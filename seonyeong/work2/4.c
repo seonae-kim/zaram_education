@@ -22,15 +22,16 @@ int main()
         for (int i = 1; i < 10; i++)
         {           
             
-            if ((num[i] > num[max_number]) && (num[i] != 0))
+            if (num[i] > num[max_number])
             { 
                 max_number = i;
             }
-            if ((num[i] < num[min_number]) && (num[i] != 0))
-            {               
+           
+            if (num[i] != 0 && num[i] < num[min_number])
+            {                
                 min_number = i;
             }
-        }
+        } 
         
         if (p % 2 == 1)
         {
@@ -39,7 +40,7 @@ int main()
         }
         else
         {
-            printf("%d ", num[min_number]);
+            printf("%d ", num[min_number]); //min ?
             num[min_number] = 0;
         }      
         
