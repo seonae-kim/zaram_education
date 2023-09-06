@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-int main() {
+int main() 
+{
     char arr[100];
-    int p = 0;
-    int q = 0;
+    int p = 0;    
     int i;
     
 
@@ -12,33 +12,31 @@ int main() {
 
     for (i = 0; arr[i]; i++) 
     {
-        if (arr[i] == '(') 
+        if (arr[i] == '(')
         {
             p++;
         }
-        else if (arr[i] == ')') 
+
+        else if (arr[i] == ')')
         {
-            q++;
+            p--;
         }
-       
-    }
-    
-    if (p == q)
-    {    
-        if ((arr[0]=='(') && (arr[p+q-1] == ')'))
-        {            
-            printf("ok\n");
-        }
+         
+    	if (p < 0)
+	{
+		printf("no\n");
+		break;	
+	}
+    }   
 
-	else printf("no\n");	
-    }	
-    
-    else
+    if (p == 0 && arr[0] == '(')
     {
-        printf("no\n");
+        printf("ok\n");
     }
 
+    else printf("no\n");
 
+	
  return 0;
 }
 
