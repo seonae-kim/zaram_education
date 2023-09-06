@@ -10,29 +10,26 @@ int main()
 
 	printf("input: ");
 
-	for(int i=0;i<20;i++)
+	for(int i = 0 ; i < 20 ; i++)
 	{
-		if(c=='a')
+		if(c == 'a')
 			break;
 
 		scanf("%c",&c);
-		a[i]=c;
+		a[i] = c;
 		b++;
-
 	}
 	
-
-
-	for(int i=0;i<b;i++)
+	for(int i = 0 ; i < b ; i++)
 	{
-		if(a[i]=='(')
+		if(a[i] == '(')
 			n++;
-		else if(a[i]==')')
-			n--;
 
+		else if(a[i] == ')')
+			n--;
 	}
 
-	if(n==0)
+	if(n == 0)
 		printf("output: ok\n");
 	else
 		printf("output: no\n");
