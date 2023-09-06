@@ -26,10 +26,9 @@ int main()
 		}
 	}
 
-	for(idx_max = 0, idx_min = 9; count < 10; idx_max++, idx_min--)
+	for(i = 0; i < 5; i++)
 	{
-		printf("%d %d ", arr[idx_max], arr[idx_min]);
-		count += 2;
+		printf("%d %d ", arr[i], arr[9-i]);
 	}
 
 	printf("\n");
