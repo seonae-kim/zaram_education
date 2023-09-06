@@ -8,31 +8,29 @@ int main()
 	char a[20];
 	int b=0;
 
-	printf("input: ");
+	printf("input: ");	
+
+	scanf("%s",a);
 
 	for(int i = 0 ; i < 20 ; i++)
 	{
-		if(c == 'a')
-			break;
-
-		scanf("%c",&c);
-		a[i] = c;
-		b++;
-	}
 	
-	for(int i = 0 ; i < b ; i++)
-	{
 		if(a[i] == '(')
 			n++;
 
 		else if(a[i] == ')')
 			n--;
+		else if(a[i] == '\0')
+			break;
 	}
 
-	if(n == 0)
-		printf("output: ok\n");
+	if(a[0] != '(')
+		printf("n: %d output: no\n",n);
+
+	else if(n == 0)
+		printf("n:%d output: ok\n",n);
 	else
-		printf("output: no\n");
+		printf("n:%d output: no\n",n);
 
 	return 0;
 
