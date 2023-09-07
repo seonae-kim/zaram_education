@@ -3,7 +3,7 @@
 int main()
 {
     int i, j;
-    int num[10]={ 0 };
+    int num[10] = { 0 };
     int max =  0 ;
     int new_arr[10] = { 0 };
     int max_num = 0;
