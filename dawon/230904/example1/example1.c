@@ -9,6 +9,7 @@ int main()
 	int min=0;
 
 
+	printf("input:");
 
 	for(int i=0;i<10;i++)
 	{
@@ -17,7 +18,6 @@ int main()
 	}
 	
 	min=a[0];
-	printf("input:");
 
 	for(int i=0;i<10;i++)
 	{
