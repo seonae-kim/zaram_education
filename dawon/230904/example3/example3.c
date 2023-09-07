@@ -25,7 +25,7 @@ int main()
 
 	printf("input: %d %d  ",n,k);
 
-	for(i;i<n;i++)
+	for(i; i < n; i++)
 		*(a+i)=i+1;
 
 	printf("output: ");
@@ -58,7 +58,6 @@ int main()
 					printf("%d",*(a+j));
 			
 			}
-
 			break;
 		}
 	}
