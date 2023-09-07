@@ -15,57 +15,70 @@ int main()
 	int i=0, j=0, h=0;
 	int index=0;
 	int p=0;
-
+	int d=0;
 	while(1)
 	{	
 		printf("formula: ");
 		scanf("%s",c);
+
+		for(int k=0;k<20;k++)
+		{
+		    printf("%c",c[k]);
+		    if(c[k] == '\0')
+			break;
+		}
 		
-		if(c[1] == '\0' && (int)c[0] == 113)
+		if((int)c[1] == 0 && (int)c[0] == 113)
 		{
 			printf("program exit\n");
 			break;
 		}
-		else if(c[1] == '\0' && (int)c[0] != 113)
+		else if((int)c[1] == 0 && (int)c[0] != 113)
 		{
-			printf("try again\n");
+			printf("try again1\n");
 			continue;
 		}
+		
+		for(int k = 0; k < 20; k++)
+		{
+		    d++;
+		    if(c[k] == '\0')
+			break;
+		}
+
+
 
 		for(i = 0; i < 20; i++)
 		{
-			if(i != 0 && (c[i] == '+' || c[i] == '-' || c[i] == '*' || c[i] == '/'))
-			{
-					    		    
-				a=atof(c);			        			
-				op = c[i];
-				index = i;
-			    
-			}   
+			if(c[i] == ' ' && index == 0)
+			{	
+				index++;
+				a=atof(c);
+				op = c[i+1];
 
-			if(c[i] == '\0')
+			}    
+		    	else if(c[i] == ' ' && index == 1)
 			{
-				for(h = i - index + 1; h <= i; h++)
-				{
-					s[p] = c[h];
-					p++;
-				}
-				
-				b=atof(s);
-				p=0;
-				s[0]='\0';
+			    for(h = i + 1; h <= d ; h++)
+			    {
+                                s[p] = c[h];
+                                p++;
+			    }
 
-				break;
+			    b=atof(s);
+			    p=0;
+			    s[0]='\0';
+			    index=0;
+			    break;
 			}
-			
-			
-
-
+				        
 		}
 
 		printf("a: %f\n",a);
 		printf("b: %f\n",b);
 		printf("op: %c\n",op);
+		
+		printf("output: ");
 
 		if(op == '+')//conflict
 			add(a,op,b);//conflict
@@ -76,7 +89,7 @@ int main()
 		else if(op == '/')
 			divs(a,op,b);
 		else 
-		        printf("try again\n");
+		        printf("try again2\n");
 		
 		c[0]='\0';
 
