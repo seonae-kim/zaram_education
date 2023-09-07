@@ -32,14 +32,13 @@ int main()
 
 	while(1)
 	{
-		if(b==n)
+		if(b == n)
 			break;
 
-		for(int j=0;j<n;j++)
+		for(int j = 0; j < n; j++)
 		{
 			if(*(a+j)==0)
 				continue;
-
 			p++;
 
 			if(p==k)
@@ -53,7 +52,7 @@ int main()
 		b++;
 		if(b==n)
 		{	
-			for(int j=0;j<n;j++)
+			for(int j = 0; j < n; j++)
 			{
 				if(*(a+j) != 0)
 					printf("%d",*(a+j));
