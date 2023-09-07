@@ -3,31 +3,31 @@
 #include <string.h>
 
 
-double add(double a, double b)
+float add(float a, float b)
 {
      printf("%.3f\n", a + b);
 	
 }
 
 
-double sub(double a, double b)
+float sub(float a, float b)
 {
      printf("%.3f\n", a - b);
 }
 
 
-double mul(double a, double b)
+float mul(float a, float b)
 {
     printf("%.3f\n", a * b);
 }
 
 
-double div(double a, double b)
+float divide(float a, float b)
 {
     printf("%.3f\n", a / b);
 }
 
-double main()
+float main()
 {
 
 	int i = 0, j = 0;
@@ -36,15 +36,20 @@ double main()
 	char num2[20] = {0};
 	char op ;		
 	int space1 = 0, space2 = 0;
-	double cal_num1 = 0, cal_num2 = 0;
+	float cal_num1 = 0, cal_num2 = 0;
+	int length = 0;
 
 	printf("input expression: " );
 	scanf("%s", &cal);
-
-
+	length = sizeof(cal);
 
     while(1)
     {
+	if(cal[length-1] != ' ')
+	{
+	    printf("error\n");
+	    break;
+	} 
 	    
 	for (i = 0; cal[i]; i++)
 	{
@@ -52,7 +57,7 @@ double main()
 	    {
                 printf("end");
 		break;
-            }
+            }	    
 
 	    if (cal[i] = ' ')
 	    {
@@ -99,13 +104,8 @@ double main()
         }
 	if (cal[op] = ( '/' ))
         {
-            div(cal_num1, cal_num2);
+            divide(cal_num1, cal_num2);
 	}  
-	   	   
-
-	    
     }	 
-	
- 
 	return 0;	
 }
