@@ -25,21 +25,20 @@ int main()
 
 	printf("input: %d %d  ",n,k);
 
-	for(i;i<n;i++)
+	for(i; i < n; i++)
 		*(a+i)=i+1;
 
 	printf("output: ");
 
 	while(1)
 	{
-		if(b==n)
+		if(b == n)
 			break;
 
-		for(int j=0;j<n;j++)
+		for(int j = 0; j < n; j++)
 		{
 			if(*(a+j)==0)
 				continue;
-
 			p++;
 
 			if(p==k)
@@ -53,13 +52,12 @@ int main()
 		b++;
 		if(b==n)
 		{	
-			for(int j=0;j<n;j++)
+			for(int j = 0; j < n; j++)
 			{
 				if(*(a+j) != 0)
 					printf("%d",*(a+j));
 			
 			}
-
 			break;
 		}
 	}
