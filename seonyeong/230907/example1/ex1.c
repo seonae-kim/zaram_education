@@ -85,9 +85,9 @@ int main()
 		printf("%.2f", result);
                 break;
             }
-            if (cal[op] = ( '*' ))
+            if (cal[op] = ( '*' )) //conflict
             {
-                double result =  mul(cal_num1, cal_num2 );
+                double result =  mul(cal_num1, cal_num2 );//conflict
 		printf("%.2f", result);
                 break;
             }

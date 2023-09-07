@@ -67,8 +67,8 @@ int main()
 		printf("b: %f\n",b);
 		printf("op: %c\n",op);
 
-		if(op == '+')
-			add(a,op,b);
+		if(op == '+')//conflict
+			add(a,op,b);//conflict
 		else if(op == '-')
 			sub(a,op,b);
 		else if(op == '*')
