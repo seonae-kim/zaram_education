@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 float add(float a,char op, float b);
@@ -107,7 +106,7 @@ int main()
 			    }
 			}
 				
-			for(k = l; k > index2 + 1; k--)
+			for(k = l; k > index2; k--)
 			{
 			    if(n[k] != '0')
 			    {
@@ -118,7 +117,7 @@ int main()
 			 
 			if(x != 1)
 			{
-			    printf("%.0f\n",out);
+			    printf("%.0f\n\n",out);
 			    continue;		
 	       	        }
 
@@ -129,33 +128,17 @@ int main()
 			out=sub(a,op,b);
 			sprintf(n,"%f",out);
 
-			l=strlen(n);
-                        for(k = l; k > l-3 ; k--)
+			l=strlen(n)-1;
+			for(k = 0; k < 20; k++)
                         {
-                            if(n[k] != '0')
+                            if(n[k] == '.')
                             {
-                                x=1;
+                                index2=k;
                                 break;
                             }
                         }
 
-                        if(x == 0)
-                        {
-                            printf("%.0f\n",out);
-                            continue;
-                        }             
-
-			printf("%.3f\n",out);
-                }
-		else if(op == '*')
-		{
-                        out=mul(a,op,b);
-			sprintf(n,"%f",out);
-			
-			l=strlen(n);
-                        
-
-                        for(k = l; k > l-3 ; k--)
+                        for(k = l; k > index2; k--)
                         {
                             if(n[k] != '0')
                             {
@@ -166,7 +149,40 @@ int main()
 
                         if(x != 1)
                         {
-                            printf("%.0f\n",out);
+                            printf("%.0f\n\n",out);
+                            continue;
+                        }             
+
+			printf("%.3f\n",out);
+                }
+		else if(op == '*')
+		{
+                        out=mul(a,op,b);
+			sprintf(n,"%f",out);
+			
+			l=strlen(n)-1;
+
+			for(k = 0; k < 20; k++)
+                        {
+                            if(n[k] == '.')
+                            {
+                                index2=k;
+                                break;
+                            }
+                        }                       
+			    
+                        for(k = l; k > index2; k--)
+                        {
+                            if(n[k] != '0')
+                            {
+                                x=1;
+                                break;
+                            }
+                        }
+
+                        if(x != 1)
+                        {
+                            printf("%.0f\n\n",out);
                             continue;
                         }
 	
@@ -178,8 +194,17 @@ int main()
                         out=divs(a,op,b);
 			sprintf(n,"%f",out);
 
-			l=strlen(n);
-                        for(k = l; k > l-3 ; k--)
+			l=strlen(n)-1;
+			for(k = 0; k < 20; k++)
+                        {
+                            if(n[k] == '.')
+                            {
+                                index2=k;
+                                break;
+                            }
+                        }
+
+                        for(k = l; k > index2; k--)
                         {
                             if(n[k] != '0')
                             {
@@ -190,7 +215,7 @@ int main()
 
                         if(x != 1)
                         {
-                            printf("%.0f\n",out);
+                            printf("%.0f\n\n",out);
                             continue;
                         }
                         printf("%.3f\n",out);
