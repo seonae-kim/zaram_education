@@ -1,24 +1,41 @@
-#include <stdio.h>
+#include <stdio.h> 
 
-int main(void)
+int main() 
 {
-	int hour, minute;
+	int num[15];
+	int i, j;
+	int index = 0;
 
-	scanf("%d %d", &hour, &minute);
-
-	int after_hour;
-	int after_minute = minute + 35;
-
-	if (after_minute >= 60) {
-		after_hour = hour + 1;
-		after_minute = after_minute - 60;
+	for (i = 0; i < 15; i++)			
+	{
+		scanf("%d", &num[i]);
 	}
-
-	if (after_hour >= 24) {
-		after_hour = after_hour - 24;
-	}
-
+	int max = num[0];
 	
-	printf("%d %d", after_hour, after_minute); 
+	for (i = 0; i < 15; i++)			
+	{
+		for (j = 0; j < i; j++)              
+		{
+			if (max <= num[j])				
+			{
+				max = num[j];
+				index = j;
+			}
+			else
+			{
+				max = max;
+			}
+		}
+
+		if (num[i] == 0) 
+		{
+			printf("%d ", max);		
+			num[index] = 0;  
+			max = 0;
+		}
+	}
 
 }
+
+
+

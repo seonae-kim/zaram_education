@@ -2,25 +2,26 @@
 
 int main()
 {
-	int input[10];
-
-	int max =0; 	
-	int min = 10000;
+	int num[10]; 	
+	int sum = 0;
 
 	for (int i = 0; i < 10; i++) {
-		scanf("%d", &input[i]);
-	
-		if (max <= input[i]) {
-			max = input[i];	
-		}
 
-		if (min >= input[i]) {
-			min = input[i];
-		}
+		scanf("%d", &num[i]);
+	
+			sum += num[i];
+	
+	if ( (num[i] == 0) && (i !=0)) {
+
+		sum = sum - num[i - 1];
+
 	}
 
-	printf("Max: %d\n", max);	
-	printf("Min: %d\n", min);
+	}
+
+	printf("%d", sum);
+
+
 } 
 
 
