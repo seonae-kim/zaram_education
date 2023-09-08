@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 float add(float a,char op, float b);
 float sub(float a,char op, float b);
@@ -13,8 +14,9 @@ int main()
 	char s[20];
 	float a=0, b=0;
 	char op;
-	int i=0, j=0, h=0, k=0, m=0, n=0, l=0;
-	int index=0;
+	int i=0, j=0, h=0, k=0, m=0, l=0, x=0;
+	char n[20];
+	int index1=0, index2=0;
 	int p=0;
 	int d=0;
 	float out=0;
@@ -24,8 +26,9 @@ int main()
 		printf("formula: ");
 		fgets(c,sizeof(c),stdin);
 		m=0;		
-		n=0;
+		n[0]='\0';
 		l=0;
+		x=0;
 
 		if(c[1] == '\n' && c[0] == 'q')
 		{
@@ -40,19 +43,10 @@ int main()
 	
 		for(i = 0; i < 20; i++)
 		{
-			if(c[i] == ' ' && index == 0)
+			if(c[i] == ' ' && index1 == 0)
 			{	
-				index++;
+				index1++;
 
-				for(k = i-1; k > 0; k--)
-				{
-				    if(c[k] == '.')
-				    {
-					n=1;
-					break;
-				    }
-				}
-			       
 				a=atof(c);
 				op = c[i+1];
 
@@ -63,17 +57,12 @@ int main()
 				}
 			
 			}    
-		    	else if(c[i] == ' ' && index == 1)
+		    	else if(c[i] == ' ' && index1 == 1)
 			{
 			    for(h = i + 1; h <= 20; h++)
 		      	    {
 		    		if(c[h] == '\0')
 				    break;
-
-				if(c[h] == '.')
-                                {
-                                    l=1;
-                                }
 
                                 s[p] = c[h];
                                 p++;
@@ -83,7 +72,7 @@ int main()
 
 			    p=0;
 			    s[0]='\0';
-			    index=0;
+			    index1=0;
 			    break;
 			}
 		      
@@ -103,11 +92,31 @@ int main()
 	        }
 
 		printf("output: ");
-		if(op == '+')//conflict
+		if(op == '+')
 		{	
-			out=add(a,op,b);//conflict
-    	
-			if(n != 1 && l != 1)
+			out=add(a,op,b);
+			sprintf(n,"%.3f",out);
+			    
+			l= strlen(n)-1;
+			for(k = 0; k < 20; k++)
+			{
+			    if(n[k] == '.')
+			    {
+				index2=k;
+				break;
+			    }
+			}
+				
+			for(k = l; k > index2 + 1; k--)
+			{
+			    if(n[k] != '0')
+			    {
+				x=1;
+				break;
+			    }
+			}
+			 
+			if(x != 1)
 			{
 			    printf("%.0f\n",out);
 			    continue;		
@@ -118,29 +127,68 @@ int main()
 		else if(op == '-')
 		{
 			out=sub(a,op,b);
-			if(n!=1 && l != 1)
+			sprintf(n,"%f",out);
+
+			l=strlen(n);
+                        for(k = l; k > l-3 ; k--)
+                        {
+                            if(n[k] != '0')
+                            {
+                                x=1;
+                                break;
+                            }
+                        }
+
+                        if(x == 0)
                         {
                             printf("%.0f\n",out);
                             continue;
-                        }
+                        }             
 
 			printf("%.3f\n",out);
                 }
 		else if(op == '*')
 		{
                         out=mul(a,op,b);
-			if(n!=1 && l != 1)
+			sprintf(n,"%f",out);
+			
+			l=strlen(n);
+                        
+
+                        for(k = l; k > l-3 ; k--)
+                        {
+                            if(n[k] != '0')
+                            {
+                                x=1;
+                                break;
+                            }
+                        }
+
+                        if(x != 1)
                         {
                             printf("%.0f\n",out);
                             continue;
                         }
+	
 
                         printf("%.3f\n",out);
 		}
 		else if(op == '/')
 		{
                         out=divs(a,op,b);
-			if(n!=1 && l != 1)
+			sprintf(n,"%f",out);
+
+			l=strlen(n);
+                        for(k = l; k > l-3 ; k--)
+                        {
+                            if(n[k] != '0')
+                            {
+                                x=1;
+                                break;
+                            }
+                        }
+
+                        if(x != 1)
                         {
                             printf("%.0f\n",out);
                             continue;
@@ -162,6 +210,7 @@ float add(float a,char op, float b)
     
     float c=0;
     c=a+b;
+    
     
     return c;
 }
