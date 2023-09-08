@@ -14,28 +14,32 @@ int main()
 	printf("Enter the num1, num2 : ");
 	scanf("%d %d", &a, &b);
 
-	if(op == '+')
+	switch(op)
 	{
-		printf("%d \n", a+b);	
+		case '+' :
+			printf("%d \n", a + b);
+			break;
+
+		case '-' :
+			printf("%d \n", a - b);
+			break;
+
+		case '*' :
+			printf("%d \n", a * b);
+			break;
+
+		case '/' :
+			printf("%d \n", a / b);
+			break;
+
+		case '<' :
+			printf("%d \n", a << b);
+			break;
+
+		case '>' :
+			printf("%d \n", a >> b);
+			break;
 	}
-	else if(op == '-')
-	{
-		printf("%d \n", a-b);
-	}
-	else if(op == '*')
-	{
-		printf("%d \n", a*b);
-	}
-	else if(op == '/')
-	{
-		printf("%d \n", a/b);
-	}
-	else if(op == '<')
-	{	
-		printf("%d %d \n", a<<1, b<<1);
-	}
-	else if(op == '>')
-	{
-		printf("%d %d \n", a>>1, b>>1);
-	}
+
+	return 0;
 }
