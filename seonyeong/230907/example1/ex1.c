@@ -49,7 +49,7 @@ int main()
 	    {
 		printf("end\n");
 		break;		
-	    }  
+	    }   
 	}
 		 
 	for(i = 0; i < 20; i++)
@@ -109,7 +109,12 @@ int main()
             float result = divide(cal_num1, cal_num2);
 	    printf("%.3f\n", result);
 	    break;	    
-	}	 
+	}
+	else 
+	{
+	    printf ("error\n");
+	    break;
+	}	
     } 
     return 0;	
 }
