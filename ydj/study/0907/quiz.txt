@@ -1,0 +1,28 @@
+1. 문자를 입력받고 해당 문자가 yes이면 pass, 그 외의 단어면 fail을 출력하는 코드를 작성하세요.
+
+ex)
+input: yes
+output: pass
+
+input: no
+output: fail
+
+input: yess
+output: fail
+
+2. 정수 3개를 입력받아 가장 큰 수와 가장 작은 수 사이의 짝수들을 곱한 결과를 출력하세요.
+ex)
+input: 1 2 3
+result: 2
+
+input: 1 5 3
+result: 8
+
+
+3. 각 원소의 길이 출력하기. 배열의 길이 N
+ex) input N: 4 input: We Are The World!
+Output: 2 3 3 6
+
+Input N: 3, Input: I Love Programmers.
+Output: 1 4 12
+
