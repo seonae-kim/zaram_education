@@ -6,6 +6,7 @@ float add(float a,char op, float b);
 float sub(float a,char op, float b);
 float mul(float a,char op, float b);
 float divs(float a,char op, float b);
+int isInt(float out);
 
 int main()
 {
@@ -13,9 +14,9 @@ int main()
 	char s[20];
 	float a=0, b=0;
 	char op;
-	int i=0, j=0, h=0, k=0, m=0, l=0, x=0;
+	int i=0, j=0, h=0, k=0, m=0, x=0;
 	char n[20];
-	int index1=0, index2=0;
+	int index1=0;
 	int p=0;
 	int d=0;
 	float out=0;
@@ -26,8 +27,6 @@ int main()
 		fgets(c,sizeof(c),stdin);
 		m=0;		
 		n[0]='\0';
-		l=0;
-		x=0;
 
 		if(c[1] == '\n' && c[0] == 'q')
 		{
@@ -45,7 +44,6 @@ int main()
 			if(c[i] == ' ' && index1 == 0)
 			{	
 				index1++;
-
 				a=atof(c);
 				op = c[i+1];
 
@@ -68,7 +66,6 @@ int main()
 			    }
 
 			    b=atof(s);
-
 			    p=0;
 			    s[0]='\0';
 			    index1=0;
@@ -94,27 +91,8 @@ int main()
 		if(op == '+')
 		{	
 			out=add(a,op,b);
-			sprintf(n,"%.3f",out);
-			    
-			l= strlen(n)-1;
-			for(k = 0; k < 20; k++)
-			{
-			    if(n[k] == '.')
-			    {
-				index2=k;
-				break;
-			    }
-			}
-				
-			for(k = l; k > index2; k--)
-			{
-			    if(n[k] != '0')
-			    {
-				x=1;
-				break;
-			    }
-			}
-			 
+			x=isInt(out);
+
 			if(x != 1)
 			{
 			    printf("%.0f\n\n",out);
@@ -126,27 +104,8 @@ int main()
 		else if(op == '-')
 		{
 			out=sub(a,op,b);
-			sprintf(n,"%f",out);
-
-			l=strlen(n)-1;
-			for(k = 0; k < 20; k++)
-                        {
-                            if(n[k] == '.')
-                            {
-                                index2=k;
-                                break;
-                            }
-                        }
-
-                        for(k = l; k > index2; k--)
-                        {
-                            if(n[k] != '0')
-                            {
-                                x=1;
-                                break;
-                            }
-                        }
-
+			x=isInt(out);
+			
                         if(x != 1)
                         {
                             printf("%.0f\n\n",out);
@@ -158,27 +117,7 @@ int main()
 		else if(op == '*')
 		{
                         out=mul(a,op,b);
-			sprintf(n,"%f",out);
-			
-			l=strlen(n)-1;
-
-			for(k = 0; k < 20; k++)
-                        {
-                            if(n[k] == '.')
-                            {
-                                index2=k;
-                                break;
-                            }
-                        }                       
-			    
-                        for(k = l; k > index2; k--)
-                        {
-                            if(n[k] != '0')
-                            {
-                                x=1;
-                                break;
-                            }
-                        }
+			x=isInt(out);
 
                         if(x != 1)
                         {
@@ -192,26 +131,7 @@ int main()
 		else if(op == '/')
 		{
                         out=divs(a,op,b);
-			sprintf(n,"%f",out);
-
-			l=strlen(n)-1;
-			for(k = 0; k < 20; k++)
-                        {
-                            if(n[k] == '.')
-                            {
-                                index2=k;
-                                break;
-                            }
-                        }
-
-                        for(k = l; k > index2; k--)
-                        {
-                            if(n[k] != '0')
-                            {
-                                x=1;
-                                break;
-                            }
-                        }
+			x=isInt(out);
 
                         if(x != 1)
                         {
@@ -264,6 +184,33 @@ float divs(float a,char op, float b)
     return c;
 }
 
+int isInt(float out)
+{
+    int x=0, l=0, k=0, index2=0;
+    char n[20];
+
+    sprintf(n,"%f",out);
+
+    l=strlen(n)-1;
+    for(k = 0; k < 20; k++)
+    {
+	if(n[k] == '.')
+	{
+	    index2=k;
+       	    break;
+	}
+     }
+    for(k = l; k > index2; k--)
+    {
+        if(n[k] != '0')
+        {
+	    x=1;
+	    break;
+        }
+    }
+
+    return x;
+}
 
 
 
