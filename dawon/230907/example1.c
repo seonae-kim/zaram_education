@@ -16,37 +16,23 @@ int main()
 	int index=0;
 	int p=0;
 	int d=0;
+	float out=0;
 	while(1)
 	{	
 		printf("formula: ");
-		scanf("%s",c);
+		fgets(c,sizeof(c),stdin);
 
-		for(int k=0;k<20;k++)
-		{
-		    printf("%c",c[k]);
-		    if(c[k] == '\0')
-			break;
-		}
-		
-		if((int)c[1] == 0 && (int)c[0] == 113)
+		if(c[1] == '\0' && c[0] == 'q')
 		{
 			printf("program exit\n");
 			break;
 		}
-		else if((int)c[1] == 0 && (int)c[0] != 113)
+		else if(c[1] == '\0' && c[0] != 'q')
 		{
 			printf("try again1\n");
 			continue;
 		}
-		
-		for(int k = 0; k < 20; k++)
-		{
-		    d++;
-		    if(c[k] == '\0')
-			break;
-		}
-
-
+	
 
 		for(i = 0; i < 20; i++)
 		{
@@ -59,8 +45,11 @@ int main()
 			}    
 		    	else if(c[i] == ' ' && index == 1)
 			{
-			    for(h = i + 1; h <= d ; h++)
+			    for(h = i + 1; h <= 20; h++)
 			    {
+				if(c[h] == '\0')
+				    break;
+
                                 s[p] = c[h];
                                 p++;
 			    }
@@ -81,19 +70,29 @@ int main()
 		printf("output: ");
 
 		if(op == '+')//conflict
-			add(a,op,b);//conflict
+		{	out=add(a,op,b);//conflict
+			printf("%.3f",out);
+		}
 		else if(op == '-')
-			sub(a,op,b);
+		{
+			out=sub(a,op,b);
+			printf("%.3f",out);
+
+                }
 		else if(op == '*')
-			mul(a,op,b);
+		{
+                        out=mul(a,op,b);
+                        printf("%.3f",out);
+		}
 		else if(op == '/')
-			divs(a,op,b);
+		{
+                        out=divs(a,op,b);
+                        printf("%.3f",out);
+                }
 		else 
 		        printf("try again2\n");
 		
 		c[0]='\0';
-
-
 	}
 
 	return 0;
@@ -101,29 +100,37 @@ int main()
 
 float add(float a,char op, float b)
 {	
-
-    printf("%.3f\n",a+b);
+    
+    float c=0;
+    c=a+b;
+  
+    return c;
 
 }
 
 float sub(float a,char op, float b)
 {
+    float c=0;
+    c=a+b;
 
-    printf("%.3f\n",a-b);
-
+    return c;
 }
 
 float mul(float a,char op, float b)
 {
+    float c=0;
+    c=a+b;
 
-    printf("%.3f\n",a*b);
+    return c;
 
 }
 
 float divs(float a,char op, float b)
 {
+    float c=0;
+    c=a+b;
 
-    printf("%.3f\n",a/b);
+    return c;
 
 }
 
