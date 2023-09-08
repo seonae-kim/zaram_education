@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 float add(float a,char op, float b);
 float sub(float a,char op, float b);
@@ -12,7 +13,7 @@ int main()
 	char s[20];
 	float a=0, b=0;
 	char op;
-	int i=0, j=0, h=0, m=0, n=0;
+	int i=0, j=0, h=0, k=0, m=0, n=0, l=0;
 	int index=0;
 	int p=0;
 	int d=0;
@@ -24,6 +25,7 @@ int main()
 		fgets(c,sizeof(c),stdin);
 		m=0;		
 		n=0;
+		l=0;
 
 		if(c[1] == '\n' && c[0] == 'q')
 		{
@@ -42,7 +44,7 @@ int main()
 			{	
 				index++;
 
-			/*	for(int k = i-1; k > 0; k--)
+				for(k = i-1; k > 0; k--)
 				{
 				    if(c[k] == '.')
 				    {
@@ -50,8 +52,7 @@ int main()
 					break;
 				    }
 				}
-			*/
-
+			       
 				a=atof(c);
 				op = c[i+1];
 
@@ -65,15 +66,21 @@ int main()
 		    	else if(c[i] == ' ' && index == 1)
 			{
 			    for(h = i + 1; h <= 20; h++)
-			    {
-				if(c[h] == '\0')
+		      	    {
+		    		if(c[h] == '\0')
 				    break;
+
+				if(c[h] == '.')
+                                {
+                                    l=1;
+                                }
 
                                 s[p] = c[h];
                                 p++;
 			    }
 
 			    b=atof(s);
+
 			    p=0;
 			    s[0]='\0';
 			    index=0;
@@ -87,33 +94,57 @@ int main()
 		    printf("op error\n");
 		    continue;
 		}
+
+
+		if(((a < -100000) || (a > 100000)) && ((b < -100000) || (b > 100000)))
+      		{
+		    printf("try again 4\n\n");
+		    continue;
+	        }
+
 		printf("output: ");
 		if(op == '+')//conflict
 		{	
 			out=add(a,op,b);//conflict
-		/*	
-	    	if(n==1)
+    	
+			if(n != 1 && l != 1)
 			{
-			    printf("%f\n",floorf(out));
-			    break;
-		
+			    printf("%.0f\n",out);
+			    continue;		
 	       	        }
-		*/
+
 			printf("%.3f\n",out);
 		}
 		else if(op == '-')
 		{
 			out=sub(a,op,b);
+			if(n!=1 && l != 1)
+                        {
+                            printf("%.0f\n",out);
+                            continue;
+                        }
+
 			printf("%.3f\n",out);
                 }
 		else if(op == '*')
 		{
                         out=mul(a,op,b);
+			if(n!=1 && l != 1)
+                        {
+                            printf("%.0f\n",out);
+                            continue;
+                        }
+
                         printf("%.3f\n",out);
 		}
 		else if(op == '/')
 		{
                         out=divs(a,op,b);
+			if(n!=1 && l != 1)
+                        {
+                            printf("%.0f\n",out);
+                            continue;
+                        }
                         printf("%.3f\n",out);
                 }
 		else 
