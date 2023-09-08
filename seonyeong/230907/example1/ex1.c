@@ -35,11 +35,14 @@ int main()
     char num2[20] = {0};
     char op ;
     float result = 0;
-    int space1 = 0, space2 = 0;
+    int count = 0;
     float cal_num1 = 0, cal_num2 = 0;
+    int length = 0;
 
     printf("input expression: " );
     fgets(cal, sizeof(cal), stdin);
+    
+    length = strlen(cal);
 
     while(1)
     {
@@ -50,71 +53,79 @@ int main()
 		printf("end\n");
 		break;		
 	    }   
-	}
+	} 
 		 
 	for(i = 0; i < 20; i++)
 	{
 	    if(cal[i] == ' ')
 	    {
-		space1 = i;
-		for(j = 0; j < space1; j++)
-                {
-                    num1[j] = cal[j];
-		    cal_num1 = atof(num1);
-                }				
-	    } continue; 
-
-	    if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/'))
-	    {
-		op = cal[i];
-		continue;		
-	    } 
-	   
-	    if(cal[i] == ' ')
-            {
-		space2 = i;
-                for(j = space2 + 1 ; j < 20 ; j++)
-                {
-                    num2[j] = cal[j];
+		count++;
+		
+		if(count < 2)
+		{
+		    for(j = 0; j < i; j++)
+		    {
+			num1[j] = cal[j];
+			cal_num1 = atof(num1);
+		    }
+		}
+		
+		if(count == 2)
+		{
+    		    for(j = i+1 ; j < length-1 ; j++)
+		    {			
+			num2[j] = cal[j];
+		    }
+		    for(j =0 ; j < i+1; j ++)
+		    {
+			num2[j] = '0';
+		    }
+		    for( j = length - 1; j < 20; j ++)
+		    {
+			num2[j] = ' ';
+		    }
 		    cal_num2 = atof(num2);
-                }				
-            }    
-	}
+		}
+	    } 
 
+	    if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/') && (count == 1))
+	    {
+		op = cal[i];		
+	    } 
+	    
+	}
 	printf("result : ");
 
 	if(op == ( '+' ))
 	{
 	    float result = add(cal_num1, cal_num2);
-	    printf("%.3f\n", result);
-	    break;
-	}
+	    printf("%.3f\n", result);	    
+	} 
 
 	else if(op == ( '-' ))
         {
             float result = sub(cal_num1, cal_num2);
-	    printf("%.3f\n", result);
-	    break;	    
-        }
+	    printf("%.3f\n", result);	    	    
+        } 
 
 	else if(op == ( '*' ))
         {
             float result = mul(cal_num1, cal_num2);
 	    printf("%.3f\n", result);
-	    break;	    
-        }
+	   	    
+        } 
 
 	else if(op == ( '/' ))
         {
             float result = divide(cal_num1, cal_num2);
 	    printf("%.3f\n", result);
-	    break;	    
+	    	    
 	}
 	else 
 	{
 	    printf ("error\n");
-	    break;
-	}	
-    } 
+	    
+	} break;	
+    }  
     return 0;	
 }
