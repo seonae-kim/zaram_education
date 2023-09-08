@@ -1,19 +1,33 @@
 #include <stdio.h>
-#include <string.h>
+
 
 int main() {
 
-char input[3];
+    char input[100];  //define numbers of chrater
 
-scanf("%s", input);
+    scanf("%s", input);
 
-if (strcmp(input, "yes") == 0) {
-	printf("yes");
-}
 
-else {
+    int i;
+    
+//    printf("%s\n", input);       //check
+
+//    printf("%s\n", &input[0]);   //check
+//    printf("%s\n", &input[1]);   //check
+//    printf("%s\n", &input[2]);   //check
+//    printf("%s\n", &input[3]);   //check
+  
+      
+     
+    if (input[0]== 'y' && input[1] == 'e' && input[2] == 's' && input[3] == '\0' )
+    {
+	printf("pass");
+    }
+
+    else
+    {
 	printf("fail");
-}
-
+    }
+    
 }
 
