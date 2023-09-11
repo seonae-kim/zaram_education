@@ -39,129 +39,338 @@ int main()
     int count = 0, p = 0;
     float cal_num1 = 0, cal_num2 = 0;
     int length = 0;
-
+    int mode = 0;
 
     while(1)
     {
-	printf("input expression: " );
-	fgets(cal, sizeof(cal), stdin);
-	length = strlen(cal);
+	printf("Select mode 1-normal or 2-Hex or 3-Dec: ");
+	scanf("%d", &mode);
 	
-	cal_num1 = 0;
-	cal_num2 = 0;	
-	count = 0;
+	       for(i = 0; i < 20; i ++)
+		 {  int p=0;
+		    if((cal[i] == 'q')&&(length == 2))
+		    {	
+			p++;
+			printf("end\n");			
+		    }	      
+		}
 
-	for(i = 0; i < 20; i ++)
-	{
+		if(p == 1)
+		 break;	
 
-	    if((cal[i] == 'q')&&(length == 2))
-	    {	
-		p++;
-		printf("end\n");			
-	    }	      
-	}
 
-	if(p == 1)
-        break;	
+	 switch (mode)
+	{ case 1://normal
+	   while(1)
+	   {
+	       printf("input expression: " );
+	       fgets(cal, sizeof(cal), stdin);
+	       length = strlen(cal);
+	
+	       cal_num1 = 0;
+	       cal_num2 = 0;	
+	       count = 0;
+	       int p = 0;
+	       float result = 0;
+
+	       for(i = 0; i < 20; i ++)
+		{
+		    if((cal[i] == 'q')&&(length == 2))
+		    {	
+			p++;
+			printf("end\n");			
+		    }	      
+		}
+
+		if(p == 1)
+		 break;	
 		 
-
-	for(i = 0; i < 20; i++)
-	{
-	    if(cal[i] == ' ')
+	    for(i = 0; i < 20; i++)
 	    {
-		count++;
-		
-		if(count < 2)
+		if(cal[i] == ' ')
 		{
-		    for(j = 0; j < i; j++)
+		    count++;
+		
+		    if(count < 2)
 		    {
-			num1[j] = cal[j];
-			cal_num1 = atof(num1);
+			for(j = 0; j < i; j++)
+			{
+			    num1[j] = cal[j];
+			    cal_num1 = atof(num1);
+			}
 		    }
-		}
 		
-		if(count == 2)
-		{
-    		    for(j = i + 1 ; j < length - 1 ; j++)
-		    {			
-			num2[j - (i + 1)] = cal[j];
-			cal_num2 = atof(num2);
+		    if(count == 2)
+		    {
+			for(j = i + 1 ; j < length - 1 ; j++)
+			{			
+			    num2[j - (i + 1)] = cal[j];
+			    cal_num2 = atof(num2);
+			}
 		    }
+		} 
+
+		if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/') && (count == 1))
+		{
+		    op = cal[i];		
+		} 
+	    }
+	   
+		if(((cal_num1 < -100000) || (cal_num1 > 100000)) || ((cal_num2 < -100000) || (cal_num2 > 100000)))
+		{
+		    printf("wrong numbers\n");
+		    continue;	   
 		}
-	    } 
-
-	    if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/') && (count == 1))
-	    {
-		op = cal[i];		
-	    } 
-	}
-
-	if(((cal_num1 < -100000) || (cal_num1 > 100000)) || ((cal_num2 < -100000) || (cal_num2 > 100000)))
-	{
-	    printf("wrong numbers\n");
-	    continue;	   
-	}
 	
-	//printf("%.3f %.3f\n", cal_num1, cal_num2);	
-	if(op == ( '+' ))
-	{
-	    float result = add(cal_num1, cal_num2);
+		if(op == ( '+' ))
+		{
+		    float result = add(cal_num1, cal_num2);
 	
-	    if( add(cal_num1, cal_num2) == (int)result)
-	    {
-		printf("result : %d\n", (int)result);
-	    }
-	    else
-	    {
-		printf("result : %.3f\n", result);
-	    }
-	} 
+		    if( add(cal_num1, cal_num2) == (int)result)
+		    {
+			printf("result : %d\n", (int)result);
+		    }
+		    else
+		    {
+			printf("result : %.3f\n", result);
+		    }
+		}	 
 
-	else if(op == ( '-' ))
-        {
-            float result = sub(cal_num1, cal_num2);
-	    if( sub(cal_num1, cal_num2) == (int)result)
-            {
-                printf("result : %d\n", (int)result);
-            }
-            else
-            {
-                printf("result : %.3f\n", result);
-            }
+		else if(op == ( '-' ))
+		{
+		    float result = sub(cal_num1, cal_num2);
+		    if( sub(cal_num1, cal_num2) == (int)result)
+		    {
+			printf("result : %d\n", (int)result);
+		    }
+		 else
+		    {
+			printf("result : %.3f\n", result);
+		    }
 	    	    	    
-        } 
+		}	 
 
-	else if(op == ( '*' ))
-        {
-            float result = mul(cal_num1, cal_num2);
-	    if( mul(cal_num1, cal_num2) == (int)result)
-            {
-                printf("result : %d\n", (int)result);
-            }
-            else
-            {
-                printf("result : %.3f\n", result);
-            }    
-        } 
+		else if(op == ( '*' ))
+		{
+		    float result = mul(cal_num1, cal_num2);
+		    if( mul(cal_num1, cal_num2) == (int)result)
+		    {
+			printf("result : %d\n", (int)result);
+		    }
+		else
+		    {
+			printf("result : %.3f\n", result);
+		    }	    
+		}       
 
-	else if(op == ( '/' ))
-        {
-            float result = divide(cal_num1, cal_num2);
-	    if( divide(cal_num1, cal_num2) == (int)result)
-            {
-                printf("result : %d\n", (int)result);
-            }
-            else
-            {
-                printf("result : %.3f\n", result);
-            } 	    
+		else if(op == ( '/' ))
+		{
+		    float result = divide(cal_num1, cal_num2);
+		    if( divide(cal_num1, cal_num2) == (int)result)
+		    {
+			printf("result : %d\n", (int)result);
+		    }
+		    else
+		    {
+			printf("result : %.3f\n", result);
+		    } 	    
+		}
+		else 
+		    {
+			printf ("error\n");
+		    }    
 	}
-	else 
-	{
-	    printf ("error\n");
-	    
+	 break;
+
+	case 2: //HEX
+	while(1)
+	{	    
+	       printf("input expression: " );
+	       fgets(cal, sizeof(cal), stdin);
+	       length = strlen(cal);
+	
+	       long long cal_num1 = 0;
+	       long long cal_num2 = 0;	
+	       int p = 0;
+	       int result = 0;
+	       count = 0;
+		
+	       for(i = 0; i < 20; i ++)
+		{   
+		    if((cal[i] == 'q')&&(length == 2))
+		    {	
+			p++;
+			printf("end\n");			
+		    }	      
+		}
+
+		if(p == 1)
+		 break;	
+		 
+	    for(i = 0; i < 20; i++)
+	    {
+		if(cal[i] == ' ')
+		{
+		    count++;
+		
+		    if(count < 2)
+		    {
+			for(j = 0; j < i; j++)
+			{
+			    num1[j] = cal[j];
+			    cal_num1 = strtoll(num1,&num1,16);
+			}
+		    }
+		
+		    if(count == 2)
+		    {
+			for(j = i + 1 ; j < length - 1 ; j++)
+			{
+			    num2[j - (i + 1)] = cal[j];
+			    cal_num2 = strtoll(num2, &num2,16);
+			}
+		    }
+		} 
+
+		if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '>>')||(cal[i] == '<<') && (count == 1))
+		{
+		    op = cal[i];		
+		} 
+	    }
+	    if(op == '+')
+	    {
+		int result = add(cal_num1, cal_num2);
+		printf("result :%x\n", result);	    
+	    }
+
+	    if(op == '-')
+	    {
+		int result = sub(cal_num1, cal_num2);
+		printf("result : %x\n", result);	    
+	    }	   
+
+	    else if(op == '*')
+	    {
+		int result = mul(cal_num1, cal_num2);
+		printf("result : %x\n", result);	    
+	    }
+
+	    else if(op == '/')
+	    {
+		int result = divide(cal_num1, cal_num2);
+		printf("result : %x\n", result);	    
+	    }
+
+	    else if(op == '<<')
+	    {
+		int result = cal_num1 << cal_num2;
+		printf("result : %x\n", result);	    
+	    }
+
+	    else if(op == '>>')
+	    {
+		int result = cal_num1 >> cal_num2;
+		printf("result : %x\n", result);	    
+	    }
+	    else printf("error\n");
 	} 
-	continue;	
-    }  
+	break;
+
+	case 3: //Dec
+	while(1)
+	{
+
+	       printf("input expression: " );
+	       fgets(cal, sizeof(cal), stdin);
+	       length = strlen(cal);
+	
+	       int cal_num1 = 0;
+	       int cal_num2 = 0;	
+	       int p = 0;
+	       int result = 0;
+	       count = 0;
+
+	       for(i = 0; i < 20; i ++)
+		{   
+		    if((cal[i] == 'q')&&(length == 2))
+		    {	
+			p++;
+			printf("end\n");			
+		    }	      
+		}
+
+		if(p == 1)
+		 break;	
+		 
+	    for(i = 0; i < 20; i++)
+	    {
+		if(cal[i] == ' ')
+		{
+		    count++;
+		
+		    if(count < 2)
+		    {
+			for(j = 0; j < i; j++)
+			{
+			    num1[j] = cal[j];
+			    cal_num1 = atof(num1);
+			}
+		    }
+		
+		    if(count == 2)
+		    {
+			for(j = i + 1 ; j < length - 1 ; j++)
+			{			
+			    num2[j - (i + 1)] = cal[j];
+			    cal_num2 = atof(num2);
+			}
+		    }
+		} 
+
+		if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '<<') ||(cal[i] == '>>') && (count == 1))
+		{
+		    op = cal[i];		
+		} 
+	    }
+	    
+	    if(op == '+')
+	    {
+		int result = add(cal_num1, cal_num2);
+		printf("result = %d\n", result);
+	    }
+	    else if(op == '-')
+	    {
+		int result = sub(cal_num1, cal_num2);
+		printf("result = %d\n", result);
+	    }
+
+	    else if(op == '*')
+	    {
+		int result = mul(cal_num1, cal_num2);
+		printf("result = %d\n", result);
+	    }
+	    else if(op == '/')
+	    {
+		int result = divide(cal_num1, cal_num2);
+		printf("result = %d\n", result);
+	    }
+	    else if(op == '<<')
+	    {
+		int result = cal_num1 << cal_num2;
+		printf("result = %d\n", result);
+	    }
+	    else if(op == '>>')
+            {
+                int result = cal_num1 >> cal_num2;
+                printf("result = %d\n", result);
+	    }
+	    else 
+		printf("error");
+	    
+	
+	} break;
+
+    }//switch
+}// big while
     return 0;	
-}
+}//main
