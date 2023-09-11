@@ -46,5 +46,5 @@ int main()
                 day = 30;
                break;
     }
-    printf("%d", &day);
+    printf("%d", day);
 }
