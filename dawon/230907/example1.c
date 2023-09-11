@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cal.h"
 
-float add(float a,char op, float b);
-float sub(float a,char op, float b);
-float mul(float a,char op, float b);
-float divs(float a,char op, float b);
-int isInt(float out);
 
 int main()
 {
@@ -45,6 +41,7 @@ int main()
 			{	
 				index1++;
 				a=atof(c);
+
 				op = c[i+1];
 
 				if(c[i+2] != ' ')
@@ -74,6 +71,17 @@ int main()
 		      
 		}
 
+		if(isInt(a) == 0)
+    		{
+		    printf("try again 5\n");
+		    continue;
+    		}
+
+		if(isInt(b) == 0)
+		{
+		    printf("try agian 6\n");
+		    continue;
+		}
 		if(m==1)
 		{
 		    printf("op error\n");
@@ -90,7 +98,7 @@ int main()
 		printf("output: ");
 		if(op == '+')
 		{	
-			out=add(a,op,b);
+			out=add(a,b);
 			x=isInt(out);
 
 			if(x != 1)
@@ -103,7 +111,7 @@ int main()
 		}
 		else if(op == '-')
 		{
-			out=sub(a,op,b);
+			out=sub(a,b);
 			x=isInt(out);
 			
                         if(x != 1)
@@ -116,7 +124,7 @@ int main()
                 }
 		else if(op == '*')
 		{
-                        out=mul(a,op,b);
+                        out=mul(a,b);
 			x=isInt(out);
 
                         if(x != 1)
@@ -130,7 +138,7 @@ int main()
 		}
 		else if(op == '/')
 		{
-                        out=divs(a,op,b);
+                        out=divs(a,b);
 			x=isInt(out);
 
                         if(x != 1)
@@ -149,77 +157,4 @@ int main()
 
 	return 0;
 }
-
-float add(float a,char op, float b)
-{	
-    
-    float c=0;
-    c=a+b;
-    
-    
-    return c;
-}
-
-float sub(float a,char op, float b)
-{
-    float c=0;
-    c=a-b;
-
-    return c;
-}
-
-float mul(float a,char op, float b)
-{
-    float c=0;
-    c=a*b;
-
-    return c;
-}
-
-float divs(float a,char op, float b)
-{
-    float c=0;
-    c=a/b;
-
-    return c;
-}
-
-int isInt(float out)
-{
-    int x=0, l=0, k=0, index2=0;
-    char n[20];
-
-    sprintf(n,"%f",out);
-
-    l=strlen(n)-1;
-    for(k = 0; k < 20; k++)
-    {
-	if(n[k] == '.')
-	{
-	    index2=k;
-       	    break;
-	}
-     }
-    for(k = l; k > index2; k--)
-    {
-        if(n[k] != '0')
-        {
-	    x=1;
-	    break;
-        }
-    }
-
-    return x;
-}
-
-
-
-
-
-
-
-
-
-
-
 
