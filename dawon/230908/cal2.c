@@ -8,6 +8,7 @@ int main()
 	char cal[20];
 	char arrayb[20];
 	char hexa[20];
+	char ch;
 	float a=0, b=0;
 	int hex1, hex2;
 	int dec1, dec2;
@@ -26,6 +27,7 @@ int main()
 	{	
 		printf("1: standard, 2: oct, 3: dec >> ");
 		scanf("%d", &modenum);
+		while( ch = getchar() != '\n' && ch != EOF);
 		printf("calculate formula: ");
 		
 		fgets(cal,sizeof(cal),stdin);
@@ -42,8 +44,7 @@ int main()
 	    	}
 		switch(modenum)
 		{
-		    case 1:
-			fgets(cal,sizeof(cal),stdin);
+		    case 1:{
 			flag_op=0;		
 			n[0]='\0';
 	
@@ -164,9 +165,9 @@ int main()
 			printf("\n");
 			
 			break;
+			   }
 		
-		
-		    case 2:
+		    case 2:{
 			
 			flag_op=0;		
 			k=0;
@@ -287,9 +288,10 @@ int main()
 			 op2[0]='\0';
                          printf("\n");
  
-                         break;		    
+                         break;		  
+			   }	 
 
-		    case 3:
+		    case 3:{
 			
 			flag_op=0;		
 			k=0;
@@ -301,13 +303,12 @@ int main()
 					index++;
 					dec1=atoi(cal);
 
-					for(j=0; j<i; j++)
+					for(j = 0; j < i; j++)
 					{
 					    hexa[j] = cal[j];
 					    
 					}    
 					    
-					hex1=strtol(hexa,NULL,16);
 					if((cal[i+1] == '<' && cal[i+2] == '<') || (cal[i+1] == '>' && cal[i+2] == '>'))
 					{
 					    op2[0]=cal[i+1];
@@ -370,23 +371,23 @@ int main()
 			 {
 			    if(op2[0] == '+')
                             {
-                                    out2=addHexDec(hex1,hex2);
-                                    printf("%x\n",out2);
+                                    out2=addHexDec(dec1,dec2);
+                                    printf("%d\n",out2);
                             }
                             else if(op2[0] == '-')
                             {
-                                    out2=subHexDec(a,b);
-                                    printf("%x\n",out2);
+                                    out2=subHexDec(dec1,dec2);
+                                    printf("%d\n",out2);
                             }
                             else if(op2[0] == '*')
                             {
-                                    out2=mulHexDec(a,b);
-                                    printf("%x\n",out2);
+                                    out2=mulHexDec(dec1,dec2);
+                                    printf("%d\n",out2);
                             }
                             else if(op2[0] == '/')
                             {
-                                    out2=divsHexDec(a,b);
-                                    printf("%x\n",out2);
+                                    out2=divsHexDec(dec1,dec2);
+                                    printf("%d\n",out2);
                             }
                             else
                                   printf("try again3\n");
@@ -395,13 +396,13 @@ int main()
 			 {
 			     if(op2[0] == '<')
 			     {
-				    out2=shftLeft(a,b);
-				    printf("%x\n",out2);
+				    out2=shftLeft(dec1,dec2);
+				    printf("%d\n",out2);
 			     }
 			     else if(op2[0] == '>')
 			     {
-				    out2=shftRight(a,b);
-				    printf("%x\n",out2);
+				    out2=shftRight(dec1,dec2);
+				    printf("%d\n",out2);
 			     }
 
 			 }
@@ -411,7 +412,8 @@ int main()
 			 op2[0]='\0';
                          printf("\n");
  
-                             break;	
+                             break;
+			   }	     
 		}	
 
 
