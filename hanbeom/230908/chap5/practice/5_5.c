@@ -5,6 +5,7 @@ int main()
     int month = 0;
     int day = 0;  
     
+    printf("input month: ");
     scanf("%d", &month);  
     switch(month)
     {
@@ -45,5 +46,5 @@ int main()
                 day = 30;
                break;
     }
-    printf("%d", &day);
+    printf("%d", day);
 }

@@ -41,6 +41,7 @@ int main()
     int length = 0;
     char mode = 0;
     int e = 0;
+    char ch;
 
     while(1)
     {
@@ -48,14 +49,19 @@ int main()
         break;
 	printf("Select mode 1-normal or 2-Hex or 3-Dec: ");
 	scanf("%c", &mode);
-
-       	switch (mode)
+	while (ch = getchar() != '\n' && ch != EOF);
+       	
+	switch (mode)
 	{ 
 	    case '1'://normal
 	    printf("normal mode\n");
 	   
 	    while(1)
 	    {
+
+		char cal[20] = {0};
+		char num1[20] = {0};
+		char num2[20] = {0};
 		printf("input expression: " );
 		fgets(cal, sizeof(cal), stdin);
 		length = strlen(cal);
@@ -181,17 +187,21 @@ int main()
 	printf("Hex mode\n");
 	while(1)
 	{	    
+		char cal[20] = {0};
+		char num1[20] = {0};
+		char num2[20] = {0};
+	        long long cal_num1 = 0;
+	        long long cal_num2 = 0;	
+	        int p = 0;
+	        int result = 0;
+	        char op = '0';
+	        count = 0;
+	        char *ptr = NULL;
+		
 	       printf("input expression: " );
 	       fgets(cal, sizeof(cal), stdin);
 	       length = strlen(cal);
-	
-	       long long cal_num1 = 0;
-	       long long cal_num2 = 0;	
-	       int p = 0;
-	       int result = 0;
-	       char op = '0';
-	       count = 0;
-		
+
 	       for(i = 0; i < 20; i ++)
 		{   
 		    if((cal[i] == 'q')&&(length == 2))
@@ -215,7 +225,7 @@ int main()
 			    for(j = 0; j < i; j++)
 			    {
 				num1[j] = cal[j];
-				cal_num1 = strtoll(num1,&num1,16);
+				cal_num1 = strtoll(num1, &ptr,16);
 			    }
 			}
 		
@@ -224,7 +234,7 @@ int main()
 			    for(j = i + 1 ; j < length - 1 ; j++)
 			    {
 				num2[j - (i + 1)] = cal[j];
-				cal_num2 = strtoll(num2, &num2,16);
+				cal_num2 = strtoll(num2, &ptr,16);
 			    }
 			}
 		    } 
@@ -261,12 +271,14 @@ int main()
 
 		else if(op == '<')
 		{
+		    printf("%llx %llx\n" , cal_num1, cal_num2); //check
 		    int result = cal_num1 << cal_num2;
 		    printf("result : %x\n", result);	    
 		}
 
 		else if(op == '>')
 		{
+		    printf("%llx %llx\n" , cal_num1, cal_num2);//check
 		    int result = cal_num1 >> cal_num2;
 		    printf("result : %x\n", result);	    
 		}
@@ -279,6 +291,9 @@ int main()
 
 	while(1)
 	{
+		char cal[20] = {0};
+		char num1[20] = {0};
+		char num2[20] = {0};
 
 	       printf("input expression: " );
 	       fgets(cal, sizeof(cal), stdin);

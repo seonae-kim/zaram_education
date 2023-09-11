@@ -115,13 +115,13 @@ int isIntDec(int a)
     int k=0;
 
     sprintf(c,"%d",a);
-    for(int k = 0; k < 20; k++)
+    for(int k = 0; k < strlen(c); k++)
     {
-	if( c[k] != '0' || c[k] != '1' || c[k] != '2' || c[k] != '3' || c[k] != '4' || c[k] != '5' || c[k] != '6' || c[k] != '7' || c[k] != '8' || c[k] != '9')                          
+	if( c[k] != '0' && c[k] != '1' && c[k] != '2' && c[k] != '3' && c[k] != '4' && c[k] != '5' && c[k] != '6' && c[k] != '7' && c[k] != '8' && c[k] != '9')                          
 	return 0;
     }
 
-    return 0;
+    return 1;
 }
 
 int isIntHex(int a)
@@ -130,13 +130,13 @@ int isIntHex(int a)
     int k=0;
 
     sprintf(c,"%d",a);
-    for(int k = 0; k < 20; k++)
+    for(int k = 0; k < strlen(c); k++)
     {
-        if( c[k] != '0' || c[k] != '1' || c[k] != '2' || c[k] != '3' || c[k] != '4' || c[k] != '5' || c[k] != '6' || c[k] != '7' || c[k] != '8' || c[k] != '9' || c[k] != 'A' || c[k] != 'B' || c[k] != 'C' || c[k] != 'D' || c[k] != 'E' || c[k] != 'F')                          
+        if( c[k] != '0' && c[k] != '1' && c[k] != '2' && c[k] != '3' && c[k] != '4' && c[k] != '5' && c[k] != '6' && c[k] != '7' && c[k] != '8' && c[k] != '9' && c[k] != 'A' && c[k] != 'B' && c[k] != 'C' && c[k] != 'D' && c[k] != 'E' && c[k] != 'F')                          
         return 0;
     }
 
-    return 0;
+    return 1;
 }
 
 
@@ -146,10 +146,10 @@ int isNum(float a)
     int k=0;
 
     sprintf(c,"%f",a);
-    for(int k = 0; k < 20; k++)
+    for(int k = 0; k < strlen(c); k++)
     {
-        if( c[k] != '0' || c[k] != '1' || c[k] != '2' || c[k] != '3' || c[k] != '4' || c[k] != '5' || c[k] != '6' || c[k] != '7' || c[k] != '8' || c[k] != '9')                          
-	    return 0;
+	printf("%c",c[k]);
+        if( c[k] != '0' && c[k] != '1' && c[k] != '2' && c[k] != '3' && c[k] != '4' && c[k] != '5' && c[k] != '6' && c[k] != '7' && c[k] != '8' && c[k] != '9' && c[k] != '.')		    return 0;
     }
 
     return 1;
