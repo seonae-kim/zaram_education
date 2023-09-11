@@ -3,52 +3,50 @@
 #include <string.h>
 #include "cal.h"
 
-#define A 10
-#define B 11
-#define C 12
-#define D 13
-#define E 14
-#define F 15
-
 int main()
 {
 	char cal[20];
 	char arrayb[20];
+	char hexa[20];
 	float a=0, b=0;
 	int hex1, hex2;
 	int dec1, dec2;
-	char op;
-	int i=0, j=0, h=0, k=0, m=0, x=0;
+	char op1;
+	char op2[3];
+	int i=0, j=0, h=0, k=0, flag_op=0, x=0;
 	char n[20];
 	int index=0;
 	int p=0;
 	int d=0;
 	int modenum=0;
-	float out=0;
+	float out1=0;
+	int out2=0;
 
 	while(1)
 	{	
 		printf("1: standard, 2: oct, 3: dec >> ");
 		scanf("%d", &modenum);
 		printf("calculate formula: ");
+		
+		fgets(cal,sizeof(cal),stdin);
 
+		if(cal[1] == '\n' && cal[0] == 'q')
+		{
+			printf("program exit\n");
+			break;
+		}
+		else if(cal[1] == '\n' && cal[0] != 'q')
+		{
+		    printf("try again1\n");
+		    continue;
+	    	}
 		switch(modenum)
 		{
 		    case 1:
 			fgets(cal,sizeof(cal),stdin);
-			m=0;		
+			flag_op=0;		
 			n[0]='\0';
 	
-			if(cal[1] == '\n' && cal[0] == 'q')
-			{
-				printf("program exit\n");
-				break;
-			}
-			else if(cal[1] == '\n' && cal[0] != 'q')
-			{
-				printf("try again1\n");
-				continue;
-			}
 			
 			for(i = 0; i < 20; i++)
 			{
@@ -56,13 +54,12 @@ int main()
 				{	
 					index++;
 					a=atof(cal);
-					if  
-			    		op = cal[i+1];
+					op1 = cal[i+1];
 	
 					if(cal[i+2] != ' ')
 					{		
 					    printf("try again2\n");
-					    m=1;
+					    flag_op=1;
 					}
 				
 				}    
@@ -86,16 +83,6 @@ int main()
 			      
 			}
 			
-
-
-			
-			if((modenum == 2 || modenum == 3) && (isIntHexDec(a) == 0 || isIntHexDec(b) == 0))
-			{
-				printf("not integer \n");
-				continue;
-			}
-
-
 		    	
 			if(isNum(a) == 0)
 	    		{
@@ -109,7 +96,7 @@ int main()
 			    continue;
 			}
 	
-			if(m==1)
+			if(flag_op==1)
 			{
 			    printf("op error\n");
 			    continue;
@@ -122,58 +109,58 @@ int main()
 		        }
 	
 			printf("output: ");
-			if(op == '+')
+			if(op1 == '+')
 			{	
-				out=add(a,b);
+				out1=add(a,b);
 	
-				if(isInt(out) != 1)
+				if(isInt(out1) != 1)
 				{
-				    printf("%.0f\n\n",out);
+				    printf("%.0f\n\n",out1);
 				    continue;		
 		       	        }
 	
-				printf("%.3f\n",out);
+				printf("%.3f\n",out1);
 			}
-			else if(op == '-')
+			else if(op1 == '-')
 			{
-				out=sub(a,b);
+				out1=sub(a,b);
 				
-	                        if(inInt(out) != 1)
+	                        if(isInt(out1) != 1)
 	                        {
-	                            printf("%.0f\n\n",out);
+	                            printf("%.0f\n\n",out1);
 	                            continue;
 	                        }             
 	
-				printf("%.3f\n",out);
+				printf("%.3f\n",out1);
 	                }
-			else if(op == '*')
+			else if(op1 == '*')
 			{
-	                        out=mul(a,b);
+	                        out1=mul(a,b);
 	
-	                        if(isInt(out) != 1)
+	                        if(isInt(out1) != 1)
 	                        {
-	                            printf("%.0f\n\n",out);
+	                            printf("%.0f\n\n",out1);
 	                            continue;
 	                        }
 		
 	
-	                        printf("%.3f\n",out);
+	                        printf("%.3f\n",out1);
 			}
-			else if(op == '/')
+			else if(op1 == '/')
 			{
-	                        out=divs(a,b);
+	                        out1=divs(a,b);
 	
-	                        if(isInt(out) != 1)
+	                        if(isInt(out1) != 1)
 	                        {
-	                            printf("%.0f\n\n",out);
+	                            printf("%.0f\n\n",out1);
 	                            continue;
 	                        }
-	                        printf("%.3f\n",out);
+	                        printf("%.3f\n",out1);
 	                }
 			else 
 			        printf("try again3\n");
 			
-			c[0]='\0';
+			cal[0]='\0';
 			printf("\n");
 			
 			break;
@@ -181,27 +168,14 @@ int main()
 		
 		    case 2:
 			
-			fgets(c,sizeof(cal),stdin);
-			m=0;		
+			flag_op=0;		
 			k=0;
 		        	
-			if(cal[1] == '\n' && cal[0] == 'q')
-			{
-				printf("program exit\n");
-				break;
-			}
-			else if(cal[1] == '\n' && cal[0] != 'q')
-			{
-				printf("try again1\n");
-				continue;
-			}
-		
 			for(i = 0; i < 20; i++)
 			{
 				if(cal[i] == ' ' && index == 0)
 				{	
 					index++;
-					char hexa[20];
 					
 					for(j=0; j<i; j++)
 					{
@@ -210,12 +184,24 @@ int main()
 					}    
 					    
 					hex1=strtol(hexa,NULL,16);
-					op = cal[i+1];
+					if((cal[i+1] == '<' && cal[i+2] == '<') || (cal[i+1] == '<' && cal[i+2] == '<'))
+					{
+					    op2[0]=cal[i+1];
+					    op2[1]=cal[i+2];
+
+					    if(cal[i+3] != ' ')
+					    {		
+						printf("try again2\n");
+						flag_op=1;
+					    }				
+					}
+					else				    
+					    op2[0] = cal[i+1];
 	
 					if(cal[i+2] != ' ')
 					{		
 					    printf("try again2\n");
-					    m=1;
+					    flag_op=1;
 					}				
 				}    
 			    	else if(cal[i] == ' ' && index == 1)
@@ -229,20 +215,204 @@ int main()
 	                                p++;
 				    }
 	
-				    hex2=strtol(arrayb);
+				    hex2=strtol(arrayb,NULL,16);
 				    p=0;
 				    arrayb[0]='\0';
 				    index=0;
 				    break;
 				}    
+						
+			}
+			 if(isIntHex(hex1) == 0 || isIntHex(hex2) == 0)
+                         {
+                             printf("try again 5\n");
+                             continue;
+			 } 
+ 
+                         if(flag_op==1)
+                         {
+                             printf("op error\n");
+                             continue;
+                         }
+ 
+                         if(((hex1 < -100000) || (hex1 > 100000)) && ((hex2 < -100000) || (hex2 > 100000)))
+                         {
+                             printf("try again 4\n\n");
+                             continue;
+                         }
+ 
+                         printf("output: ");
+			 if(strlen(op2)==1)
+			 {
+			    if(op2[0] == '+')
+                            {
+                                    out2=addHexDec(hex1,hex2);
+                                     printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '-')
+                            {
+                                    out2=subHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '*')
+                            {
+                                    out2=mulHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '/')
+                            {
+                                    out2=divsHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else
+                                  printf("try again3\n");
+			 }
+			 else if(strlen(op2) == 2)
+			 {
+			     if(op2[0] == '<')
+			     {
+				    out2=shftLeft(a,b);
+				    printf("%x\n",out2);
+			     }
+			     else if(op2[0] == '>')
+			     {
+				    out2=shftRight(a,b);
+				    printf("%x\n",out2);
+			     }
+
+			 }
+
+                         cal[0]='\0';
+			 hexa[0]='\0';
+			 op2[0]='\0';
+                         printf("\n");
+ 
+                         break;		    
+
+		    case 3:
 			
+			flag_op=0;		
+			k=0;
 		
-		}
+			for(i = 0; i < 20; i++)
+			{
+				if(cal[i] == ' ' && index == 0)
+				{	
+					index++;
+					dec1=atoi(cal);
 
-		
+					for(j=0; j<i; j++)
+					{
+					    hexa[j] = cal[j];
+					    
+					}    
+					    
+					hex1=strtol(hexa,NULL,16);
+					if((cal[i+1] == '<' && cal[i+2] == '<') || (cal[i+1] == '>' && cal[i+2] == '>'))
+					{
+					    op2[0]=cal[i+1];
+					    op2[1]=cal[i+2];
 
+					    if(cal[i+3] != ' ')
+					    {		
+						printf("try again2\n");
+						flag_op=1;
+					    }				
+					}
+					else				    
+					    op2[0] = cal[i+1];
+	
+					if(cal[i+2] != ' ')
+					{		
+					    printf("try again2\n");
+					    flag_op=1;
+					}				
+				}    
+			    	else if(cal[i] == ' ' && index == 1)
+				{
+				    for(h = i + 1; h <= 20; h++)
+			      	    {
+			    		if(cal[h] == '\0')
+					    break;
+	
+	                                arrayb[p] = cal[h];
+	                                p++;
+				    }
+	
+				    dec2=atoi(arrayb);
+				    p=0;
+				    arrayb[0]='\0';
+				    index=0;
+				    break;
+				}    
+						
+			}
+			 if(isIntDec(dec1) == 0 || isIntDec(dec2) == 0)
+                         {
+                             printf("try again 5\n");
+                             continue;
+			 } 
+ 
+                         if(flag_op == 1)
+                         {
+                             printf("op error\n");
+                             continue;
+                         }
+ 
+                         if(((dec1 < -100000) || (dec1 > 100000)) && ((dec2 < -100000) || (dec2 > 100000)))
+                         {
+                             printf("try again 4\n\n");
+                             continue;
+                         }
+ 
+                         printf("output: ");
+			 if(strlen(op2) == 1)
+			 {
+			    if(op2[0] == '+')
+                            {
+                                    out2=addHexDec(hex1,hex2);
+                                    printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '-')
+                            {
+                                    out2=subHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '*')
+                            {
+                                    out2=mulHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else if(op2[0] == '/')
+                            {
+                                    out2=divsHexDec(a,b);
+                                    printf("%x\n",out2);
+                            }
+                            else
+                                  printf("try again3\n");
+			 }
+			 else if(strlen(op2) == 2)
+			 {
+			     if(op2[0] == '<')
+			     {
+				    out2=shftLeft(a,b);
+				    printf("%x\n",out2);
+			     }
+			     else if(op2[0] == '>')
+			     {
+				    out2=shftRight(a,b);
+				    printf("%x\n",out2);
+			     }
 
+			 }
 
+                         cal[0]='\0';
+			 hexa[0]='\0';
+			 op2[0]='\0';
+                         printf("\n");
+ 
+                             break;	
+		}	
 
 
 	}	
