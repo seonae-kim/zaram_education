@@ -24,37 +24,44 @@ float divd(float a, float b)
 int main()
 {
 	char str[N] = {};
-	char op = 0;
 	int i = 0;
-	float a = 0, b = 0;
-	float result = 0;
 	while(1)
 	{
 		printf("Please enter the formula : ");
 		fgets(str, sizeof(str), stdin);
 		
-		// not working... ??		
-		if(str[0] == 'q' && str[1] == '\0')
+		// reset -> to avoid printing previous value		
+		float a = 0, b = 0;
+		float result = 0;
+		char op = 0;
+
+		if(str[0] == 'q' && str[2] == '\0')
 		{
 			break;
 		}
 
+		// feedback 1. 4 * 45d
+		// other method.? to verify a and b (int) -> present working
 		sscanf(str, "%f %c %f", &a, &op, &b);
 //		printf("%f %c %f \n", a, op, b);
-//		printf("%c %c \n", str[0], str[1]);
+		
+		int flag = 0;
+		flag = 	sscanf(str, "%f %c %f", &a, &op, &b);
+		printf("%d \n", flag);
 
 		if (op != '+' && op != '-' && op != '*' && op != '/')
 		{
-			printf("wrongq \n");
+			printf("wrong a \n");
 			continue;
 		}
 
 		if (a < -100000 || a > 100000 || b < -10000 || b > 10000)
 		{
-			printf("wrong");
+			printf("wrong b");
 			continue;
 		}
-
+		
+		// add default
 		switch (op)
 		{
 			case '+' :
@@ -68,7 +75,9 @@ int main()
 				break;
 			case '/' :
 				result = divd(a,b);
-				break;	
+				break;
+			default : 
+				printf("Not supported");	
 		}
 
 		if (result == (int)result)
@@ -79,9 +88,7 @@ int main()
 		else
 		{
 			printf("%.3f \n", result);
-		}
-		
-		result = 0;
+		}	
 	}
 	return 0;
 }
