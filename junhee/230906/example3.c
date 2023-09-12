@@ -22,9 +22,10 @@ int main()
 
 int dec(char str[])
 {
-	int opcount=0;
-	int clcount=0;
-	for(int i = 0; i<10;i++)
+	int opcount = 0;
+	int clcount = 0;
+	int in = 0;
+	for(int i = 0; i < 10; i++)
 	{
 		char prChar = str[i];
 		if(prChar=='(')
@@ -35,22 +36,30 @@ int dec(char str[])
 		{
 			clcount++;
 		}
+	}
+	if(clcount < opcount)
+	{
+		return 0;
+	}
+	
+	else if(clcount > opcount)
+	{
+		return 0;
+	}
+	else if (str[0] == ')' || str[opcount + clcount - 1] == '(')
+	{
+		return 0;
+	}
+	for (in = 0; str[in] != NULL; in++)
+	{
+		if(str[in]=='(')
+		opcount --;
+		else 
+		clcount --;
+		
+		if(opcount > clcount)
+		return 0;
+	}
 
-	}
-	if (opcount == clcount)
-	{
-		return 1;
-	}
-	
-	else if(clcount<opcount)
-	{
-		return 0;
-	}
-	
-	else if(clcount>opcount)
-	{
-		return 0;
-	}
-	else
-	return -1;
+	return 1;
 }
