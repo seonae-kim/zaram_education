@@ -1,94 +1,51 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-int sum(char ch[])
-{
-    int answer = 0;
-    int len = strlen(ch);
-    int i;
-    //printf("sum");
-    for(i = 0; i < len; i++)
-	{
-	    if(ch[i] > '0' && ch[i] < '9')
-		answer += (ch[i] - 48);	//real number
-	}
-    return answer;
-}
-
-int minus(char ch[])
-{
-    int answer = 0;
-    int len = strlen(ch);
-    int i;
-    for(i = 0; i < len; i++)
-     {
-            if(ch[i] > '0' && ch[i] < '9')
-	    {	
-		if(answer == 0)
-		    answer = (ch[i] - 48);    	
-		else
-		    answer -= (ch[i] - 48);
-	    }
-
-     }
-    return answer;
-}
-
-int multiple(char ch[])
-{
-    int answer = 0;
-    int len = strlen(ch);
-    int i;
-    for(i = 0; i < len; i++)
-    {
-        if(ch[i] > '0' && ch[i] < '9')
-	{
-	   if(answer == 0)
-	       answer = (ch[i] - 48);
-           else
-	       answer *= (ch[i] - 48);
-	}
-    }
-    return answer;
-}
-
-int divide(char ch[])
-{
-    int answer = 0;
-    int len = strlen(ch);
-    int i;
-
-    for(i = 0; i < len; i++)
-        {
-	if(ch[i] > '0' && ch[i] < '9')
-        {
-           if(answer == 0)
-               answer = (ch[i] - 48);
-           else
-               answer /= (ch[i] - 48);
-        }
-    }
-    return answer;
-}
 
 int main()
 {
     char str[500];
-    char operator = 'a';
-    int result = 0;
-    int i;
+    int i =0;
+    double num[2] = {0, 0};
     
-    printf("input real number: ");
+    printf("input number and op ex(43 + 27): ");
     fgets(str, sizeof(str), stdin);	//input the chracter. ex) 4 + 3
+    
+    char *token = strtok(str, "+");  // blank	    43 + 27
+    while (token != NULL)
+    {
+	num[i] = atof(token);
+	printf("%lf\n", num[i]);
+	token = strtok(NULL, "+");
+        i++;	
+    }
 
-    double num1 = atof(str);     //change string to real number  
-    double num2 = atof(str);     //change string to real number 
- 
-    int len = strlen(str);
+    printf("%lf", num[0] + num[1]);    
+    //printf("%f", num2);
+    
+    /*
+    while (token != NULL)	    // address = null = 0 
+    {
+	if
+    */
+    
+    /*
+    for(i =0; i < len; i++)	// + 
+    {
+	str =  	
+    }
+    */
+   // printf("%s", str);		
 
-				
-    for(i = 0; str[i]		    //
+   // printf("%d", (int)num1);	    //front number
+    
 
+       
+
+   // for(i = 0; str[i];		    //  43 + 54
+    
+/*
     for(i = 0; i < len; i++)	// if find '+', define operator = '+'
     {
         switch(str[i])
@@ -126,7 +83,7 @@ int main()
 	    result = divide(str);
 	    break;    
     }
-  
+*/
 
-    printf("%d\n",result);
+   // printf("%d\n",result);
 }
