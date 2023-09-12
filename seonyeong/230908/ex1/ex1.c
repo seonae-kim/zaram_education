@@ -109,11 +109,10 @@ int main()
 			    }
 			}
 		    }    
-
-		    if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/') && (count == 1))
-		    {
-			op = cal[i];		
-		    } 
+			if(((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/'))&&(count == 1))
+			    {	
+				op = cal[i];		
+			    }
 		}
     
 		if(((cal_num1 < -100000) || (cal_num1 > 100000)) || ((cal_num2 < -100000) || (cal_num2 > 100000)))
@@ -121,7 +120,7 @@ int main()
 		    printf("wrong numbers\n");
 		    continue;	   
 		}
-	
+		
 		if(op == ( '+' ))
 		{
 		    float result = add(cal_num1, cal_num2);
@@ -238,11 +237,10 @@ int main()
 			    }
 			}
 		    } 
-
-		    if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '>')||(cal[i] == '<') && (count == 1))
-		    {
-			op = cal[i];		
-		    } 
+			if(((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '>')||(cal[i] == '<')) && (count == 1))
+			{
+			   op = cal[i];		
+			}
 		}
 	    
 		if(op == '+')
@@ -271,14 +269,12 @@ int main()
 
 		else if(op == '<')
 		{
-		    printf("%llx %llx\n" , cal_num1, cal_num2); //check
 		    int result = cal_num1 << cal_num2;
 		    printf("result : %x\n", result);	    
 		}
 
 		else if(op == '>')
 		{
-		    printf("%llx %llx\n" , cal_num1, cal_num2);//check
 		    int result = cal_num1 >> cal_num2;
 		    printf("result : %x\n", result);	    
 		}
@@ -342,11 +338,10 @@ int main()
 			}
 		    }
 		} 
-
-		if((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '<') ||(cal[i] == '>') && (count == 1))
-		{
-		    op = cal[i];		
-		} 
+		    if(((cal[i] == '+')||(cal[i] == '-')||(cal[i] == '*')||(cal[i] == '/')||(cal[i] == '<') ||(cal[i] == '>'))&&(count == 1))
+		    {
+			op = cal[i];		
+		    } 
 	    }
 	    
 	    if(op == '+')
