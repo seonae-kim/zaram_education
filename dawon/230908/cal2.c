@@ -192,12 +192,14 @@ int main()
 			    modenum[0]='\0';
 			    cal[0]='\0';
 			    index=0;
+			    hexa[0]='\0';
+			    p=0;
 		    
                             printf("calculate formula: ");
 
                             fgets(cal,sizeof(cal),stdin);
 
-			    for(i =0; i < strlen(cal); i++)
+			    for(i = 0; i < strlen(cal); i++)
 			    {
 				printf("%c",cal[i]);
 			    }
@@ -215,21 +217,41 @@ int main()
 			    
 			    for(i = 0; i < 20; i++)
 			    {
+				if(cal[i] == '\0')
+					break;
 				if(cal[i] == ' ' && index == 0)
 				{   	
-					    index++;
 					    printf("index: %d\n",index);
 					
 					    for(j = 0; j < i; j++)
 					    {
 						hexa[j] = cal[j];
-						if(hexa[j] != '<' && hexa[j] != '>' && hexa[j] != '0' && hexa[j] != '1' && hexa[j] != '2' && hexa[j] != '3' && hexa[j] != '4' && hexa[j] != '5' && hexa[j] != '6' && hexa[j] != '7' && hexa[j] != '8' && hexa[j] != '9' && hexa[j] != 'A' && hexa[j] != 'B' && hexa[j] != 'C' && hexa[j] != 'D' && hexa[j] != 'E' && hexa[j] != 'F')
-						k1++;	
+						if(
+						    hexa[j] != '<' 
+						    && hexa[j] != '>' 
+						    && hexa[j] != '0' 
+						    && hexa[j] != '1' 
+						    && hexa[j] != '2' 
+						    && hexa[j] != '3' 
+						    && hexa[j] != '4' 
+						    && hexa[j] != '5' 
+						    && hexa[j] != '6' 
+						    && hexa[j] != '7' 
+						    && hexa[j] != '8' 
+						    && hexa[j] != '9' 
+						    && hexa[j] != 'A' 
+						    && hexa[j] != 'B' 
+						    && hexa[j] != 'C' 
+						    && hexa[j] != 'D' 
+						    && hexa[j] != 'E' 
+						    && hexa[j] != 'F')
+						    k1++;	
 					    }    
 					printf("hexa: ");			
 					for(int t=0; t<strlen(hexa);t++)
 					    printf("%c", hexa[t]);
 					printf("\n");
+					printf("k: %d\n",k1);
 					hex1=strtol(hexa,NULL,16);
 					if((cal[i+1] == '<' && cal[i+2] == '<') || (cal[i+1] == '<' && cal[i+2] == '<'))
 					{
@@ -244,7 +266,8 @@ int main()
 					}
 					else				    
 					    op2[0] = cal[i+1];
-	
+
+					index++;
 				}    
 			    	else if(cal[i] == ' ' && index == 1)
 				{
@@ -255,28 +278,42 @@ int main()
 	
 	                                arrayb[p] = cal[h];
 	                                
-					if(arrayb[p] != '<' && arrayb[p] != '>' && arrayb[p] != '0' && arrayb[p] != '1' && arrayb[p] != '2' && arrayb[p] != '3' && arrayb[p] != '4' && arrayb[p] != '5' && arrayb[p] != '6' && arrayb[p] != '7' && arrayb[p] != '8' && arrayb[p] != '9' && arrayb[p] != 'A' && arrayb[p] != 'B' && arrayb[p] != 'C' && arrayb[p] != 'D' && arrayb[p] != 'E' && arrayb[p] != 'F')
+					if(
+					    arrayb[p] != '<' 
+					    && arrayb[p] != '>' 
+					    && arrayb[p] != '0' 
+					    && arrayb[p] != '1' 
+					    && arrayb[p] != '2' 
+					    && arrayb[p] != '3' 
+					    && arrayb[p] != '4' 
+					    && arrayb[p] != '5' 
+					    && arrayb[p] != '6' 
+					    && arrayb[p] != '7' 
+					    && arrayb[p] != '8' 
+					    && arrayb[p] != '9' 
+					    && arrayb[p] != 'A' 
+					    && arrayb[p] != 'B' 
+					    && arrayb[p] != 'C' 
+					    && arrayb[p] != 'D' 
+					    && arrayb[p] != 'E' 
+					    && arrayb[p] != 'F')
                                                 k2++;
 
 					p++;
 				    }
-                                                
-				}
-
+				    printf("arrayb: ");
+				    for(int t=0; t<strlen(arrayb);t++)
+					printf("%c",arrayb[t]);
+				    printf("\n");
+                                    index=0;
 				    hex2=strtol(arrayb,NULL,16);
-				    p=0;
 				    arrayb[0]='\0';
-				    index=0;
-				    break;
-			      
+				    p=0;	    
+				}
 						
 			}
-		/*	 if(isIntHex(hex1) == 0 || isIntHex(hex2) == 0)
-                         {
-                             printf("try again 5\n");
-                             continue;
-			 } 
-*/
+
+			printf("k: %d\n",k2);
 			printf("%d %d\n",hex1,hex2); 
 
 			    
@@ -373,6 +410,7 @@ int main()
 
 			    for(i = 0; i < 20; i++)
 			    {
+			
 				    if(cal[i] == ' ' && index == 0)
 				    {	
 					    index++;
