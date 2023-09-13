@@ -8,7 +8,7 @@ int main()
     int nummax=0;
     int a=0;
     int index=0;
-    int cnt[20]={0, };
+    int cnt[100]={0, };
 
     printf("input N: ");
     scanf("%d",&n);
@@ -24,7 +24,8 @@ int main()
     printf("\n");
 
     for(i =0; i < n; i++)
-	printf("%d",*(p+i));
+	printf("%d\n",*(p+i));
+    printf("\n");
 
     for(i = 0; i < n; i++)
     {

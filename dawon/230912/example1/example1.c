@@ -1,24 +1,41 @@
 #include <stdio.h>
+#include <string.h>
 
 int main()
 {
     char array[5][20];
-    int i=0, j=0;
-    char[20] max1, max2, max3, max4, max5;
-    int a,b,c,d,e;    
-    printf("input": );
+    char array2[5][20];
+    char string[30];
+    int cmp[10];
+    int i=0, j=0, k=0;
+    int minlen=100;
+    int index=0;
+    printf("input:" );
     for(i = 0; i < 5; i++)
     {
-	for(j = 0; j < 20; j++)
-	{
-	    fgets(array[i][j],sizeof(array[i]),stdin);
-	}
+       scanf("%s",array[i]);
     }
 
-    a=strlen(array[0]);
-    b=strlen(array[1]);
-    c=strlen(array[2]);
-    d=strlen(array[3]);
-    e=strlen(array[4]);
 
-    for(int i=0;
+    for(i = 0; i < 5; i++)
+    {
+	cmp[i]=strlen(array[i]);
+    }
+
+    for(i = 0; i < 5; i++)
+    {
+	if(cmp[i] < minlen)
+	{
+	    minlen=cmp[i];
+	    array2[i]=array[i];
+	}
+    }
+    
+
+	printf("\n");
+    }
+    
+    
+
+    return 0;
+}

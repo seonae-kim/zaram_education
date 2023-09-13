@@ -3,7 +3,7 @@
 int main()
 {
     int *p;
-    int i=0, j=0, n=0, k=1;
+    int i=0, j=0, n=0, k=1, flag=0;
     int num[20]={0, };
     char ch;
 
@@ -33,17 +33,22 @@ int main()
     {
 	for(j = 0; j < i; j++)
 	{
-	    if(*(p+i) != *(p+j))
+	    if(*(p+i) == *(p+j))
 	    {
-		num[k] = *(p+i);
-		k++;
+		flag=1;
+		break;		
 	    }
-	    else 
-		continue;
+	     		
 	}
+	if(flag==0)
+	{
+	    num[k]=*(p+i);
+	    k++;
+	}
+	flag=0;
     }
 
-    for(i=0;i<=k;k++)
+    for(i = 0; i < k; i++)
 	printf("%d",num[k]);
     printf("\n");
 
@@ -54,7 +59,7 @@ int main()
 	   printf("(%d, %d) ",num[i],num[j]);
 	}
     }
-
+    printf("\n");
     return 0;
 }    
 
