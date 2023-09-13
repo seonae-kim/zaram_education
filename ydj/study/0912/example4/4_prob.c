@@ -19,8 +19,8 @@ int main()
 	
 	for (i = 0; i < N; i++)
 	{
-		count = 1;
-		for (j = i + 1; j < N; j++)
+		count = 0;
+		for (j = 0 ; j < N; j++)
 		{
 			if (arr[i] == arr[j])
 			{
@@ -36,9 +36,12 @@ int main()
 
 		else if (max == count)
 		{
-			printf("%d \n", -1);
-			flag++;
-			break;
+			if ((i == N - 1) && (num != arr[N - 1]))
+			{
+				printf("%d \n", -1);
+				flag++;
+				break;
+			}
 		}
 	}
 	
@@ -46,6 +49,5 @@ int main()
 	{
 		printf("%d \n", num);
 	}
-	return 0;
-		
+	return 0;		
 }
