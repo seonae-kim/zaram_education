@@ -20,16 +20,13 @@ int main()
 
 	for (i = 0; i < N; i++)
 	{
+		flag = 0;
 		for (j = i + 1; j < N; j++)
 		{
-			if (arr[i] == 0)
+			if (arr[i] == arr[j])
 			{
 				flag++;
 				break;
-			}
-			else if(arr[i] == arr[j])
-			{
-				arr[j] = 0;
 			}
 		}
 		if (flag == 0)
@@ -37,14 +34,13 @@ int main()
 			prt[k] = arr[i];
 			k++;
 		}
-		flag = 0;
 	}
 
-	for (i = 0; i < k - 1; i++)
+	for (i = 0; i < k; i++)
 	{
-		for (j = i + 1; j < k - 1; j++)
+		for (j = i + 1; j < k; j++)
 		{
-			printf("(%d %d) ", prt[i], prt[j]);
+			printf("(%d %d)", prt[i], prt[j]);
 		}
 	}
 	printf("\n");
