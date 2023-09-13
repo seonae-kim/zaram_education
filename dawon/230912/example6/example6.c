@@ -23,6 +23,10 @@ int main()
 
     for(i = 0; i < 50; i++)
     {
+	if(array[i] == '\0')
+	    break;
+	if(i <= index && flag == 1)
+	    continue;
 	if(
 	    array[i] == '0'
 	    || array[i] == '1'
@@ -37,32 +41,47 @@ int main()
 	  )
 	{
 	    p=i;
-	    while(
-		     array[h] != '0'
-		    && array[h] != '1'
-		    && array[h] != '2'
-	    	    && array[h] != '3'
-		    && array[h] != '4'
-		    && array[h] != '5'
-		    && array[h] != '6'
-		    && array[h] != '7'
-		    && array[h] != '8'
-		    && array[h] != '9'
-		 )
+	    for(h=i+1; h<50; h++)
 	    {
-		for(int h=i; h<50; h++)
-		{
-		    if(array[h] == '\0')
-			break;
+		if(
+			array[h] == '0'
+			|| array[h] == '1'
+			|| array[h] == '2'
+			|| array[h] == '3'
+			|| array[h] == '4'
+			|| array[h] == '5'
+			|| array[h] == '6'
+			|| array[h] == '7'
+			|| array[h] == '8'
+			|| array[h] == '9'
+		    ){
 		    p++;
 		}
+		else 
+		    break;
 	    }
-	    for(j = i; i < p; i++)
-	    {
+	    index=p;
+	    if(p == i)
+	    {  
 		numarray[k]=array[i];
-		k++;
+		flag=0;
 	    }
-
+	    else
+	    {
+		for(j = i; j <= p; j++)
+		{
+		    numarray[k]=array[j];
+		    k++;
+		    flag=1;
+		}
+	    }
+	    printf("numarray:");	    
+    
+	    for(int j = 0; j<k; j++)
+	    {
+		printf("%c",numarray[j]);
+	    }
+	    printf("\n");
 	    array2[m]=atoi(numarray);
 	    m++;
 	}
@@ -70,63 +89,12 @@ int main()
 	k=0;
     }	
 
-    for(i=0;i<m;m++)
+    printf("m: %d\n",m);
+
+    for(i = 0; i < m; i++)
     {
-	printf("%d",array2[i]);
+	printf("%d ",array2[i]);
     }
-
-
-
-
-
-/*	    for(k=0; k <= i; k++)
-	    {
-		if(numarray[k] == array[i])
-		{
-		    flag=1;
-		    break;
-		}
-	    }
-	    if(flag == 0)	
-	    {
-		numarray[p] = array[i];
-		p++;
-	    }
-	}
-	flag=0;
-    }
-
-    j=0;
-
-    printf("numarray: ");
-    for(i = 0; i < p; i++)
-    {
-	printf("%c",numarray[i]);
-    }
-
-
-    for(k = 0; k <= p; k++)
-    {
-	for(i = 0; i <= p; i++)
-	{
-	    if(numarray[i] < minnum)
-	    {
-		minnum=numarray[i];
-		index=i;
-	    }
-	}
-    
-	array2[j]=minnum;
-	numarray[index]=100;
-	j++;
-
-    }
-
-    for(i = 0; i < p; p++)
-    {
-	printf("%d", array2[i]);
-    }
-    */
 
     return 0;
 }
