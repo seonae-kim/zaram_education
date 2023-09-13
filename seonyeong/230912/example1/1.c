@@ -79,7 +79,36 @@ int main()
     {
         for(j = 1; j < 6; j ++)
         {
+	    if(min == length[j])
+	    {
+		if(word[min_num][0] > word[j][0])
+		{		    
+		    min = length[j];
+		    min_num = j;
+		}
+			
+		if(word[min_num][0] == word[j][0])
+		{
+		    if(word[min_num][1] > word[j][1])
+		    {               
+			min = length[j];
+			min_num = j;
+		    }
+		    if(word[min_num][1] == word[j][1])
+                    { 
+			if(word[min_num][2] > word[j][2])
+			{ 
+			    min = length[j];
+			    min_num = j;
+			}
+                    }
+		}
 
+		else 
+		{
+		    min = length[min_num];
+		}
+	    }
 	    if(min > length[j])
 	    {
 	        min = length[j];
