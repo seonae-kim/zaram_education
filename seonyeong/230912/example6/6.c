@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <ctype.h>
 
 int main()
 {
@@ -10,6 +10,7 @@ int main()
     char new_arr[50] = {0};
     int i = 0; 
     int j = 0;
+    char num_arr[5] = {0};
     int num = 0;
     int count = 0;
     int min_num = 0;
@@ -26,7 +27,31 @@ int main()
     {
         if (arr[i] >= '0' && arr[i] <= '9')
         {
-            num = arr[i] - '0';
+	    if(arr[i+1] >= '0' && arr[i+1] <= '9')
+	    {
+		if(arr[i+2] >= '0' && arr[i+2] <= '9')
+		{
+		    num_arr[0] = arr[i];
+                    num_arr[1] = arr[i+1];
+		    num_arr[2] = arr[i+2];
+	            num = atof(num_arr);
+	            arr[i+1] = 'a';
+		    arr[i+2] = 'a';
+
+		}
+		else
+		{
+		    num_arr[0] = arr[i];
+		    num_arr[1] = arr[i+1];
+		    num = atof(num_arr);
+		    arr[i+1] = 'a';
+		}
+	    }
+
+	    else
+	    {
+		num = arr[i] - '0';
+	    }
             count = 0;
                         
 	    for (j = 0; j < i; j++)

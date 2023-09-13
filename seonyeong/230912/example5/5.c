@@ -27,18 +27,26 @@ int main()
 	    for( a = j + 1; a < N; a ++)
 	    {
 		if(num[a] == num[j])
-		    num[a] 
-
+		{
+		    num[a] = 'z';
+		} 
+		
+		if(num[a] == num[i])
+                {
+                    num[a] = 'z';
+                }	
 	    }
 	    
+	    if(num[j] == 'z')
+		continue;
+	    if(num[i] == 'z')
+		continue;
 
 	    if( num[j] != num[i] ) 
 	    {
 	        printf("(%d %d) ", num[i], num[j]);
 	    }
-	    	    
 	}
-
 
     }
 

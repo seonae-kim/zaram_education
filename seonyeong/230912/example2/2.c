@@ -84,7 +84,6 @@ int main()
 	{
 	    printf("%c", word[i][j]);
 	}
-	printf(" ");
     }
     
     printf("\n");
