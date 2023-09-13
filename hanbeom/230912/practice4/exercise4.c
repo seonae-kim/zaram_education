@@ -25,31 +25,40 @@ int main()
                 count++;
             }
         }
-        countgroup[i] = count;
+        countgroup[i] = count;	    //ok
         count = 0;
     }
-    int max = countgroup[0];
 
+    int max = countgroup[0];
     for (i = 0; i < n; i++)
     {
-        for (j = 0; j < n - 1; j++)             
+        for (j = 1 + i ; j < n; j++)             
         {
-            if (countgroup[i] < countgroup[j + 1])
+            if (countgroup[i] < countgroup[j])	         
             {
-                max = num[j + 1];		
+                max = num[j];		
             }
         }
     }
+
     int numberofmax = 0;
     for (i = 0; i < n; i++)
     {
-        if (countgroup[i] == max)
+        if (num[i] == max)
         {
             numberofmax++;
         }
     }
-    
-    if (numberofmax % max == 0 && numberofmax / max != 1)         
+   
+    int bonus = 0;
+    for(i = 0; i < n; i++)
+    {
+	if (countgroup[i] == numberofmax)
+	{
+	    bonus++;
+	}
+    }	
+    if (bonus % numberofmax ==0 && bonus / numberofmax !=1)
     {
         printf("-1");
         return -1;
