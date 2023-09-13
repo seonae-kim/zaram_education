@@ -33,21 +33,33 @@ int main()
 	{
 	    printf("%ld", strlen(word[i]));	    // 1 3 3 3 3
 	}
-    }    
-    
-    int min = strlen(word[0]);
+    }   
 
-    /*  find min
+    int min = strlen(word[0]);			    // 1
+    int strlengroup[5];
+    int miniindex = 0;    
+
+    for(i = 0 ; i < 5 ; i++)
+    {
+	strlengroup[i] = strlen(word[0]); 
+    }
+
+    
+     // find min
     for( i = 0 ; i < 5; i++)
     {
-	if(strlen(word[i] >= min)
+	if(strlengroup[i] <=  min)
 	{
-	    min = strlen(word[i]);
-	    // 
+	    min = strlengroup[i];
+	    miniindex = i;
+	    min = 0;
+	    strlengroup[miniindex] = 0;
 	}
-	
     }
-    */
-    //printf("%s ", word[i]);
+    
+    for( i = 0; i < 5; i ++)
+    {
+      //  printf("strlengroup is %d ", strlengroup[i]);
+    } 
 }
 
