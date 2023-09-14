@@ -14,8 +14,7 @@ int main()
 	int num[SIZE][SIZE];
 	int d_num [SIZE];
 	int i,j,o,u = 0;
-	int numb = 0;
-	int count,p_num = 0;
+	int p_num = 0;
 	int k_count = 0;
 	printf("n과 k는 100까지\n");
 	printf("n = ");
@@ -68,8 +67,7 @@ int main()
 				if (k > n)
 				{
 					k -= n ;
-				}	
-				++count;				
+				}					
 			}
 		}
 	}
