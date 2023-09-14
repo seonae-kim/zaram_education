@@ -20,19 +20,16 @@ int main()
 		{	
 			len = 1;
 			temp_c[k] = str[i];
-//			printf("%c,,,", temp_c[k]);
-			j = i + 1;
-			while (str[j] <= '9' && str[j] >= '0')
+			i = i + 1;
+			while (str[i] <= '9' && str[i] >= '0')
 			{
 				k++;
-				temp_c[k] = str[j];
-//				printf("%c,, ", temp_c[k]);
-				j++;
+				temp_c[k] = str[i];
+				i++;
 				len++;
 			}
 			num[l] = atoi(temp_c);
-			memset(temp_c, '0', 5 * sizeof(char));
-//			printf("%d, ", num[l]);
+			memset(temp_c, 0, 20 * sizeof(char));
 			l++; 
 		}
 		k = 0;
