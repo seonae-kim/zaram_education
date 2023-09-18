@@ -16,7 +16,8 @@ struct member
 int main()
 {
     FILE *fp;
-    struct member m;
+	FILE *fout;
+	struct member m;
     char buffer[255] = {0};
     char user[20] = {0};
     int period = 0;
@@ -26,7 +27,7 @@ int main()
 	int i = 0;
 	char arr[10] = {0};
 	char buffer2[10] = {0};
-    
+   
 	printf(" < Extension of the period >\n user name, period :");
 	scanf("%s %d", user, &period);
 	
@@ -37,8 +38,6 @@ int main()
 
 	while(fgets(buffer, sizeof(buffer), fp) != NULL)
 	{
-		fgets(buffer, sizeof(buffer), fp);
-		
 		char *ptr = strstr(buffer, user);
 
 		if(ptr != NULL)
@@ -55,8 +54,8 @@ int main()
 					break;
 				}
 			}
-	
-			 if((fp = fopen("member_info.txt", "a")) == NULL)
+		
+			if((fp = fopen("member_info.txt", "a")) == NULL)
 			{
 				printf("fail2\n");
 			}
@@ -65,10 +64,41 @@ int main()
 			sprintf(arr, "%d", m.remain_period);
 		}
 			strcat(buffer2, arr);
-			//printf("%s\n",buffer2);
 	}
+	//fclose(fp);
+	
+	fp = fopen ("member_info.txt","r");
+	fout = fopen ("exchange.txt", "w");
+
+	printf("%d %s\n",__LINE__, buffer2); //>? 
+	//fputs(buffer2, fout);	
+	
+	if(fout == NULL)
+    {
+        printf("fail2\n");
+    }
+
+	while(fgets(buffer, 255, fp) != NULL)
+    {   
+		char *ptr = strstr(buffer, user);
+
+        if( ptr == NULL)
+		{
+			fputs(buffer, fout);
+			printf("%d %s\n",__LINE__, buffer);
+		}
+	
+		else //if( ptr != NULL)
+		{
+			printf("%d\n",__LINE__);
+		}
+    } 
 
 	fclose(fp);
-	printf(" Success\n");
+	fclose(fout);
+	//remove("member_info.txt");
+	//rename("exchange.txt", "member_info.txt");
+	printf(" Success2\n");
+	
 	return 0 ;
 }

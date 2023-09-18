@@ -23,7 +23,7 @@ int main()
 	int e = 0;
 	int i = 0;
 	FILE *fp;
-	char m[50] ;
+	struct member m[50] ;
 	char buffer[255] = {0};
 	
 	for(i = 0; i < 50; i++)
@@ -39,6 +39,11 @@ int main()
 		if(ptr == NULL)
 		break;
 	}		
+
+	for(i = 0; i < 50; i ++)
+	{
+		printf("%s\n", m[i].name);
+	}
 
 	while(1)
 	{

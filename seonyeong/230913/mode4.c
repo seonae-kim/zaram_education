@@ -13,12 +13,12 @@ struct member
 
 };
 
-int mode4()
+int main()
 {
     FILE *fin; 
 	FILE *fout;
     struct member m;
-	char buffer[2550] = {0};
+	char buffer[255] = {0};
     char user[20] = {0};
     int line = 0;
 	char *ptr = 0;
@@ -40,24 +40,24 @@ int mode4()
     }
     while(1)
     {   
-        fgets(buffer, 2550, fin);
-        char *ptr = strstr(buffer, user);
+        if( fgets(buffer, 255, fin) == NULL)
+        {
+            printf(" Success\n");
+			break;
+		}
+        
+		char *ptr = strstr(buffer, user);
 
         if( ptr == NULL)
 		{
 			fputs(buffer, fout);
-			printf("%d %s\n", __LINE__, buffer);
 		}
-		else
+	
+		if( ptr != NULL)
 		{
-			printf("%d %s\n", __LINE__, buffer);
+			continue;
 		}
 
-        if( fgets(buffer, 2550, fin) == NULL)
-        {
-            printf(" Success\n");
-            break;
-        }
     }   
     	
     fclose(fin);

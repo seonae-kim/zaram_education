@@ -39,7 +39,7 @@ int mode7()
 		
 		char *ptr = strtok(buffer, "\t");
 
-		if( )
+/*		if( )
 		{
 			count++;
 			if(count == 3)
@@ -55,7 +55,7 @@ int mode7()
 			printf(" End\n");
 			break;
 		}
-
+*/
 	}	
 
 

@@ -13,7 +13,7 @@ struct member
 
 };
 
-int mode5()
+int main()
 {
 	FILE *fp;
     struct member m[50];
@@ -29,21 +29,14 @@ int mode5()
 		printf("fail\n");
 	}
 	
-	while(1)
+	while(fgets(buffer, 255, fp) != NULL)
 	{
-		fgets(buffer, 255, fp);
 		char *ptr = strstr(buffer, user);
-
+		
 		if( ptr != NULL)
 		{
 			printf("%s", ptr);
 		}
-		if( fgets(buffer, 255, fp) == NULL)
-		{
-			printf(" End\n");
-			break;
-		}
-		line++;
 	}
     
 
