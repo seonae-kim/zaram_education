@@ -1,2 +1,14 @@
-Example File
-The NUM is 0 : 
+	NAME	AGE	start
+end	remain 
+		0		0	0 
+	NAME	AGE	start
+end	remain 
+		0		0	0 
+	NAME	AGE	start	end	remain 
+		0		0	0 
+	NAME	AGE	start	end	remain 
+		0		0	0 
+NAME	AGE	start	end	remain 
+	0		0	0 
+NAME	AGE	start	end	remain 
+	0		0	0 
