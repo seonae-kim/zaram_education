@@ -8,7 +8,7 @@ int main()
 	char word[200] = {0,};
 	char word2[200] = {0,};
 	char word3[200] = {0,};
-	int new[200] = {0,};
+	int new[200] = {50000,};
 	int i = 0;
 	int k = 0;
 	int a = 0;
@@ -20,6 +20,16 @@ int main()
 	printf("input the sentence: ");
 	
 	fgets(word, sizeof(word), stdin);
+
+
+	for(i = 0; i < strlen(word) -1; i++)
+	{
+		if(word[i] == '0')
+		{
+			word[i] = '*';
+		}
+	}
+
 
 	for(i =0 ; i < strlen(word) -1 ; i++)			
 	{
@@ -40,6 +50,13 @@ int main()
 		}
 	}
 
+/*
+	for(i = 0 ; i < strlen(word) - 1; i++)
+	{	
+		printf("%c", word2[i]);
+	}
+*/
+
 	for(i= 0; i < strlen(word2) ; i++)
 	{
 		if(word2[i] >= '0' && word2[i] <= '9')		//  number
@@ -54,7 +71,12 @@ int main()
 			index_3++;
 		}
 	}
-	
+/*
+	for(i = 0 ; i < sizeof(num) / sizeof(int); i++)
+	{
+		printf("num is: %d", num[i]);
+	}
+*/
 	int *ptr = num;
 
 	while (*ptr != '\0')
