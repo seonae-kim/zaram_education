@@ -1,3 +1,5 @@
+/*4행 4열로 이루어진 배열에 숫자를 입력받는다.
+숫자를 모두 출력하세요*/
 #include <stdio.h>
 #define COLUMN 4
 #define	ROW 4
@@ -5,21 +7,21 @@
 int main()
 {
 	int arr[COLUMN][ROW] = {0,};
-
+	int i,j k,o = 0;
     
-	for(int i=0;i<COLUMN;i++)
+	for(i = 0; i < COLUMN; i++)
 	{
-		for(int j=0; j<ROW;j++)
+		for(j = 0; j < ROW; j++)
 		{
-            scanf("%d", &arr[i][j]);
+            		scanf("%d", &arr[i][j]);
 		}
 	}
 
-	for(int i=0;i<COLUMN;i++)
+	for(k = 0; k < COLUMN; k++)
 	{
-		for(int j=0; j<ROW;j++)
+		for(o = 0; o < ROW; o++)
 		{
-            printf("%d ", arr[i][j]);
+	            printf("%d ", arr[k][o]);
 		}
 	}
 	return 0;	

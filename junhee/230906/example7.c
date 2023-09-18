@@ -1,3 +1,5 @@
+/*2행 4열로 이루어진 배열에 숫자를 입력받는다.
+ 모든 조합을 출력하세요*/
 #include <stdio.h>
 #define COLUMN 2
 #define	ROW 4
@@ -5,20 +7,19 @@
 int main()
 {
 	int arr[COLUMN][ROW] = {0,};
-
-    
-	for(int i=0;i<COLUMN;i++)
+   	int i,j,k,o = 0; 
+	for(i = 0; i < COLUMN; i++)
 	{
-		for(int j=0; j<ROW;j++)
+		for(j = 0; j < ROW; j++)
 		{
-            scanf("%d", &arr[i][j]);
+            		scanf("%d", &arr[i][j]);
 		}
 	}
-	for(int i=0;i<ROW;i++)
+	for(k = 0; k < ROW; k++)
 	{
-		for(int j=0; j<ROW;j++)
+		for(o = 0; o < ROW; o++)
 		{
-			printf("(%d,%d)",arr[0][i],arr[1][j]);
+			printf("(%d,%d)",arr[0][k],arr[1][o]);
 		}
 	}
 

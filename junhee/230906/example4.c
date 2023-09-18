@@ -1,3 +1,5 @@
+/*숫자 10개를 입력받는다. 
+최댓값, 최소값 순서로 번갈아 가면서 출력한다*/
 #include <stdio.h>
 #include <stdint.h>
 
@@ -24,21 +26,22 @@ int main()
     int history[arr] = {0};
     int x, n = 0;
     int count = 0;
-    for (int i = 0; i < arr; i++)
+    int i,j,k,o,u = 0;
+    for (i = 0; i < arr; i++)
     {
         scanf("%d", &num[i]);
         max_count++;
     }
-    for (int i = 0; i < arr; i++)
+    for (j = 0; j < arr; j++)
     {
-        if (i % 2 == 0)
+        if (j % 2 == 0)
         {
-            for (int j = 0; j < max_count; j++)
+            for (k = 0; k < max_count; k++)
             {
-                if (num[j] > maxnum)
+                if (num[k] > maxnum)
                 {
-                    maxnum = num[j];
-                    x = j;
+                    maxnum = num[k];
+                    x = k;
                 }
             }
             delete_at(x);
@@ -48,12 +51,12 @@ int main()
         }
         else
         {
-            for (int j = 0; j < max_count; j++)
+            for (o = 0; o < max_count; o++)
             {
-                if (num[j] < minnum && num[j] != 0)  
+                if (num[o] < minnum && num[o] != 0)  
                 {
-                    minnum = num[j];
-                    n = j;
+                    minnum = num[o];
+                    n = o;
                 }
             }
         	delete_at(n);
@@ -63,9 +66,9 @@ int main()
         }
         count++;
     }
-    for (int i = 0; i < count; i++)
+    for (u = 0; u < count; u++)
     {
-        printf("%d ", history[i]);
+        printf("%d ", history[u]);
     }
     return 0;
 }

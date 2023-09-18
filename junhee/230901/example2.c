@@ -1,3 +1,4 @@
+/*현재 시간과 분을 입력하면 "35분 이후로 설정" 하여 보여준다.*/
 #include <stdio.h>
 
 int main(void)
