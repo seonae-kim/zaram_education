@@ -1,67 +1,46 @@
 /*괄호가 올바르게 구성되었는지 검사받는다. 맞으면 ok, 틀리면 no로 출력한다*/
 #include <stdio.h>
+#define SIZE 20
 
-int dec(char str[]);
-int main()
+int examine(char *input)
 {
-	char str[10];
-	
-	scanf("%s",str);
-	if (dec(str) == 1)
+	int i = 0;
+	int count = 0;
+	for( i = 0; input[i] != '\0'; i++)
 	{
-		printf("ok");
+		if (count < 0)
+		{
+			return 0;
+		}
+		
+		if(input[i] == '(')
+		{
+			count++;
+		}
+		else if(input[i] == ')')
+		{
+			count--;
+		}	
+		printf("count = %d\n", count);
 	}
-	
+	if (count == 0)
+	return 1;
 	else
-	{
-		printf("no");
-	}
-	
-	return 0;	
+	return 0;
 }
 
-
-int dec(char str[])
+int main()
 {
-	int opcount = 0;
-	int clcount = 0;
-	int in = 0;
-	int i = 0;
-	for(i = 0; i < 10; i++)
-	{
-		char prChar = str[i];
-		if(prChar=='(')
-		{
-			opcount++;
-		}
-		else if(prChar==')')
-		{
-			clcount++;
-		}
-	}
-	if(clcount < opcount)
-	{
-		return 0;
-	}
+	char input[SIZE];
 	
-	else if(clcount > opcount)
-	{
-		return 0;
+	scanf("%s",input);
+	
+	int result = examine(input);	
+	if(result){
+		printf("ok\n");
 	}
-	else if (str[0] == ')' || str[opcount + clcount - 1] == '(')
-	{
-		return 0;
+	else{
+		printf("no\n");
 	}
-	for (in = 0; str[in] != NULL; in++)
-	{
-		if(str[in]=='(')
-		opcount --;
-		else 
-		clcount --;
-		
-		if(opcount > clcount)
-		return 0;
-	}
-
-	return 1;
+    return 0;
 }
