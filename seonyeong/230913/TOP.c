@@ -1,14 +1,44 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "mode1.h"
 #include "mode4.h"
 #include "mode5.h"
 #include "mode6.h"
 #include "mode7.h"
 
+
+struct member
+{
+	char name[20];
+	int age;
+	char start_date[50];
+	char end_date[50];
+	int remain_period;
+};
+			
+
 int main()
 {
 	int mode = 0;
 	int e = 0;
+	int i = 0;
+	FILE *fp;
+	char m[50] ;
+	char buffer[255] = {0};
+	
+	for(i = 0; i < 50; i++)
+	{
+		if((fp = fopen("member_info.txt", "r")) == NULL)
+		{
+			printf("fail\n");
+
+		}
+		char *ptr = fgets(buffer, sizeof(buffer), fp);
+		m[i] = buffer;
+
+		if(ptr == NULL)
+		break;
+	}		
 
 	while(1)
 	{
@@ -59,7 +89,6 @@ int main()
 		}
 
 	}
-
 
 	return 0;
 }

@@ -23,7 +23,7 @@ int mode4()
     int line = 0;
 	char *ptr = 0;
 
-    fin = fopen("member_info.txt","r+");
+    fin = fopen("member_info.txt","r");
     fout = fopen ("exchange.txt", "w");
 
     printf(" < Delete Membership >\n user name : ");

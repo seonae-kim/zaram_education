@@ -39,7 +39,7 @@ int mode7()
 		
 		char *ptr = strtok(buffer, "\t");
 
-		if( ptr == "\t")
+		if( )
 		{
 			count++;
 			if(count == 3)

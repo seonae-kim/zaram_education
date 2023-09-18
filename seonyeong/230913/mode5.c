@@ -17,7 +17,7 @@ int mode5()
 {
 	FILE *fp;
     struct member m[50];
-	char buffer[2550] = {0};
+	char buffer[255] = {0};
 	char user[20] = {0};
 	int line = 0;
 
@@ -31,15 +31,14 @@ int mode5()
 	
 	while(1)
 	{
-		fgets(buffer, 2550, fp);
+		fgets(buffer, 255, fp);
 		char *ptr = strstr(buffer, user);
 
 		if( ptr != NULL)
 		{
 			printf("%s", ptr);
-			printf(">%d\n",__LINE__);
 		}
-		if( fgets(buffer, 2550, fp) == NULL)
+		if( fgets(buffer, 255, fp) == NULL)
 		{
 			printf(" End\n");
 			break;
