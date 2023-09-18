@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
+#include<string.h>
 
 struct member 
 {
@@ -30,12 +31,15 @@ int main()
 	FILE *fp;
 	int num = 0;
 	char mode = 0;
-	int i = 0;
+	int i = 0, j = 0, flag = 0;
 	int period = 0, month = 0, year = 0, date = 0, cal_date = 0;
 	char date_c[10] = {0};
 	struct member new[100];
-
 	int remain = 0;
+
+	prac_str[30] = {0};
+
+//	char 2_mode[20] = {0};
 	
 	printf("\t\t __________________________________________ \n");
 	printf("\t\t| MEMBERSHIP PROGRAM                       |\n");
@@ -48,6 +52,10 @@ int main()
 	printf("\t\t| 7. Renew All member's period             |\n");
 	printf("\t\t|__________________________________________|\n");
 	printf("\n\n");
+	
+	fp = fopen("member_info.txt", "a");
+	fprintf(fp, "NAME\tAGE\tstart\t\t\tend\t\t\tremain \n");
+	fclose(fp);
 
 	printf("If you want to exit this prgram, Press q \n");
 	while(1)
@@ -63,21 +71,43 @@ int main()
 		switch(mode)
 		{
 			case '1' :
-	
+					
+				fp = fopen("member_info.txt", "a+");
+				if (fp == NULL)
+				{
+					printf("Fail to open file, Try again \n");
+				}
+
 				printf("Please enter the NEW member's INFO \n");
 				printf("NAME : ");
 				scanf("%s", new[i].name);
+
+				for (j = 0; j < i; j++)
+				{
+					if (strcmp(new[i].name, new[j].name) == 0)
+					{
+						printf("\n");
+						printf("Oops~ The name is same!!\n");
+						printf("Back to the start menu\n\n");
+						flag++;
+					}
+				}
+				if (flag == 1)
+				{
+					break;
+				}
+
 				printf("AGE : ");
 				scanf("%d", &new[i].age);
 
 				printf("Registration Period : ");
-				scanf("%d", &period);
+				scanf("%d", &new[i].remain);
 
 				strftime(new[i].start, sizeof(new[i].start), "%Y%m%d%H%M", localtime(&now));
 				strftime(date_c, sizeof(date_c), "%Y%m%d", localtime(&now));
 				date = atoi(date_c);
 
-				date = date + (100 * period);
+				date = date + (100 * new[i].remain);
 				if (date % 10000 > 1300)
 				{	
 					month = (date % 10000) % 1200;
@@ -88,29 +118,26 @@ int main()
 					month = date % 10000;
 					year = date / 10000;
 				}
-				
+
 				cal_date = year * 10000 + month;
 
 				new[i].end = cal_date;
-				new[i].remain = period;
+//				new[i].remain = period;
 				
-				i++;
-
-				fp = fopen("member_info.txt", "a");
-				if (fp == NULL)
-				{
-					printf("Fail to open file, Try again \n");
-				}
-
-				fprintf(fp, "NAME\tAGE\tstart\tend\tremain \n");
 				fprintf(fp, "%s\t%d\t%s\t%d\t%d \n", new[i].name, new[i].age, new[i].start, new[i].end, new[i].remain);
 
 				fclose(fp);
+				i++;
 				break;
 
 			case '2' :
-				printf("Enter the name : \n");
-					
+//				printf("Enter the name : \n");
+//				scanf("");
+
+				fp = fopen("example.txt", "r");
+				fseek(fp, )
+
+//				fp = fopen("member_info.txt")
 				break;
 		}
 		printf("\n");
@@ -131,7 +158,6 @@ int main()
 		fclose(fp);
 		printf("end");
 		*/
-
 	}
 
 	printf("%s \n", new[0].name);
@@ -144,3 +170,5 @@ int main()
 	printf("%d \n", new[0].remain);
 	return 0;
 }
+
+

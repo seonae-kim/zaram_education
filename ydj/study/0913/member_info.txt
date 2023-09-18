@@ -1,14 +1,4 @@
-	NAME	AGE	start
-end	remain 
-		0		0	0 
-	NAME	AGE	start
-end	remain 
-		0		0	0 
-	NAME	AGE	start	end	remain 
-		0		0	0 
-	NAME	AGE	start	end	remain 
-		0		0	0 
-NAME	AGE	start	end	remain 
-	0		0	0 
-NAME	AGE	start	end	remain 
-	0		0	0 
+NAME	AGE	start			end			remain 
+hans	27	202309181757	20231218	3 
+karen	26	202309181757	20250418	19 
+jane	29	202309181757	20231118	2 
