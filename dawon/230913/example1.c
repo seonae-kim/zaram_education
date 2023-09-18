@@ -23,6 +23,7 @@ typedef struct member
 int main()
 {
 	FILE *f;
+	FILE *fout;
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	char *file;
@@ -33,14 +34,19 @@ int main()
 	int year, day;
 	int word;
 	char name[10]={0, };
-	char arr[100]={0, };
+	char arr[200]={0, };
 	char buf[100]={0, };
 	char array_inquire[200]={0, };
 	char *n_temp;
 	
 	M a[20];
-
-
+	
+	file=(char *)malloc(sizeof(char)*400);
+	if(file == NULL)
+	{
+		printf("malloc error\n");
+		exit(0);
+	}
 		
 	printf("1: register 2: extend 3:transfer 4:delete 5:inquire 6:renew >> ");
 	scanf("%d",&n);
@@ -104,6 +110,7 @@ int main()
 		fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",a[0].name,a[0].age,a[0].start.year,a[0].start.mon,a[0].start.mday,a[0].start.hour,a[0].start.min,a[0].end.year,a[0].end.mon,a[0].end.mday,a[0].end.hour,a[0].end.min,a[0].remain.year,a[0].remain.mon,a[0].remain.mday,a[0].remain.hour,a[0].remain.min);
 
 		fclose(f);
+		free(file);
 	}
 	
 
@@ -129,9 +136,21 @@ int main()
 			if(n_temp != NULL)
 				break;
 		}
-		
+	
+		if(n_temp == NULL)
+		{
+			printf("no name\n");
+			exit(0);
+		}
+
+		word = strlen(arr) - (n_temp-arr) + 1;
+		fseek(f,-1 * word, SEEK_CUR);
+
 
 		fscanf(f,"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", a[0].name, &a[0].age,&a[0].start.year,&a[0].start.mon,&a[0].start.mday,&a[0].start.hour,&a[0].start.min,&a[0].end.year,&a[0].end.mon,&a[0].end.mday,&a[0].end.hour,&a[0].end.min,&a[0].remain.year,&a[0].remain.mon,&a[0].remain.mday,&a[0].remain.hour,&a[0].remain.min);
+	
+		printf("from file: %s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",a[0].name, a[0].age,a[0].start.year,a[0].start.mon,a[0].start.mday,a[0].start.hour,a[0].start.min,a[0].end.year,a[0].end.mon,a[0].end.mday,a[0].end.hour,a[0].end.min,a[0].remain.year,a[0].remain.mon,a[0].remain.mday,a[0].remain.hour,a[0].remain.min);
+
 
 		a[0].end.year += date / 12;
 		a[0].end.mon  += date % 12;
@@ -143,7 +162,7 @@ int main()
 		}
 
 		word = strlen(arr) - (n_temp+68-arr) + 1;
-		fseek(f,-1 * word+1, SEEK_CUR);
+		fseek(f, word+1, SEEK_CUR);
 		fwrite(&a[0].end.year,1,3,f);
 
 		if(a[0].end.mon > 9)
@@ -158,6 +177,7 @@ int main()
 		}
 
 		fclose(f);
+		free(file);
 				
 	}
 /*
@@ -168,13 +188,74 @@ int main()
 
 
 	}
+*/	
+
 	else if(n==4)
 	{
-		for(i = 0; i < pum; i++)
-		{
+		int i=0;
+		int n_flag=0;
+		char *tmp;
 
+		f=fopen("program.txt","r");
+		fout=fopen("newfile.txt","w");
+		tmp=file;
+
+		if(f==NULL)
+		{
+			printf("no file\n");
+			exit(0);
+		}
+		if(fout==NULL)
+		{
+			printf("no file\n");
+			exit(0);
+		}
+
+		printf("name to find: ");
+		scanf("%s",name);
+		while(!feof(f))
+		{
+			memset(arr,0,200);
+			file=fgets(arr,200,f);
+			n_temp=strstr(arr,name);
+			if(n_temp != NULL)
+			{	
+				n_flag=1;
+				n_temp=NULL;
+				continue;
+			}
+			for(i = 0; i < strlen(arr); i++)
+			{			
+				printf("%c",arr[i]);
+			}
+//			fputs(file,fout);
+			printf("\n");
+			printf("\n");
+		}
+
+		if(n_flag == 0)
+		{
+			printf("%d\n",ftell(f));
+			printf("no such name\n");
+			exit(0);
+		}
+
+/*		if(n_flag == 1)
+		{
+			remove("program.txt");
+			rename("newfile.txt","program.txt");
+		}
 
 */
+		file=tmp;
+		fclose(f);
+		fclose(fout);
+		free(file);
+		return 0;
+	}
+
+
+
 	else if(n==5)
 	{
 		f=fopen("program.txt","r");
@@ -209,7 +290,7 @@ int main()
 		}
 		printf("\n");
 		
-
+		free(file);
 		fclose(f);
 	}
 /*	else if(n==6)
