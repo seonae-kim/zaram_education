@@ -52,6 +52,8 @@ int main()
 	scanf("%d",&n);
 	if(n == 1)
 	{
+		char* tmp;
+		tmp=file;
 
 		f=fopen("program.txt","r");
 
@@ -109,6 +111,7 @@ int main()
 
 		fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",a[0].name,a[0].age,a[0].start.year,a[0].start.mon,a[0].start.mday,a[0].start.hour,a[0].start.min,a[0].end.year,a[0].end.mon,a[0].end.mday,a[0].end.hour,a[0].end.min,a[0].remain.year,a[0].remain.mon,a[0].remain.mday,a[0].remain.hour,a[0].remain.min);
 
+		file=tmp;
 		fclose(f);
 		free(file);
 	}
@@ -116,6 +119,9 @@ int main()
 
 	else if(n==2)
 	{
+		char *tmp;
+		char update_year[10], update_mon[10];
+		tmp=file;
 		f=fopen("program.txt","r+");
 
 		if(f == NULL)
@@ -136,7 +142,7 @@ int main()
 			if(n_temp != NULL)
 				break;
 		}
-	
+		printf("start point: %d\n",ftell(f));	
 		if(n_temp == NULL)
 		{
 			printf("no name\n");
@@ -160,22 +166,29 @@ int main()
 			a[0].end.year += 1;
 			a[0].end.mon -=12;
 		}
+		
+		printf("year update: %d\n", a[0].end.year);
+		printf("mon update: %d\n",a[0].end.mon);
+		sprintf(update_year,"%d",a[0].end.year);
+		sprintf(update_mon,"%d",a[0].end.mon);
+		printf("EOF: %d\n",ftell(f));
 
-		word = strlen(arr) - (n_temp+68-arr) + 1;
-		fseek(f, word+1, SEEK_CUR);
-		fwrite(&a[0].end.year,1,3,f);
+		word = strlen(arr) - (n_temp+9-arr) + 1;
+		fseek(f, -1 * word, SEEK_CUR);
+		fwrite(update_year,1,4,f);
 
 		if(a[0].end.mon > 9)
 		{
-			fseek(f,8,SEEK_CUR);
-			fwrite(&a[0].end.mon,4,1,f);
+			fseek(f,4,SEEK_CUR);
+			fwrite(update_mon,1,2,f);
 		}
 		else
 		{
-			fseek(f,9,SEEK_CUR);
-			fwrite(&a[0].end.mon,4,1,f);
+			fseek(f,4,SEEK_CUR);
+			fwrite(update_mon,1,1,f);
 		}
 
+		file=tmp;
 		fclose(f);
 		free(file);
 				
@@ -228,7 +241,7 @@ int main()
 			{			
 				printf("%c",arr[i]);
 			}
-			fputs(file,fout);
+			fputs(arr,fout);
 			printf("\n");
 			printf("\n");
 		}
@@ -240,13 +253,12 @@ int main()
 			exit(0);
 		}
 
-/*		if(n_flag == 1)
+		if(n_flag == 1)
 		{
 			remove("program.txt");
 			rename("newfile.txt","program.txt");
 		}
 
-*/
 		file=tmp;
 		fclose(f);
 		fclose(fout);

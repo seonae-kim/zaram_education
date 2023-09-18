@@ -73,6 +73,13 @@ int main()
 	a[0].remain.mday=tm.tm_mday;
 	a[0].remain.hour=tm.tm_hour;
 	a[0].remain.min=tm.tm_min;
+	
+	if(a[0].end.mon > 12)
+	{
+		a[0].end.year += 1;
+		a[0].end.mon -= 12;
+	}
+	
 
 	fputs("===============================================================================================================================================================================================\n",f);
 	fprintf(f,"%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s\n","name","age","year","month","day","hour","min","year","month","day","hour","min","year","month","day","hour","min");
