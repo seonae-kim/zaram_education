@@ -228,7 +228,7 @@ int main()
 			{			
 				printf("%c",arr[i]);
 			}
-//			fputs(file,fout);
+			fputs(file,fout);
 			printf("\n");
 			printf("\n");
 		}
