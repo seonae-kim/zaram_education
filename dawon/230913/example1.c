@@ -42,62 +42,7 @@ int main()
 	M a[20];
 	
 	
-/*	f=fopen("program.txt","w");
-	
-	if(f == NULL)
-	{
-		printf("no file");
-		exit(0);
-	}
-					
-	printf("name: ");
 
-	for(int i=0; i < 1; i++)
-	{
-		scanf("%s %d %d",a[i].name,&a[i].age,&period);
-		for(int j = 0; j < i; j++)
-		{
-			if(a[i].name == a[j].name)
-			{
-				printf("same name");
-				i--;
-				flag_name = 1;
-				break;
-			}
-		}
-		if(flag_name ==1)
-			continue;
-						
-		a[i].start.year = tm.tm_year+1900;
-		a[i].start.mon = tm.tm_mon+1;
-		a[i].start.mday = tm.tm_mday;
-		a[i].start.hour = tm.tm_hour;
-		a[i].start.min = tm.tm_min;
-	    a[i].start.year = tm.tm_year+1900;
-		a[i].end.year = a[0].start.year + period/12;
-		a[i].end.mon = a[0].start.mon+period%12;
-		a[i].end.mday = tm.tm_mday;
-		a[i].end.hour = tm.tm_hour;
-		a[i].end.min = tm.tm_min;
-		a[i].remain.year = period/12;
-		a[i].remain.mon = period%12;
-		a[i].remain.mday = 0;
-		a[i].remain.hour = 0;
-		a[i].remain.min = 0;
-					
-		if(a[i].end.mon > 12)
-		{
-			a[i].end.year += 1;
-			a[i].end.mon -=12;
-		}
-					
-		fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
-							a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
-							a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
-							a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
-	}
-
-*/	
 
 	while(1)
 	{
