@@ -26,17 +26,10 @@ int main()
 		{
 			even++;
 		}
-	}
-	
-	for(i = 0; i < n; i++)
-	{
-		if(num_list[i] % 2 == 1 )
+		else if(num_list[i] % 2 == 1)
 		{
 			odd++;
 		}
 	}
-
 	printf("(%d, %d)", even, odd);
-
-
 }
