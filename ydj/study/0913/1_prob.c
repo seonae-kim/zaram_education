@@ -31,13 +31,18 @@ int main()
 	FILE *fp;
 	int num = 0;
 	char mode = 0;
-	int i = 0, j = 0, flag = 0;
+	int i = 0, j = 0, x = 0, flag = 0;
 	int period = 0, month = 0, year = 0, date = 0, cal_date = 0;
 	char date_c[10] = {0};
 	struct member new[100];
 	int remain = 0;
 
-	prac_str[30] = {0};
+	char temp = '0';
+	int cnt_line = 0;
+	int ext_period = 0;
+	char find_name[10] = {0};
+	char comp_name[10] = {0};
+	char origin[1000] = {0};
 
 //	char 2_mode[20] = {0};
 	
@@ -54,7 +59,7 @@ int main()
 	printf("\n\n");
 	
 	fp = fopen("member_info.txt", "a");
-	fprintf(fp, "NAME\tAGE\tstart\t\t\tend\t\t\tremain \n");
+	fprintf(fp, "  \tNAME\t\tAGE\t\t   start\t\t  end\t\tremain \n");
 	fclose(fp);
 
 	printf("If you want to exit this prgram, Press q \n");
@@ -94,6 +99,7 @@ int main()
 				}
 				if (flag == 1)
 				{
+					flag = 0;
 					break;
 				}
 
@@ -124,19 +130,91 @@ int main()
 				new[i].end = cal_date;
 //				new[i].remain = period;
 				
-				fprintf(fp, "%s\t%d\t%s\t%d\t%d \n", new[i].name, new[i].age, new[i].start, new[i].end, new[i].remain);
+				fprintf(fp, "%10s\t\t%d\t\t%s\t%d\t%6d \n", new[i].name, new[i].age, new[i].start, new[i].end, new[i].remain);
 
 				fclose(fp);
+				flag = 0;
 				i++;
 				break;
 
 			case '2' :
-//				printf("Enter the name : \n");
-//				scanf("");
+				printf("Enter the name : ");
+				scanf("%s", find_name);
+				printf("%s\n", find_name);	
 
-				fp = fopen("example.txt", "r");
-				fseek(fp, )
+				fp = fopen("member_info.txt", "r+");
+				if (fp == NULL)
+				{
+					printf("Fail to open file, Try again \n");
+				}
+				fseek(fp, 0, SEEK_SET);
 
+				while (fscanf(fp, "%c", &temp) != EOF)
+				{
+					if (temp == '\n')
+					{
+						cnt_line++;
+					}
+				}
+				printf("%d, \n", cnt_line);
+				
+				fseek(fp, 44, SEEK_SET);
+				for (i = 0; i < cnt_line - 1; i++)
+				{
+					fscanf(fp, "%s%*d%*s%*d%*d", comp_name);
+					printf("%s \n", comp_name);
+
+					if (strcmp(find_name, comp_name) == 0)
+					{
+						printf("\n");
+//						printf("\tstart\t\t\tend\t\t\tremain \n");
+//						printf("\t%s\t%d\t%d \n", new[i].start, new[i].end, new[i].remain);
+						x = i;
+						printf("%d", x);
+						break;
+					}
+				}
+
+				printf("Enter the extension period : ");
+				scanf("%d", &ext_period);
+				printf("%d \n", ext_period);
+
+				month = 0;
+				year = 0;
+
+				new[x].remain = new[x].remain + ext_period;
+				new[x].end = new[x].end + (100 * ext_period);
+
+				if (new[x].end % 10000 > 1300)
+				{
+					month = (new[x].end % 10000) % 1200;
+					year = (new[x].end / 10000) + (new[x].end % 10000) / 1200;
+				}
+				else
+				{
+					month = new[x].end % 10000;
+					year = new[x].end / 10000;
+				}
+
+				new[x].end = year * 10000 + month;
+				
+				int x_end [] = {new[x].end};
+				int x_remain [] = {new[x].remain};
+//				printf("\n");
+//				printf("%d", )
+//				printf("%ld", sizeof(new[x].remain));
+				fseek(fp, 0, SEEK_SET);
+//				fgets(origin, 59 * (x + 1) + 39, fp);
+				fseek(fp, 44 * (x + 3) + 29, SEEK_SET);
+				fwrite(x_end, sizeof(x_end), 1, fp);
+				fseek(fp, 2, SEEK_CUR);
+				fwrite(x_remain, sizeof(x_remain), 1, fp);
+				
+				printf("MEMEBERSHIP period sucessfully changed!! \n");
+
+				fclose(fp);
+				cnt_line = 0;
+				x = 0;
 //				fp = fopen("member_info.txt")
 				break;
 		}
