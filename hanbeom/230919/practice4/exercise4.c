@@ -23,8 +23,15 @@ int main()
 	printf("input num2 \n");
 	scanf("%d", &num2);
 
-	for(i = num1; i <= num2; i++)
+	if(num1 <=  n-1 && num1 <=num2 && num2 < n)		//4
 	{
-		printf("%d ", num[i]);
+		for(i = num1; i <= num2; i++)
+		{
+			printf("%d ", num[i]);
+		}	
+	}
+	else
+	{
+		printf("bad input");
 	}
 }
