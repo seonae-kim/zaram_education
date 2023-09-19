@@ -13,7 +13,7 @@ struct member
 
 };
 
-int main()
+int mode4()
 {
     FILE *fin; 
 	FILE *fout;

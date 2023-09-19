@@ -13,7 +13,7 @@ struct member
 
 };
 
-int main()
+int mode5()
 {
 	FILE *fp;
     struct member m[50];

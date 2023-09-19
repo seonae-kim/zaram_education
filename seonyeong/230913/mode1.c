@@ -14,7 +14,7 @@ struct member
 };
 
 
-int main()
+int mode1()
 {
 	FILE *fp;
 	struct member m[50];

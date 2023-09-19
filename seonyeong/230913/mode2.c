@@ -13,92 +13,113 @@ struct member
 
 };
 
-int main()
+int mode2()
 {
     FILE *fp;
 	FILE *fout;
-	struct member m;
+	struct member m[50];
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
     char buffer[255] = {0};
     char user[20] = {0};
-    int period = 0;
+	int period = 0;
 	int count = 0;
 	char *ptr = {0}; 
-	char *ptr2 = {0};
 	int i = 0;
-	char arr[10] = {0};
-	char buffer2[10] = {0};
+	int line = 0;
    
-	printf(" < Extension of the period >\n user name, period :");
-	scanf("%s %d", user, &period);
-	
 	if((fp = fopen("member_info.txt", "r")) == NULL)
 	{
 		printf("fail\n");
 	}
 
-	while(fgets(buffer, sizeof(buffer), fp) != NULL)
+	while(1)
 	{
-		char *ptr = strstr(buffer, user);
-
-		if(ptr != NULL)
-		{
-			char *ptr2 = strtok(buffer, "\t");
-			while(ptr2 != NULL)
-			{
-				count++;
-				strcat(buffer2, ptr2);
-				strcat(buffer2, "\t");
-				ptr2 = strtok(NULL, "\t");
-				if(count == 4)					
-				{
-					break;
-				}
-			}
+		if(fgets(buffer, sizeof(buffer), fp) == NULL)
+			break;
+		char *ptr = strtok(buffer, "\t");
 		
-			if((fp = fopen("member_info.txt", "a")) == NULL)
+		while(ptr != NULL)
+		{
+			if(count == 0)
 			{
-				printf("fail2\n");
+				sprintf(m[i].name,"%s",ptr);
+				ptr = strtok(NULL, "\t");
 			}
-
-			m.remain_period = atof(ptr2) + period;
-			sprintf(arr, "%d", m.remain_period);
+			if(count == 1)
+			{
+				m[i].age =atof(ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count == 2)
+			{
+				sprintf(m[i].start_date,"%s",ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count == 3)
+			{
+				sprintf(m[i].end_date,"%s",ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count==4)
+			{
+				m[i].remain_period = atof(ptr);
+				ptr = strtok(NULL, "\t");
+				i++;
+			}
+			count++;
 		}
-			strcat(buffer2, arr);
 	}
-	//fclose(fp);
+	fclose(fp);
 	
-	fp = fopen ("member_info.txt","r");
-	fout = fopen ("exchange.txt", "w");
+    printf(" < Extension of the period >\n user name, period :");
+	scanf("%s %d", user, &period);
 
-	printf("%d %s\n",__LINE__, buffer2); //>? 
-	//fputs(buffer2, fout);	
-	
+	fp = fopen("member_info.txt", "r");
+	fout = fopen ("exchange.txt", "w");
+	if(fp == NULL)
+    {
+        printf("fail1\n");
+    }
 	if(fout == NULL)
     {
         printf("fail2\n");
     }
 
-	while(fgets(buffer, 255, fp) != NULL)
-    {   
+	while(fgets(buffer, sizeof(buffer), fp) != NULL)
+	{
 		char *ptr = strstr(buffer, user);
+		if(ptr != NULL)
+		{
+			m[line].remain_period += period;
+			tm.tm_mon += m[line].remain_period;
+			mktime(&tm);
+			
+			sprintf(m[line].end_date, "%d-%d-%d %d:%d", 
+					tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			
+			fprintf(fout,"%s	%d	%s	%s	%d\n",
+					 m[line].name, m[line].age, m[line].start_date, m[line].end_date , m[line].remain_period);
+		}
 
-        if( ptr == NULL)
+		else	
 		{
 			fputs(buffer, fout);
-			printf("%d %s\n",__LINE__, buffer);
-		}
-	
-		else //if( ptr != NULL)
-		{
-			printf("%d\n",__LINE__);
-		}
-    } 
+		}	
+		line++;
+	}
 
 	fclose(fp);
 	fclose(fout);
-	//remove("member_info.txt");
-	//rename("exchange.txt", "member_info.txt");
-	printf(" Success2\n");
+	remove("member_info.txt");
+	rename("exchange.txt", "member_info.txt");
 	
-	return 0 ;
+	printf(" Success\n");
+	return 0;
 }
+
+
+
+
+
+

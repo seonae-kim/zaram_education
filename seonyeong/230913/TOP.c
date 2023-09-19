@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "mode1.h"
+#include "mode2.h"
 #include "mode4.h"
 #include "mode5.h"
 #include "mode6.h"
 #include "mode7.h"
-
 
 struct member
 {
@@ -25,26 +26,51 @@ int main()
 	FILE *fp;
 	struct member m[50] ;
 	char buffer[255] = {0};
-	
-	for(i = 0; i < 50; i++)
+	int count = 0;
+	/*
+	if((fp = fopen("member_info.txt", "r")) == NULL)
 	{
-		if((fp = fopen("member_info.txt", "r")) == NULL)
-		{
-			printf("fail\n");
-
-		}
-		char *ptr = fgets(buffer, sizeof(buffer), fp);
-		m[i] = buffer;
-
-		if(ptr == NULL)
-		break;
-	}		
-
-	for(i = 0; i < 50; i ++)
-	{
-		printf("%s\n", m[i].name);
+		printf("fail\n");
 	}
+	printf("%d\n",__LINE__);
 
+	while(1)
+	{
+		if(fgets(buffer, sizeof(buffer), fp) == NULL)
+			break;
+		char *ptr = strtok(buffer, "\t");
+		while(ptr != NULL)
+		{
+			if(count == 0)
+			{
+				sprintf(m[i].name,"%s",ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count == 1)
+			{
+				m[i].age =atof(ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count == 2)
+			{
+				sprintf(m[i].start_date,"%s",ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count == 3)
+			{
+				sprintf(m[i].end_date,"%s",ptr);
+				ptr = strtok(NULL, "\t");
+			}
+			if(count==4)
+			{
+				m[i].remain_period = atof(ptr);
+				ptr = strtok(NULL, "\t");
+				i++;
+			}
+			count++;
+		}
+	}
+	*/
 	while(1)
 	{
 		if(e == 1)
@@ -62,6 +88,7 @@ int main()
 				break;
 		
 			case 2:
+				mode2(1);
 				break;
 
 			case 3:
