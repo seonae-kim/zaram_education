@@ -49,6 +49,14 @@ int main()
 		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
 
 		scanf("%d",&n);
+		while (getchar() != '\n');
+
+		
+		if(!(n > 0 && n < 9))
+		{
+			continue;
+		}
+
 		if(n==8)
 		{
 			printf("program exit\n");
@@ -75,24 +83,12 @@ int main()
 					printf("no file");
 					exit(0);
 				}
-					
-/*				scanf("%s %d %d",name,&age,&period);
-				while(!feof(f))
-				{
-					file=fgets(arr,100,f);
-					n_temp=strstr(arr,name);
-					if(n_temp != NULL)
-					{	printf("same name");
-						exit(0);
-					}
-				}
-				fclose(f);
-*/	
+
 				printf("pnum to register: ");
 				scanf("%d",&pnum);
 				for(int i=0; i < pnum; i++)
 				{
-					printf("name: ");
+					printf("name, age period: ");
 					scanf("%s %d %d",a[i].name,&a[i].age,&period);
 					for(int j = 0; j < i; j++)
 					{
@@ -492,8 +488,8 @@ int main()
 		{
 			int i=0;
 			char* tmp;
-			file=(char *)malloc(sizeof(char)*400);
-/*			if(file == NULL)
+/*			file=(char *)malloc(sizeof(char)*400);
+			if(file == NULL)
 			{
 				printf("malloc error\n");
 				exit(0);
