@@ -7,18 +7,36 @@ int main()
 	int num_list[100] = {0,};
 	int i= 1;
 	int count = 0;
+	int n;
+	int even =0;
+	int odd =0;
+
+	printf("input n: \n");
 	
-	while(num_list[1] != '\n')
+	scanf("%d", &n);
+	
+	for(i = 0; i < n; i++)
 	{
-		scanf("%d", &num_list[i]);	// 3 5 6 // num_list[0] =3 
-		printf("#%c\n", num_list[i]);
-		count++;
-		i++;
+		scanf("%d", &num_list[i]);
 	}
 
-	printf("%d", count / 2);			// 1 2 3 4 5 6  == print 6
+	for(i =0; i < n; i++)
+	{
+		if(num_list[i] % 2 ==0)
+		{
+			even++;
+		}
+	}
 	
-	printf("%d", num_list[1]);
+	for(i = 0; i < n; i++)
+	{
+		if(num_list[i] % 2 == 1 )
+		{
+			odd++;
+		}
+	}
+
+	printf("(%d, %d)", even, odd);
 
 
 }
