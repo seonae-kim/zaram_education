@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mode1.h"
+#include <time.h>
+
 #include "mode2.h"
-#include "mode4.h"
-#include "mode5.h"
-#include "mode6.h"
 #include "mode7.h"
 
 struct member
@@ -57,9 +55,44 @@ void insertend(char name[50], int age, char start_date[20], char end_date[20], i
     linkedlist->next = lk; 
 }
 
+void deletenode(char* data)
+{
+	struct node *temp = head, *prev;
+	if (temp != NULL && strstr(temp->data.name,data) != NULL) {
+		head = temp->next;
+		return;
+	}
+
+	while (temp != NULL && strstr(temp->data.name,data) == NULL) {
+		prev = temp;
+		temp = temp->next;
+	}
+
+	if (temp == NULL) return;
+
+	prev->next = temp->next;
+	printf(" Success\n");
+}
+
+int searchlist(char* data)
+{
+	struct node *temp = head;
+	while(temp != NULL) 
+	{
+		if (strstr(temp->data.name, data) != NULL) 
+		{
+			printf("%s %d %s %s %d \n", 
+					temp -> data.name, temp -> data.age ,temp -> data.start_date ,
+					temp -> data.end_date ,temp -> data.remain_period);
+			return 1;
+		}
+		temp=temp->next;
+	}
+	return 0;
+}
+
 void printList(){
       struct node *p = head;
-      printf("\n[");
   
       while(p != NULL) 
 	  {
@@ -69,7 +102,6 @@ void printList(){
 
           p = p->next;
       }
-      printf("]");
   }
 
 
@@ -86,6 +118,11 @@ int main()
 	int count = 0;
 	char name[50], start_date[20], end_date[20];
 	int age, remain_period;
+	char user[20] = {0};
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+
+
 	
 	if((fp = fopen("member_info.txt", "r")) == NULL)
 	{
@@ -113,7 +150,6 @@ int main()
 			else if(count == 2)
             {
                 sprintf(start_date,"%s",ptr);
-				printf("%d %s\n",__LINE__, start_date);//
                 ptr = strtok(NULL, "\t");
             }
 			else if(count == 3)
@@ -145,7 +181,7 @@ int main()
 			p++;
     }
 
-    printList(); 
+	fclose(fp);
 
 	while(1)
 	{
@@ -160,7 +196,38 @@ int main()
 		switch(mode)
 		{
 			case 1:
-				mode1(1);
+/*				while(1)
+				{
+					if(count == 1)
+						break;
+					if(count > 1 || count == 0|| p >= 1)
+					{
+						printf("\n< New member registration > \n name, age, period: ");
+						scanf("%s %d %d", name, &age, &remain_period);
+					}
+					int k = searchlist(name);
+					if(k==1)
+					{
+						count = 1;
+						printf("\n The name is already exists\n Try Again");
+						count++;
+					}
+					else
+					{
+						count = 1;
+					}
+				}
+				sprintf(start_date,"%d-%d-%d %d:%d", 
+						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				
+				tm.tm_mon += remain_period;
+				mktime(&tm);
+				
+				sprintf(end_date,"%d-%d-%d %d:%d",
+						tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+				insertend(name, age, start_date, end_date, remain_period);
+*/
 				break;
 		
 			case 2:
@@ -171,15 +238,27 @@ int main()
 		        break;
 	
 			case 4:
-				mode4(1);
+				fp=fopen("member_info.txt","a");
+				printf(" < Delete Membership >\n user name : ");
+				scanf("%s", user);
+
+				deletenode(user);
+				
 				break;
 
 			case 5:
-				mode5(1);
+				printf(" < Search Member >\n user name : ");
+				scanf("%s", user);
+
+				int k = searchlist(user);
+				if(k == 1)
+					printf(" User is found\n");
+				else 
+					printf(" User is not present in the list");
 				break;
 
 			case 6:
-				mode6(1);
+				printList();	
 				break;
 
 			case 7:

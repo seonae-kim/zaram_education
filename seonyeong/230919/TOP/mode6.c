@@ -1,5 +1,6 @@
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
 
 struct member
 {
@@ -11,27 +12,30 @@ struct member
 
 };
 
+struct node{
+    struct member data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+void printList(){ 
+      struct node *p = head;
+      printf("\n[");
+
+      while(p != NULL)
+      {
+          printf(" %s %d %s %s %d \n", 
+                  p -> data.name, p -> data.age ,p -> data.start_date ,
+                  p -> data.end_date ,p -> data.remain_period);
+          
+          p = p->next;
+      }
+      printf("]");
+  }
+
 int mode6()
 {
-
-	FILE *fp;
-	struct member m;
-	int c = 0;
-	
-	
-	fp = fopen("member_info.txt", "r");
-
-    if(fp == NULL)
-    {   
-        printf("fail2\n");
-    }
-	printf("\n");
-
-     while((c = fgetc(fp)) != EOF)  
-     {   
-         putchar(c);
-     }
-	printf("\n");
-
-    fclose(fp);
+	printList();	
+	return 0;
 }
