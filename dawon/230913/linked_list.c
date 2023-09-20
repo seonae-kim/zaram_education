@@ -6,16 +6,15 @@
 
 void printList(struct node *head){
 	struct node *p = head;
-	printf("\n[");
+		printf("===============================================================================================================================================================================================\n");
+		printf("%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s\n","name","age","year","month","day","hour","min","year","month","day","hour","min","year","month","day","hour","min");
+		printf("===============================================================================================================================================================================================\n");
 
 	//start from the beginning
 	while(p != NULL) {
-		printf("name: %s\n",p->data.name);
-		printf("age: %d\n",p->data.age);
-		printf("start year: %d\n",p->data.start.year);
-		p = p->next;
-	}
-	printf("]");
+		printf(" %10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d \n",p->data.name,p->data.age,p->data.start.year,p->data.start.mon,p->data.start.mday,p->data.start.hour,p->data.start.min,p->data.end.year,p->data.end.mon,p->data.end.mday,p->data.end.hour,p->data.end.min,p->data.remain.year,p->data.remain.mon,p->data.remain.mday,p->data.remain.hour,p->data.remain.min);
+		p=p->next;
+		}
 }
 
 //insertion at the beginning
@@ -78,7 +77,7 @@ struct node *deleteatend(struct node *head){
 		prev = temp;
 		temp = temp->next;
 	}
-
+			
 	// If the key is not present
 	if (temp == NULL) return NULL;
 
@@ -99,10 +98,14 @@ struct node *deletenode_name(struct node *head,char *key){
 	while (temp != NULL && strcmp(temp->data.name,key) == 0) {
 		prev = temp;
 		temp = temp->next;
+		
 	}
 
 	// If the key is not present
-	if (temp == NULL) return NULL;
+	if (temp == NULL) 
+	{
+		return NULL;
+	}
 
 	// Remove the node
 	prev->next = temp->next;

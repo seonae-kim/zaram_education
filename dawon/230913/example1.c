@@ -12,8 +12,8 @@ int main()
 	struct tm tm = *localtime(&t);
 	char *file;
 	int n;
-	int i,j,k;
-	int pnum=0, flag_name=0, date=0, period =0;
+	int i=0,j=0,k=0;
+	int pnum=0, flag_name=0, date=0, period =0,total=0,regnum=0;
 	int age=0;
 	int year, day;
 	int word;
@@ -27,20 +27,38 @@ int main()
 	struct node  *current = NULL;
 	M a[20];
 	
-	head=(struct node*)malloc(sizeof(struct node));
-	if(head == NULL)
+	printf("start \n");
+	
+	f=fopen("program.txt","r");
+	if(f==NULL)
 	{
-		printf("head malloc error\n");
-		exit(0);
+		printf("no file to read\n");
 	}
 
+	while(!feof(f))
+	{		
+		fscanf(f,"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", a[i].name, &a[i].age,&a[i].start.year,&a[i].start.mon,&a[i].start.mday,&a[i].start.hour,&a[i].start.min,&a[i].end.year,&a[i].end.mon,&a[i].end.mday,&a[i].end.hour,&a[i].end.min,&a[i].remain.year,&a[i].remain.mon,&a[i].remain.mday,&a[i].remain.hour,&a[i].remain.min);
+		
+		if(head == NULL)
+		{
+			head=insertatbegin(head,a[i]);
+		}
+		else
+		{
+			head=insertatend(head,a[i]);
+		}
+
+		i++;
+		
+	}
+	regnum=i;	
+	
 	while(1)
 	{
 		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
 
 		scanf("%d",&n);
 		while (getchar() != '\n');
-
 		
 		if(!(n > 0 && n < 9))
 		{
@@ -54,19 +72,9 @@ int main()
 		}
 
 		if(n == 1)
-		{
-			
-				char* tmp;
-				tmp=file;
-				file=(char *)malloc(sizeof(char)*400);
-
-				if(file == NULL)
-				{
-					printf("malloc error\n");
-					exit(0);
-				}
-	
-				f=fopen("program.txt","w");
+		{			
+				fclose(f);
+				f=fopen("program.txt","a");
 	
 				if(f == NULL)
 				{
@@ -76,8 +84,9 @@ int main()
 
 				printf("pnum to register: ");
 				scanf("%d",&pnum);
+				total=pnum+regnum;
 				
-/*				for(int i=0; i < pnum; i++)
+				for(int i=regnum; i < total; i++)
 				{
 					printf("name, age period: ");
 					scanf("%s %d %d",a[i].name,&a[i].age,&period);
@@ -91,7 +100,8 @@ int main()
 							break;
 						}
 					}
-					if(flag_name ==1)
+
+					if(flag_name == 1)
 						break;
 
 					a[i].start.year = tm.tm_year+1900;
@@ -133,13 +143,9 @@ int main()
 					}
 
 				}
-*/				
-	//			printList(head);
-
-				file=tmp;
-				fclose(f);
-				free(file);
-			
+				
+				printList(head);
+				fclose(f);		
 		}
 	
 		else if(n==2)
@@ -148,15 +154,16 @@ int main()
 			char update_year[10], update_mon[10];
 			int i=0, search_name=0;
 			struct node *temp=NULL;
-			tmp=file;
+//			tmp=file;
+			fclose(f);
 			f=fopen("program.txt","r+");
-			file=(char *)malloc(sizeof(char)*400);
-			if(file == NULL)
+//			file=(char *)malloc(sizeof(char)*400);
+/*			if(file == NULL)
 			{
 				printf("malloc error\n");
 				exit(0);
 			}
-	
+*/	
 			if(f == NULL)
 			{
 				printf("no file");
@@ -185,7 +192,7 @@ int main()
 			}
 
 			temp->data.end.year += date / 12;
-			temp->data.end.year += date % 12;
+			temp->data.end.mon += date % 12;
 			if(temp->data.end.mon > 12)
 			{
 				temp->data.end.year += 1;
@@ -200,10 +207,11 @@ int main()
 			}
 			printf("year update: %d\n",temp->data.end.year);
 			printf("mon update: %d\n",temp->data.end.mon);
+			printList(head);
 
 
 
-/*			for(i = 0; i < pnum; i++)
+			for(i = 0; i < total; i++)
 			{
 				if(strcmp(name,a[i].name) == 0)
 				{
@@ -234,9 +242,18 @@ int main()
 				printf("no such name\n");
 				continue;
 			}
+			for(i = 0; i < total; i++)
+			{
+				fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
+						a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
+						a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
+						a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
+			}
 
 
-			printf("start point: %d\n",ftell(f));	
+
+
+/*			printf("start point: %d\n",ftell(f));	
 			if(n_temp == NULL)
 			{
 				printf("no name\n");
@@ -263,18 +280,10 @@ int main()
 			}
 			
 		
-			for(i = 0; i < pnum; i++)
-			{
-				fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
-						a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
-						a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
-						a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
-			}
-
 	
-	//		word = strlen(arr) - (n_temp+3-arr) + 1;
-	//		fseek(f, -1 * word, SEEK_CUR);
-//			fwrite(update_year,1,4,f);
+			word = strlen(arr) - (n_temp+3-arr) + 1;
+			fseek(f, -1 * word, SEEK_CUR);
+			fwrite(update_year,1,4,f);
 	
 			if(a[0].end.mon > 9)
 			{
@@ -287,9 +296,9 @@ int main()
 				fwrite(update_mon,1,1,f);
 			}
 	*/
-			file=tmp;
+	//		file=tmp;
 			fclose(f);
-			free(file);
+	//		free(file);
 					
 		}
 	
@@ -299,13 +308,70 @@ int main()
 			int i=0;
 			int from_index=0, to_index=0, from_flag=0, to_flag=0;
 			int n_flag=0;
+			struct node *from;
+			struct node	*to;
 
 			printf("from name: ");
 			scanf("%s",from_name);
 			printf("to name: ");
 			scanf("%s",to_name);
+		
 			
-			for(i = 0; i < pnum; i++)
+			from=searchlist_name(head,from_name);
+			to=searchlist_name(head,to_name);
+
+			if(from==NULL)
+			{
+				printf("no from name\n");
+				continue;
+			}
+			
+			if(to==NULL)
+			{
+				printf("no to name\n");
+				continue;
+			}
+
+
+			to->data.remain.year += from->data.remain.year;
+			to->data.remain.mon += from->data.remain.mon;
+			to->data.remain.mday += from->data.remain.mday;
+			to->data.remain.hour += from->data.remain.hour;
+			to->data.remain.min += from->data.remain.min;
+			to->data.end.year += to->data.remain.year;
+			to->data.end.mon += to->data.remain.mon;
+			to->data.end.mday += from->data.remain.mday;
+			to->data.end.hour += to->data.end.mday;
+			to->data.end.min += to->data.end.min;
+
+			if(to->data.remain.min > 60)
+			{
+				to->data.remain.hour += (to->data.remain.hour / 60);
+				to->data.remain.min %= 60;
+			}
+
+			if(a[to_index].remain.hour > 24)
+			{	
+				to->data.remain.mday += (to->data.remain.mday / 24);
+				to->data.remain.hour %= 24;
+			}
+
+			if(to->data.remain.mday > 30)
+			{
+				to->data.remain.mon += (to->data.remain.mon / 30);
+				to->data.remain.mday %= to->data.remain.mday;
+			}
+
+			if(a[to_index].remain.mon > 12)
+			{
+				to->data.remain.year += (to->data.remain.year / 12);
+				to->data.remain.mon -= 12;
+			}
+
+			deletenode_name(head,from_name);
+			printList(head);											//linked
+
+			for(i = 0; i < total; i++)
 			{
 				if(strcmp(from_name,a[i].name) == 0)
 				{
@@ -318,19 +384,20 @@ int main()
 					to_flag = 1;
 				}
 			}
-				
 			
-			if(from_flag==0)
+			if(from_flag == 0)
 			{
-				printf("no from name\n");
+				printf("no from name");
 				continue;
 			}
-			
-			if(to_flag==0)
+
+			if(to_flag == 0)
 			{
-				printf("no to name\n");
+				printf("no to name");
 				continue;
 			}
+			fclose(f);
+			f=fopen("program.txt","w");
 
 			a[to_index].remain.year += a[from_index].remain.year;
 			a[to_index].remain.mon += a[from_index].remain.mon;
@@ -368,7 +435,8 @@ int main()
 				a[to_index].remain.mon -= 12;
 			}
 			
-			for(i = 0; i < pnum; i++)
+
+			for(i = 0; i < total; i++)
 			{			
 				if(i == from_index)
 					continue;
@@ -378,7 +446,7 @@ int main()
 					a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
 			}
 			
-			for(i = 0; i < pnum; i++)
+			for(i = 0; i < total; i++)
 			{	
 				if(i > from_index)
 				{
@@ -401,9 +469,7 @@ int main()
 					a[i-1].remain.min = a[i].remain.min;
 				}
 			}
-			pnum--;	
-	
-	
+			total--;		
 		}
 		
 	
@@ -411,12 +477,11 @@ int main()
 		{
 			int i=0;
 			int n_flag=0;
-			char *tmp;
+//			char *tmp;
 			int index_name=0;
 			
 	
-			f=fopen("program.txt","r");
-//			fout=fopen("newfile.txt","w");
+/*			fout=fopen("newfile.txt","w");
 
 			file=(char *)malloc(sizeof(char)*400);
 			if(file == NULL)
@@ -425,7 +490,7 @@ int main()
 				exit(0);
 			}
 			tmp=file;
-	
+*/	
 			if(f==NULL)
 			{
 				printf("no file\n");
@@ -490,8 +555,8 @@ int main()
 				a[i-1].remain.hour = a[i].remain.hour;
 				a[i-1].remain.min = a[i].remain.min;
 			}
-
-			for(i = 0; i < 2; i++)
+*/
+			for(i = 0; i < total; i++)
 			{
 				printf("strcmp: %d\n",strcmp(name,a[i].name));
 				if(strcmp(name,a[i].name) == 0)
@@ -549,7 +614,7 @@ int main()
 					a[i-1].remain.min = a[i].remain.min;
 				}
 			}
-*/			pnum--;
+			total--;
 
 /*			if(n_flag == 1)
 			{
@@ -557,19 +622,19 @@ int main()
 				rename("newfile.txt","program.txt");
 			}
 */	
-			file=tmp;
+//			file=tmp;
 			fclose(f);
-			free(file);
+//			free(file);
 		}
 	
 	
 	
 		else if(n==5)
 		{
-			char* tmp;
+//			char* tmp;
 			struct node *temp;
 
-			file=(char *)malloc(sizeof(char)*400);
+/*			file=(char *)malloc(sizeof(char)*400);
 			if(file == NULL)
 			{
 				printf("malloc error\n");
@@ -577,7 +642,7 @@ int main()
 			}
 			tmp=file;
 			f=fopen("program.txt","r");
-			if(f==NULL)
+*/			if(f==NULL)
 			{
 				printf("no file");
 				exit(0);
@@ -618,14 +683,14 @@ int main()
 */
 
 			printf("\n");
-			file=tmp;
-			free(file);
+//			file=tmp;
+//			free(file);
 			fclose(f);
 		}
 
 		else if(n==6)
 		{			
-			char *tmp;
+/*			char *tmp;
 
 			file=(char *)malloc(sizeof(char)*400);
 			if(file == NULL)
@@ -641,7 +706,7 @@ int main()
 				printf("no file");
 				exit(0);
 			}
-
+*/
 			printList(head);
 
 
@@ -658,15 +723,15 @@ int main()
 				memset(arr,0,200);
 			}
 
-*/			file=tmp;
+			file=tmp;
 			free(file);
-			fclose(f);
+*/			fclose(f);
 		}
 
 		else if(n==7)
 		{
-			int i=0;
-			char* tmp;
+		//	char* tmp;
+			struct node* temp;
 /*			file=(char *)malloc(sizeof(char)*400);
 			if(file == NULL)
 			{
@@ -674,17 +739,33 @@ int main()
 				exit(0);
 			}
 			tmp=file;
-*/			
+*/			fclose(f);
 			f=fopen("program.txt","w");
 			if(f == NULL)
 			{
 				printf("no file");
 				exit(0);
 			}
-
-			for(i = 0; i < pnum; i++)
+			temp=head;
+			while(temp != NULL)
 			{
-				
+				temp->data.remain.year = temp->data.end.year-(tm.tm_year+1900);
+				temp->data.remain.mon = temp->data.end.mon-(tm.tm_mon+1);
+				temp->data.remain.mday = temp->data.end.mday-tm.tm_mday;
+				temp->data.remain.hour = temp->data.end.hour-tm.tm_hour;
+				temp->data.remain.min = temp->data.end.min-tm.tm_min;
+
+				if(temp->data.remain.mon < 0)
+				{
+					temp->data.remain.year -= 1;
+					temp->data.remain.mon = 12 + temp->data.remain.mon;
+				}
+				temp=temp->next;
+			}
+			printList(head);											//linked list
+
+			for(i = 0; i < total; i++)
+			{				
 				printf("remain1: %d\n",a[i].remain.year); 
 				printf("tm: %d\n",tm.tm_year+1900);
 
@@ -693,16 +774,17 @@ int main()
 				a[i].remain.mday = a[i].end.mday-tm.tm_mday;
 				a[i].remain.hour = a[i].end.hour-tm.tm_hour;
 				a[i].remain.min = a[i].end.min-tm.tm_min;
+				if(a[i].remain.mday < 0)
+				{
+					a[i].remain.mon -= 1;
+					a[i].remain.mday = 30 + a[i].remain.mday;
+				}
 
 				if(a[i].remain.mon < 0)
 				{
 					a[i].remain.year -= 1;
 					a[i].remain.mon = 12 + a[i].remain.mon;
 				}
-
-
-				printf("remain2: %d\n",a[i].remain.year); 
-
 
 				fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
 						a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,

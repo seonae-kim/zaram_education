@@ -1,0 +1,47 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+D	linked_list.h	/^}D;$/;"	t	typeref:struct:date
+D	program.c	/^}D;$/;"	t	typeref:struct:date	file:
+M	linked_list.h	/^}M;$/;"	t	typeref:struct:member
+M	program.c	/^}M;$/;"	t	typeref:struct:member	file:
+age	linked_list.h	/^	int age;$/;"	m	struct:member
+age	program.c	/^	int age;$/;"	m	struct:member	file:
+data	linked_list.h	/^	M data;$/;"	m	struct:node
+date	linked_list.h	/^typedef struct date$/;"	s
+date	program.c	/^typedef struct date$/;"	s	file:
+deleteatbegin	linked_list.c	/^struct node *deleteatbegin(struct node *head){$/;"	f
+deleteatend	linked_list.c	/^struct node *deleteatend(struct node *head){$/;"	f
+deletenode_name	linked_list.c	/^struct node *deletenode_name(struct node *head,char *key){$/;"	f
+end	linked_list.h	/^	D end;$/;"	m	struct:member
+end	program.c	/^	D end;$/;"	m	struct:member	file:
+hour	linked_list.h	/^	int hour;$/;"	m	struct:date
+hour	program.c	/^	int hour;$/;"	m	struct:date	file:
+insertafternode	linked_list.c	/^struct node *insertafternode(struct node *list, M data){$/;"	f
+insertatbegin	linked_list.c	/^struct node *insertatbegin(struct node *head,M data){$/;"	f
+insertatend	linked_list.c	/^struct node *insertatend(struct node *head,M data){$/;"	f
+main	example1.c	/^int main()$/;"	f
+main	program.c	/^int main()$/;"	f
+mday	linked_list.h	/^	int mday;$/;"	m	struct:date
+mday	program.c	/^	int mday;$/;"	m	struct:date	file:
+member	linked_list.h	/^typedef struct member$/;"	s
+member	program.c	/^typedef struct member$/;"	s	file:
+min	linked_list.h	/^	int min;$/;"	m	struct:date
+min	program.c	/^	int min;$/;"	m	struct:date	file:
+mon	linked_list.h	/^	int mon;$/;"	m	struct:date
+mon	program.c	/^	int mon;$/;"	m	struct:date	file:
+name	linked_list.h	/^	char name[30];$/;"	m	struct:member
+name	program.c	/^	char name[30];$/;"	m	struct:member	file:
+next	linked_list.h	/^	struct node *next;$/;"	m	struct:node	typeref:struct:node::node
+node	linked_list.h	/^struct node {$/;"	s
+printList	linked_list.c	/^void printList(struct node *head){$/;"	f
+remain	linked_list.h	/^	D remain;$/;"	m	struct:member
+remain	program.c	/^	D remain;$/;"	m	struct:member	file:
+searchlist_name	linked_list.c	/^struct node *searchlist_name(struct node *head,char* key){	$/;"	f
+start	linked_list.h	/^	D start;$/;"	m	struct:member
+start	program.c	/^	D start;$/;"	m	struct:member	file:
+year	linked_list.h	/^	int year;$/;"	m	struct:date
+year	program.c	/^	int year;$/;"	m	struct:date	file:
