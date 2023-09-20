@@ -43,8 +43,16 @@ int main()
 	char find_name[10] = {0};
 	char comp_name[10] = {0};
 	char origin[1000] = {0};
+	
+	// 3. hand over membership period
+	char lev_name[20] = {0};
+	char add_name[20] = {0};
 
-//	char 2_mode[20] = {0};
+	// 4. remove member
+	char rm_name[20] = {0};
+
+	// 5. search member
+	char search_name[20] = {0};
 	
 	printf("\t\t __________________________________________ \n");
 	printf("\t\t| MEMBERSHIP PROGRAM                       |\n");
@@ -130,7 +138,7 @@ int main()
 				new[i].end = cal_date;
 //				new[i].remain = period;
 				
-				fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%d \n", new[i].name, new[i].age, new[i].start, new[i].end, new[i].remain);
+				fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", new[i].name, new[i].age, new[i].start, new[i].end, new[i].remain);
 
 				fclose(fp);
 				flag = 0;
@@ -140,7 +148,6 @@ int main()
 			case '2' :
 				printf("Enter the name : ");
 				scanf("%s", find_name);
-				printf("%s\n", find_name);	
 
 				fp = fopen("member_info.txt", "r+");
 				if (fp == NULL)
@@ -156,28 +163,21 @@ int main()
 						cnt_line++;
 					}
 				}
-				printf("%d, \n", cnt_line);
 				
 				fseek(fp, 39, SEEK_SET);
 				for (i = 0; i < cnt_line - 1; i++)
 				{
 					fscanf(fp, "%s%*d%*s%*d%*d", comp_name);
-					printf("%s \n", comp_name);
-
 					if (strcmp(find_name, comp_name) == 0)
 					{
 						printf("\n");
-//						printf("\tstart\t\t\tend\t\t\tremain \n");
-//						printf("\t%s\t%d\t%d \n", new[i].start, new[i].end, new[i].remain);
 						x = i;
-						printf("%d", x);
 						break;
 					}
 				}
 
 				printf("Enter the extension period : ");
 				scanf("%d", &ext_period);
-				printf("%d \n", ext_period);
 
 				month = 0;
 				year = 0;
@@ -198,26 +198,111 @@ int main()
 
 				new[x].end = year * 10000 + month;
 				
-				int x_end [] = {new[x].end};
-				int x_remain [] = {new[x].remain};
-//				printf("\n");
-				printf("%d\n", x_end[0]);
-				printf("%d\n", x_remain[0]);
-				printf("%ld", sizeof(new[x].remain));
-				fseek(fp, 0, SEEK_SET);
-//				fgets(origin, 59 * (x + 1) + 39, fp);
-				fseek(fp, 46 * x + 66, SEEK_SET);
-				fwrite(x_end, sizeof(int), 1, fp);
-				fseek(fp, -6, SEEK_CUR);
-				fwrite(x_remain, sizeof(int), 1, fp);
-				
+				fseek(fp, 42 * x + 68, SEEK_SET);
+				fprintf(fp, "%d", new[x].end);
+				fseek(fp, 1, SEEK_CUR);
+				fprintf(fp, "%d", new[x].remain);
+
 				printf("MEMEBERSHIP period sucessfully changed!! \n");
 
 				fclose(fp);
 				cnt_line = 0;
 				x = 0;
-//				fp = fopen("member_info.txt")
 				break;
+
+			case '3' :
+				printf("Please enter member's name to leave : ");
+				scanf("%s", lev_name);
+
+				printf("Please enter member's name to add membership period : ");
+				scanf("%s", add_name);
+
+			case '4' :
+
+				fp = fopen("member_info.txt", "r+");
+				if (fp == NULL)
+				{
+					printf("Fail to open file, Try again \n");
+				}
+				fseek(fp, 0, SEEK_SET);
+
+				printf("Please enter the name you want to remove : ");
+				scanf("%s", rm_name);
+
+				while (fscanf(fp, "%c", &temp) != EOF)
+				{
+					if (temp == '\n')
+					{
+						cnt_line++;
+					}
+				}
+
+				fseek(fp, 39, SEEK_SET);
+				for (i = 0; i < cnt_line - 1; i++)
+				{
+					fscanf(fp, "%s%*d%*s%*d%*d", comp_name);
+					if (strcmp(rm_name, comp_name) == 0)
+					{
+						printf("\n");
+						x = i;
+						break;
+					}
+				}
+
+				fseek(fp, 42 * x + 39, SEEK_SET);
+				for (i = x; i < cnt_line - 1; i++)
+				{
+					fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", new[i + 1].name, new[i + 1].age, new[i + 1].start, new[i + 1].end, new[i + 1].remain);
+				}
+
+				fclose(fp);
+
+				printf("\n");
+				printf("Successfully removed!!  \n");
+				cnt_line = 0;
+				x = 0;
+				break;
+
+			case '5' :
+				
+				fp = fopen("member_info.txt", "r+");
+				if (fp == NULL)
+				{
+					printf("Fail to open file, Try again \n");
+				}
+				fseek(fp, 0, SEEK_SET);
+
+				printf("Please enter the name you want to search : ");
+				scanf("%s", search_name);
+
+				while (fscanf(fp, "%c", &temp) != EOF)
+				{
+					if (temp == '\n')
+					{
+						cnt_line++;
+					}
+				}
+
+				fseek(fp, 39, SEEK_SET);
+				for (i = 0; i < cnt_line - 1; i++)
+				{
+					fscanf(fp, "%s%*d%*s%*d%*d", comp_name);
+					if (strcmp(search_name, comp_name) == 0)
+					{
+						printf("\n");
+						x = i;
+						break;
+					}
+				}
+
+				printf("  ---->    \tNAME\t\tAGE\t\t   start\t  end\t\tremain \n");
+				printf("  ---->  %10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", new[x].name, new[x].age, new[x].start, new[x].end, new[x].remain);
+
+				fclose(fp);
+
+				cnt_line = 0;
+				x = 0;
+
 		}
 		printf("\n");
 
