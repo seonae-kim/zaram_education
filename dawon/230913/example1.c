@@ -2,31 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct date
-{
-	int year;
-	int mon;
-	int mday;
-	int hour;
-	int min;
-}D;
-typedef struct member
-{
-	char name[30];
-	int age;
-	D start;
-	D end;
-	D remain;
-}M;
-
-typedef struct node {
-	M data;
-	struct node *next;
-}L;
-
-struct node *head = NULL;
-struct node *prev = NULL;
-struct node *cur = NULL;
+#include "linked_list.h"
 
 int main()
 {
@@ -46,17 +22,18 @@ int main()
 	char buf[100]={0, };
 	char array_inquire[200]={0, };
 	char *n_temp;
-	
+	struct node *head = NULL;
+	struct node *prev = NULL;
+	struct node  *current = NULL;
 	M a[20];
-	L *lk;
-
-	lk=(L*)malloc(sizeof(L));
-	if(lk == NULL)
+	
+	head=(struct node*)malloc(sizeof(struct node));
+	if(head == NULL)
 	{
-		printf("malloc error\n");
+		printf("head malloc error\n");
 		exit(0);
 	}
-	
+
 	while(1)
 	{
 		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
@@ -82,12 +59,6 @@ int main()
 				char* tmp;
 				tmp=file;
 				file=(char *)malloc(sizeof(char)*400);
-				lk=(L*)malloc(sizeof(L));
-				if(lk == NULL)
-				{
-					printf("malloc error\n");
-					exit(0);
-				}
 
 				if(file == NULL)
 				{
@@ -105,7 +76,8 @@ int main()
 
 				printf("pnum to register: ");
 				scanf("%d",&pnum);
-				for(int i=0; i < pnum; i++)
+				
+/*				for(int i=0; i < pnum; i++)
 				{
 					printf("name, age period: ");
 					scanf("%s %d %d",a[i].name,&a[i].age,&period);
@@ -128,8 +100,8 @@ int main()
 					a[i].start.hour = tm.tm_hour;
 					a[i].start.min = tm.tm_min;
 					a[i].start.year = tm.tm_year+1900;
-					a[i].end.year = a[0].start.year + period/12;
-					a[i].end.mon = a[0].start.mon+period%12;
+					a[i].end.year = a[i].start.year + period/12;
+					a[i].end.mon = a[i].start.mon+period%12;
 					a[i].end.mday = tm.tm_mday;
 					a[i].end.hour = tm.tm_hour;
 					a[i].end.min = tm.tm_min;
@@ -149,21 +121,21 @@ int main()
 								a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
 								a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
 								a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
+								
 
 					if(head == NULL)
 					{
-						insertatbegin(a[i]);
+						head=insertatbegin(head,a[i]);
 					}
 					else
-						insertatend(a[i]);
+					{
+						head=insertatend(head,a[i]);
+					}
 
 				}
-				
-				printList(head);
-				if(flag_name ==1)
-					continue;	
-								
-	
+*/				
+	//			printList(head);
+
 				file=tmp;
 				fclose(f);
 				free(file);
@@ -175,7 +147,7 @@ int main()
 			char *tmp;
 			char update_year[10], update_mon[10];
 			int i=0, search_name=0;
-			L *temp=NULL;
+			struct node *temp=NULL;
 			tmp=file;
 			f=fopen("program.txt","r+");
 			file=(char *)malloc(sizeof(char)*400);
@@ -205,7 +177,7 @@ int main()
 			}
 */
 		
-			temp=searchlist_name(name);
+			temp=searchlist_name(head,name);
 			if(temp == NULL)
 			{
 				printf("no such name\n");
@@ -441,7 +413,7 @@ int main()
 			int n_flag=0;
 			char *tmp;
 			int index_name=0;
-			int p=0;
+			
 	
 			f=fopen("program.txt","r");
 //			fout=fopen("newfile.txt","w");
@@ -489,13 +461,16 @@ int main()
 			}
 */	
 
-			p=deletenode(name);
-			if(p == 0)
+			if(deletenode_name(head,name) == NULL)
 			{
 				printf("no such name\n");
 				continue;
 			}			
-			if(i > (p-1))
+			else
+			{
+				head=deletenode_name(head,name);
+			}
+/*			if(i > (p-1))
 			{
 				strcpy(a[i-1].name,a[i].name);
 				a[i-1].age = a[i].age;
@@ -516,7 +491,7 @@ int main()
 				a[i-1].remain.min = a[i].remain.min;
 			}
 
-/*			for(i = 0; i < 2; i++)
+			for(i = 0; i < 2; i++)
 			{
 				printf("strcmp: %d\n",strcmp(name,a[i].name));
 				if(strcmp(name,a[i].name) == 0)
@@ -592,7 +567,7 @@ int main()
 		else if(n==5)
 		{
 			char* tmp;
-			L* temp;
+			struct node *temp;
 
 			file=(char *)malloc(sizeof(char)*400);
 			if(file == NULL)
@@ -611,7 +586,7 @@ int main()
 			printf("name to find: ");
 			scanf("%s",name);
 
-			data=searchlist(name);
+			temp=searchlist_name(head,name);
 			
 			printf("name: %s\n",temp->data.name);
 			printf("age: %d\n",temp->data.age);
@@ -667,7 +642,7 @@ int main()
 				exit(0);
 			}
 
-			printlist(head);
+			printList(head);
 
 
 /*			while(!feof(f))

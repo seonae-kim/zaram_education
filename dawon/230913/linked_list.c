@@ -1,28 +1,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-struct node {
-	int data;
-	struct node *next;
-};
-struct node *head = NULL;
-struct node *current = NULL;
-
+#include "linked_list.h"
 // display the list
+
 void printList(struct node *head){
 	struct node *p = head;
 	printf("\n[");
 
 	//start from the beginning
 	while(p != NULL) {
-		printf(" %d ",p->data);
+		printf("name: %s\n",p->data.name);
+		printf("age: %d\n",p->data.age);
+		printf("start year: %d\n",p->data.start.year);
 		p = p->next;
 	}
 	printf("]");
 }
 
 //insertion at the beginning
-void insertatbegin(int data){
+struct node *insertatbegin(struct node *head,M data){
 
 	//create a link
 	struct node *lk = (struct node*) malloc(sizeof(struct node));
@@ -33,8 +30,10 @@ void insertatbegin(int data){
 
 	//point first to new first node
 	head = lk;
+
+	return head;
 }
-void insertatend(int data){
+struct node *insertatend(struct node *head,M data){
 
 	//create a link
 	struct node *lk = (struct node*) malloc(sizeof(struct node));
@@ -47,27 +46,31 @@ void insertatend(int data){
 
 	//point first to new first node
 	linkedlist->next = lk;
+	return head;
 }
-void insertafternode(struct node *list, int data){
+struct node *insertafternode(struct node *list, M data){
 	struct node *lk = (struct node*) malloc(sizeof(struct node));
 	lk->data = data;
 	lk->next = list->next;
 	list->next = lk;
+	return lk;
 }
-void deleteatbegin(){
+struct node *deleteatbegin(struct node *head){
 	head = head->next;
+	return head;
 }
-void deleteatend(){
+struct node *deleteatend(struct node *head){
 	struct node *linkedlist = head;
 	while (linkedlist->next->next != NULL)
 		linkedlist = linkedlist->next;
 	linkedlist->next = NULL;
+	return head;
 }
-void deletenode(int key){
+/*struct node *deletenode(struct node *head,int key){
 	struct node *temp = head, *prev;
 	if (temp != NULL && temp->data == key) {
 		head = temp->next;
-		return;
+		return head;
 	}
 
 	// Find the key to be deleted
@@ -77,18 +80,19 @@ void deletenode(int key){
 	}
 
 	// If the key is not present
-	if (temp == NULL) return;
+	if (temp == NULL) return NULL;
 
 	// Remove the node
 	prev->next = temp->next;
 	free(temp);
+	return head;
 }
-
-void deletenode(char *key){
+*/
+struct node *deletenode_name(struct node *head,char *key){
 	struct node *temp = head, *prev;
 	if (temp != NULL && strcmp(temp->data.name,key) == 0) {
 		head = temp->next;
-		return;
+		return head;
 	}
 
 	// Find the key to be deleted
@@ -98,36 +102,15 @@ void deletenode(char *key){
 	}
 
 	// If the key is not present
-	if (temp == NULL) return;
+	if (temp == NULL) return NULL;
 
 	// Remove the node
 	prev->next = temp->next;
+	return head;
 }
 
-int deletenode(char *key){
-	struct node *temp = head, *prev;
-	int p=0;
-	if (temp != NULL && strcmp(temp->data.name,key) == 0) {
-		head = temp->next;
-		p++;
-		return p;
-	}
 
-	// Find the key to be deleted
-	while (temp != NULL && strcmp(temp->data.name,key) == 0) {
-		prev = temp;
-		temp = temp->next;
-		p++;
-	}
-
-	// If the key is not present
-	if (temp == NULL) return p;
-
-	// Remove the node
-	prev->next = temp->next;
-}
-
-int searchlist(int key){
+/*int searchlist(struct node *head,int key){
 	struct node *temp = head;
 	while(temp != NULL) {
 		if (temp->data == key) {
@@ -137,18 +120,19 @@ int searchlist(int key){
 	}
 	return 0;
 }
+*/
 
-struct node *searchlist_name(char* key){	
+struct node *searchlist_name(struct node *head,char* key){	
 	struct node *temp = head;
 	while(temp != NULL) {
 		if (strcmp(temp->data.name,key)==0){
-			return 1;
+			return temp;
 		}
 		temp=temp->next;
 	}
-	return temp;
+	return NULL;
 }
-
+/*
 void main(){
 	int k=0;
 	insertatbegin(12);
@@ -178,3 +162,4 @@ void main(){
 	else
 		printf("\nElement is not present in the list");
 }
+*/
