@@ -12,10 +12,10 @@ int main()
 	int result = 0;
 	int count = 0;
 	int i;
-	fgets(my_string,sizeof(my_string),stdin);	//banana
-	fgets(is_prefix,sizeof(is_prefix),stdin);	//ban
+	fgets(my_string,sizeof(my_string),stdin);	//banana\n
+	fgets(is_prefix,sizeof(is_prefix),stdin);	//ban\n
 	
-	printf("%d", strncmp(my_string,is_prefix, 3));
+	printf("strncmp show %d", strncmp(my_string,is_prefix, 3));
 
 	size_t len1 = strlen(my_string) -1;
 	size_t len2 = strlen(is_prefix) -1;
