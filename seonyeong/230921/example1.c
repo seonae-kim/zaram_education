@@ -10,6 +10,7 @@ int main()
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	int n;
+	int x;
 	int i=0,j=0;
 	int pnum = 0, flag_name = 0, date = 0, period = 0, total=0;
 	int age=0;
@@ -281,6 +282,7 @@ int main()
 			{
 				to->data.remain.year += (to->data.remain.year / 12);
 				to->data.remain.mon -= 12;
+				printf("%d %d\n", __LINE__, to->data.remain.year); //
 			}
 
 			to->data.end.year += from->data.remain.year;
@@ -314,7 +316,7 @@ int main()
 			}
 
 
-			head=deletenode_name(head,from_name);
+			head=deletenode_name(head,from_name,x);
 			printList(head);											//linked
 
 			for(i = 0; i < total; i++)
@@ -448,7 +450,7 @@ int main()
 	
 		else if(n==4)
 		{
-			
+	
 			if(f==NULL)
 			{
 				printf("no file\n");
@@ -457,19 +459,22 @@ int main()
 			printf("name to find: ");
 			scanf("%s",name);
 
-			if(deletenode_name(head,name) == NULL)
+			head=deletenode_name(head,name,x);
+			int *Y = 0;
+			Y = &x;
+			
+			if(*Y == -1)
 			{
 				printf("no such name1\n");
 				continue;
 			}			
-			else
+			else if (*Y == 2 )
 			{
-				head=deletenode_name(head,name);
-				printf("success##");
+				printf("success");
 			}
 			for(i = 0; i < total; i++)
 			{
-				printf("strcmp: %d\n",strcmp(name,a[i].name));
+			//	printf("strcmp: %d\n",strcmp(name,a[i].name));
 				if(strcmp(name,a[i].name) == 0)
 				{
 					index_name = i;

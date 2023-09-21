@@ -11,7 +11,7 @@ data	linked_list.h	/^	M data;$/;"	m	struct:node
 date	linked_list.h	/^typedef struct date$/;"	s
 deleteatbegin	linked_list.c	/^struct node *deleteatbegin(struct node *head){$/;"	f
 deleteatend	linked_list.c	/^struct node *deleteatend(struct node *head){$/;"	f
-deletenode_name	linked_list.c	/^struct node *deletenode_name(struct node *head,char *key){$/;"	f
+deletenode_name	linked_list.c	/^struct node *deletenode_name(struct node *head,char *key, int x){$/;"	f
 end	linked_list.h	/^	D end;$/;"	m	struct:member
 hour	linked_list.h	/^	int hour;$/;"	m	struct:date
 insertafternode	linked_list.c	/^struct node *insertafternode(struct node *list, M data){$/;"	f
