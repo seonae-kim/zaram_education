@@ -78,6 +78,7 @@ int deletenode(char* data)
         return 0;
 
     prev->next = temp->next;
+	free(temp);
     return 1;
 }
 
@@ -92,6 +93,7 @@ void deleteend()
     while (linkedlist->next->next != NULL)
         linkedlist = linkedlist->next;
     linkedlist->next = NULL;
+	free(linkedlist);
 }
 
 int searchlist(char* data)
@@ -101,7 +103,7 @@ int searchlist(char* data)
     {
         if (strstr(temp->data.name, data) != NULL)
         {
-            printf("%s %d %s %s %d \n",
+            printf("%s	%d	%s	%s	%d \n",
                     temp -> data.name, temp -> data.age ,temp -> data.start_date ,
                     temp -> data.end_date ,temp -> data.remain_period);
             return 1;
@@ -126,9 +128,6 @@ int extension(char* data, int period)
             sprintf(temp->data.end_date,"%d-%d-%d %d:%d",
                     tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
-            deletenode(data);
-            insertend(temp->data.name, temp->data.age, temp->data.start_date,
-                    temp->data.end_date, temp->data.remain_period);
             return 0;
         }
         temp = temp->next;
@@ -168,7 +167,7 @@ void printList(){
 
       while(p != NULL)
       {
-          printf(" %s %d %s %s %d \n",
+          printf(" %s	%d	%s	%s	%d \n",
                   p -> data.name, p -> data.age ,p -> data.start_date ,
                   p -> data.end_date ,p -> data.remain_period);
 
@@ -249,13 +248,13 @@ void savefile()
     {
         while (p->next != NULL)
         {
-            fprintf(new, "%s    %d  %s  %s  %d\n",
+            fprintf(new, "%s	%d	%s	%s	%d\n",
                  p->data.name,p->data.age ,p->data.start_date ,
                  p->data.end_date ,p->data.remain_period);
 
             p = p -> next;
         }
-        fprintf(new, "%s    %d  %s  %s  %d\n",
+        fprintf(new, "%s	%d	%s	%s	%d\n",
                  p -> data.name, p -> data.age ,p -> data.start_date ,
                  p -> data.end_date ,p -> data.remain_period);
         p = p->next;
