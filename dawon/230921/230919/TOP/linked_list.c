@@ -156,7 +156,7 @@ void printList(){
 
       while(p != NULL)
       {
-          printf(" %s	%d	%s	%s	%d \n",
+          printf(" %s	%d%20s%20s%5d \n",
                   p -> data.name, p -> data.age ,p -> data.start_date ,
                   p -> data.end_date ,p -> data.remain_period);
 

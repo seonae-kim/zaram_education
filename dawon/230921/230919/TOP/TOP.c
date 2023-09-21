@@ -118,6 +118,21 @@ int main()
 						getchar();
 						age=atoi(age_ch);
 						remain_period=atoi(period_ch);
+						if(strlen(name) > 20)
+						{
+							printf("strlen name > 20\n");
+							continue;
+						}
+						if(strlen(age_ch) > 10)
+						{
+							printf("strlen age > 20\n");
+							continue;
+						}
+						if(strlen(period_ch) > 10)
+						{
+							printf("strlen period > 10\n");
+							continue;
+						}
    
 						for(int i = 0; i < strlen(name); i++)
 						{
