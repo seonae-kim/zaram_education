@@ -29,13 +29,6 @@ int main()
 			j=0;
 		}
 	}
-/*
-	for(i = 0; i < k; i++)
-	{
-		printf("%s\n", word[i]);
-	}
-*/
-
 	int min_index;
 	char min;
 	int o;
@@ -50,19 +43,19 @@ int main()
 			{
 				continue;
 			}
-			if(min > word[j][0])			//min = [0][0]      [1][0]
+			if(min > word[j][0])			
 			{
 				min = word[j][0];
 				min_index = j;
 			}
-			else if(min == word[j][0])		// min=[0][0]    [1][0]  / a == a      
+			else if(min == word[j][0])		      
 			{
 				if( strlen(word[o]) != strlen(word[j]))    
 				{	
-					if(strlen(word[o]) < strlen(word[j]))		// <
+					if(strlen(word[o]) < strlen(word[j]))		
 					{
 						min = word[o][0];			
-						min_index = o;			//min_index=0
+						min_index = o;			
 
 						printf("min index is %d\n", min_index);
 					}
@@ -75,12 +68,9 @@ int main()
 				else if(strlen(word[o]) == strlen(word[j]))
 				{
 					z =0;
-	//				printf("%d %d %d \n", o, j, z);
-					while(word[o][z] == word[j][z])		//
+					while(word[o][z] == word[j][z])		
 					{
-					//	printf("wordoz is %c wordjz is %c\n", word[o][z], word[j][z]);
 					z++;
-						//printf("z is %d ", z);
 					}
 					
 
@@ -102,5 +92,4 @@ int main()
 		printf("answer is%d  %s ",min_index, word[min_index]);	
 		word[min_index][0] = 'z'; 
 	}
-
 }
