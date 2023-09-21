@@ -29,7 +29,10 @@ int main()
 	int end_day = 0;
 	int end_hour = 0;
 	int end_min = 0;
-	struct node *head = NULL;
+	int k=0;
+	char age_ch[5] = {0, };
+	char period_ch[5] = {0, };
+	int flag = 0;
 
 
 	printf("\n");
@@ -101,6 +104,8 @@ int main()
 			case 1:
 				while(1)
 				{
+					flag=0;
+					k=0;
 					if(count == 1)
 					{
 						count = 0;
@@ -109,9 +114,42 @@ int main()
 					if(count > 1 || count == 0|| p >= 1)
 					{
 						printf("\n< New member registration > \n name, age, period: ");
-						scanf("%s %d %d", name, &age, &remain_period);
+						scanf("%s %s %s", name, age_ch, period_ch);
+						getchar();
+						age=atoi(age_ch);
+						remain_period=atoi(period_ch);
+   
+						for(int i = 0; i < strlen(name); i++)
+						{
+							if(!((int)name[i] > 96 && (int)name[i] < 123))
+							{
+								printf("name error\n");
+								flag=1;
+								break;
+							}
+						}
+						for(int i = 0; i < strlen(age_ch); i++)
+						{
+							if(!((int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)age_ch[i] > 96 && (int)age_ch[i] < 123))
+							{
+								printf("age error\n");
+								flag=1;
+								break;
+							}
+						}
+						for(int i = 0; i < strlen(period_ch); i++)
+						{
+							if((!(int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)period_ch[i] > 96 && (int)period_ch[i] < 123) )
+							{
+								printf("age error\n");
+								flag=1;
+								break;
+							}
+						}
 					}
-					int k = searchlist(name);
+					if(flag == 1)
+						continue;
+					k = searchlist(name);
 					while(1)
 					{
 						if(k==1)
@@ -214,3 +252,5 @@ int main()
 	}
 	return 0;
 }
+
+
