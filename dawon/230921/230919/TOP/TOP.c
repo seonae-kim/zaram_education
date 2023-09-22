@@ -10,7 +10,6 @@
 
 int main()
 {
-	int mode = 0;
 	int e = 0;
 	int i = 0;
 	int p = 0;
@@ -32,6 +31,7 @@ int main()
 	int k=0;
 	char age_ch[5] = {0, };
 	char period_ch[5] = {0, };
+	char mode[3] = {0, };
 	int flag = 0;
 
 
@@ -95,11 +95,23 @@ int main()
 		
 		printf("\n # MEMBERSHIP PROGRAM #\n Select Mode\n 1-Registration\n 2-Extension of the period\n 3-Transfer of membership\n 4-Delete membership\n 5-Search membership \n 6-View all information \n 7-Update all membership \n 8-Save\n 9-exit & save\n");
 
-		scanf("%d", &mode);
+		scanf("%s", mode);
 		while (getchar() != '\n');
-
-
-		switch(mode)
+		if(!(atoi(mode) > 0 && atoi(mode) < 10))
+		{
+			printf("num 1 to 9\n");
+			continue;
+		}
+		for(i = 0; i < strlen(mode); i++)
+		{
+			if((int)mode[i] > 96 && (int)mode[i] < 123)
+			{
+				printf("no char\n");
+				continue;
+			}
+		}
+		
+		switch(atoi(mode))
 		{
 			case 1:
 				while(1)
@@ -120,17 +132,17 @@ int main()
 						remain_period=atoi(period_ch);
 						if(strlen(name) > 20)
 						{
-							printf("strlen name > 20\n");
+							printf("strlen name error > 20\n");
 							continue;
 						}
 						if(strlen(age_ch) > 10)
 						{
-							printf("strlen age > 20\n");
+							printf("strlen age error > 20\n");
 							continue;
 						}
 						if(strlen(period_ch) > 10)
 						{
-							printf("strlen period > 10\n");
+							printf("strlen period error > 10\n");
 							continue;
 						}
    
@@ -163,7 +175,7 @@ int main()
 						}
 					}
 					if(flag == 1)
-						continue;
+						break;
 					k = searchlist(name);
 					while(1)
 					{
@@ -182,6 +194,8 @@ int main()
 						}
 					}
 				}
+				if(flag == 1)
+					break;
 				tm = *localtime(&t);
 
 				sprintf(start_date,"%d-%d-%d %d:%d", 
