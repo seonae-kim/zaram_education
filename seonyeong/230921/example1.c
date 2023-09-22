@@ -45,7 +45,6 @@ int main()
 			head=insertatend(head,a[i]);
 
 		i++;
-		
 	}
 	total = i;
 	
@@ -80,7 +79,7 @@ int main()
 				printf("pnum to register: ");
 				scanf("%d",&pnum);
 		
-				
+				flag_name = 0;
 				for( i=total; i < total+pnum; i++)
 				{
 					printf("name, age, period: ");
@@ -89,7 +88,7 @@ int main()
 					{	
 						if(strcmp(a[i].name,a[j].name) == 0)
 						{
-							printf("same name");
+							printf("same name\n");
 							pnum--;
 							flag_name = 1;
 							total--;
@@ -170,17 +169,17 @@ int main()
 
 			temp->data.end.year += date / 12;
 			temp->data.end.mon += date % 12;
-			if(temp->data.end.mon > 12)
+			if(temp->data.end.mon >= 12)
 			{
 				temp->data.end.year += 1;
 				temp->data.end.mon -=12;
 			}
 			temp->data.remain.year += date / 12;
 			temp->data.remain.mon += date % 12;
-			if(temp->data.remain.mon > 12)
+			if(temp->data.remain.mon >= 12)
 			{
 				temp->data.remain.year += 1;
-				a[i].remain.mon -=12;
+				temp->data.remain.mon -=12;
 			}
 			printf("year update: %d\n",temp->data.end.year);
 			printf("mon update: %d\n",temp->data.end.mon);
@@ -192,14 +191,14 @@ int main()
 				{
 					a[i].end.year += date / 12;
 					a[i].end.mon  += date % 12;
-					if(a[i].end.mon > 12)
+					if(a[i].end.mon >= 12)
 					{
 						a[i].end.year += 1;
 						a[i].end.mon -=12;
 					}
 					a[i].remain.year += date / 12;
 					a[i].remain.mon += date % 12;
-					if(a[i].remain.mon > 12)
+					if(a[i].remain.mon >= 12)
 					{
 						a[i].remain.year += 1;
 						a[i].remain.mon -=12;
@@ -209,7 +208,6 @@ int main()
 					printf("mon update: %d\n",a[i].end.mon);
 					flag_name=1;
 				}
-
 			}
 
 			if(flag_name == 0)
@@ -225,7 +223,6 @@ int main()
 						a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
 			}
 			fclose(f);
-					
 		}
 	
 		else if(n==3)
@@ -262,62 +259,57 @@ int main()
 
 			if(to->data.remain.min > 60)
 			{
-				to->data.remain.hour += (to->data.remain.hour / 60);
+				to->data.remain.hour += (to->data.remain.min / 60);
 				to->data.remain.min %= 60;
 			}
 
 			if(to->data.remain.hour > 24)
 			{	
-				to->data.remain.mday += (to->data.remain.mday / 24);
+				to->data.remain.mday += (to->data.remain.hour / 24);
 				to->data.remain.hour %= 24;
 			}
 
 			if(to->data.remain.mday > 30)
 			{
-				to->data.remain.mon += (to->data.remain.mon / 30);
+				to->data.remain.mon += (to->data.remain.mday / 30);
 				to->data.remain.mday %= 30;
 			}
 
 			if(to->data.remain.mon > 12)
 			{
-				printf("%d %d\n", __LINE__, to->data.remain.year); //
-				to->data.remain.year += (to->data.remain.year / 12);
+				to->data.remain.year += (to->data.remain.mon / 12);
 				to->data.remain.mon -= 12;
-				printf("%d %d\n", __LINE__, to->data.remain.year); //
 			}
 
 			to->data.end.year += from->data.remain.year;
 			to->data.end.mon += from->data.remain.mon;
 			to->data.end.mday += from->data.remain.mday;
-			to->data.end.hour += from->data.end.mday;
+			to->data.end.hour += from->data.end.hour;
 			to->data.end.min += from->data.end.min;
 
 			if(to->data.end.min > 60)
 			{
-				to->data.end.hour += (to->data.end.hour / 60);
+				to->data.end.hour += (to->data.end.min / 60);
 				to->data.end.min %= 60;
 			}
 
 			if(to->data.end.hour > 24)
 			{	
-				to->data.end.mday += (to->data.end.mday / 24);
+				to->data.end.mday += (to->data.end.hour / 24);
 				to->data.end.hour %= 24;
 			}
 
 			if(to->data.end.mday > 30)
 			{
-				to->data.end.mon += (to->data.end.mon / 30);
+				to->data.end.mon += (to->data.end.mday / 30);
 				to->data.end.mday %= 30;
 			}
 
 			if(to->data.end.mon > 12)
 			{
-				printf("%d %d\n", __LINE__, to->data.remain.year); //
-				to->data.end.year += (to->data.end.year / 12);
+				to->data.end.year += (to->data.end.mon / 12);
 				to->data.end.mon -= 12;
-				printf("%d %d\n", __LINE__, to->data.remain.year); //
 			}
-
 
 			head=deletenode_name(head,from_name,&x);
 			printList(head);											//linked
@@ -338,13 +330,13 @@ int main()
 			
 			if(from_flag == 0)
 			{
-				printf("no from name");
+				printf("no from name\n");
 				continue;
 			}
 
 			if(to_flag == 0)
 			{
-				printf("no to name");
+				printf("no to name\n");
 				continue;
 			}
 			
@@ -358,26 +350,26 @@ int main()
 
 			if(a[to_index].remain.min > 60)
 			{
-				a[to_index].remain.hour += (a[to_index].remain.hour / 60);
+				a[to_index].remain.hour += (a[to_index].remain.min / 60);
 				a[to_index].remain.min %= 60;
 			}
 
 			if(a[to_index].remain.hour > 24)
 			{	
-				a[to_index].remain.mday += (a[to_index].remain.mday / 24);
+				a[to_index].remain.mday += (a[to_index].remain.hour / 24);
 				a[to_index].remain.hour %= 24;
 			}
 
 			
 			if(a[to_index].remain.mday > 30)
 			{
-				a[to_index].remain.mon += (a[to_index].remain.mon / 30);
+				a[to_index].remain.mon += (a[to_index].remain.mday / 30);
 				a[to_index].remain.mday %= 30;
 			}
 
 			if(a[to_index].remain.mon > 12)
 			{
-				a[to_index].remain.year += (a[to_index].remain.year / 12);
+				a[to_index].remain.year += (a[to_index].remain.mon / 12);
 				a[to_index].remain.mon -= 12;
 			}
 
@@ -389,30 +381,29 @@ int main()
 
 			if(a[to_index].end.min > 60)
 			{
-				a[to_index].end.hour += (a[to_index].end.hour / 60);
+				a[to_index].end.hour += (a[to_index].end.min / 60);
 				a[to_index].end.min %= 60;
 			}
 
 			if(a[to_index].end.hour > 24)
 			{	
-				a[to_index].end.mday += (a[to_index].end.mday / 24);
+				a[to_index].end.mday += (a[to_index].end.hour / 24);
 				a[to_index].end.hour %= 24;
 			}
 
 			
 			if(a[to_index].end.mday > 30)
 			{
-				a[to_index].end.mon += (a[to_index].end.mon / 30);
+				a[to_index].end.mon += (a[to_index].end.mday / 30);
 				a[to_index].end.mday %= 30;
 			}
 
 			if(a[to_index].end.mon > 12)
 			{
-				a[to_index].end.year += (a[to_index].end.year / 12);
+				a[to_index].end.year += (a[to_index].end.mon / 12);
 				a[to_index].end.mon -= 12;
 			}
 			
-
 			for(i = 0; i < total; i++)
 			{			
 				if(i == from_index)
@@ -450,7 +441,6 @@ int main()
 			fclose(f);
 		}
 		
-	
 		else if(n==4)
 		{
 	
@@ -469,13 +459,12 @@ int main()
 				printf("no such name1\n");
 				continue;
 			}			
-			else if (x == 2 )
+			else
 			{
-				printf("success");
+				printf("success\n");
 			}
 			for(i = 0; i < total; i++)
 			{
-			//	printf("strcmp: %d\n",strcmp(name,a[i].name));
 				if(strcmp(name,a[i].name) == 0)
 				{
 					index_name = i;
@@ -585,6 +574,24 @@ int main()
 				temp->data.remain.hour = temp->data.end.hour-tm.tm_hour;
 				temp->data.remain.min = temp->data.end.min-tm.tm_min;
 
+				if(temp->data.remain.min < 0)
+				{
+					temp->data.remain.hour -= 1;
+					temp->data.remain.min = 60 + temp->data.remain.min;
+				}
+
+				if(temp->data.remain.hour < 0)
+				{
+					temp->data.remain.mday -= 1;
+					temp->data.remain.hour = 24 + temp->data.remain.hour;
+				}
+
+				if(temp->data.remain.mday < 0)
+				{
+					temp->data.remain.mon -= 1;
+					temp->data.remain.mday = 30 + temp->data.remain.mday;
+				}
+				
 				if(temp->data.remain.mon < 0)
 				{
 					temp->data.remain.year -= 1;
@@ -602,6 +609,18 @@ int main()
 				a[i].remain.hour = a[i].end.hour-tm.tm_hour;
 				a[i].remain.min = a[i].end.min-tm.tm_min;
 				
+				if(a[i].remain.min < 0)
+				{
+					a[i].remain.hour -= 1;
+					a[i].remain.min = 60 + a[i].remain.min;
+				}
+
+				if(a[i].remain.hour < 0)
+				{
+					a[i].remain.mday -= 1;
+					a[i].remain.hour = 24 + a[i].remain.hour;
+				}
+
 				if(a[i].remain.mday < 0)
 				{
 					a[i].remain.mon -= 1;

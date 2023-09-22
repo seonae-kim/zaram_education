@@ -4,6 +4,7 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A	test.c	/^void A(int *x)$/;"	f
 D	linked_list.h	/^}D;$/;"	t	typeref:struct:date
 M	linked_list.h	/^}M;$/;"	t	typeref:struct:member
 age	linked_list.h	/^	int age;$/;"	m	struct:member
@@ -11,13 +12,14 @@ data	linked_list.h	/^	M data;$/;"	m	struct:node
 date	linked_list.h	/^typedef struct date$/;"	s
 deleteatbegin	linked_list.c	/^struct node *deleteatbegin(struct node *head){$/;"	f
 deleteatend	linked_list.c	/^struct node *deleteatend(struct node *head){$/;"	f
-deletenode_name	linked_list.c	/^struct node *deletenode_name(struct node *head,char *key, int x){$/;"	f
+deletenode_name	linked_list.c	/^struct node *deletenode_name(struct node *head,char *key, int *x){$/;"	f
 end	linked_list.h	/^	D end;$/;"	m	struct:member
 hour	linked_list.h	/^	int hour;$/;"	m	struct:date
 insertafternode	linked_list.c	/^struct node *insertafternode(struct node *list, M data){$/;"	f
 insertatbegin	linked_list.c	/^struct node *insertatbegin(struct node *head,M data){$/;"	f
 insertatend	linked_list.c	/^struct node *insertatend(struct node *head,M data){$/;"	f
 main	example1.c	/^int main()$/;"	f
+main	test.c	/^int main(void)$/;"	f
 mday	linked_list.h	/^	int mday;$/;"	m	struct:date
 member	linked_list.h	/^typedef struct member$/;"	s
 min	linked_list.h	/^	int min;$/;"	m	struct:date
