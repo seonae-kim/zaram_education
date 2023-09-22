@@ -128,26 +128,41 @@ int transfer(char *data1, char *data2)
 {
     int A = 0;
     struct node *temp = head;
+	struct node *g = NULL;
+	struct node *r = NULL;
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     while(temp != NULL)
     {
         if(strstr(temp->data.name, data1) != NULL)
         {
-            A = temp->data.remain_period;
+			g=temp;
         }
-        if(strstr(temp->data.name, data2) != NULL)
+	    if(strstr(temp->data.name, data2) != NULL)
         {
-            temp->data.remain_period = A + temp->data.remain_period;
-
-            tm.tm_mon += temp->data.remain_period;
-            mktime(&tm);
-
-            sprintf(temp->data.end_date,"%d-%d-%d %d:%d",
-                    tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			r=temp;
         }
-        temp = temp->next;
+	        temp = temp->next;
     }
+	if(r == NULL)
+	{
+		printf("no receiver exist\n");
+		return 0;
+	}
+	if(g == NULL)
+	{	
+		printf("no giver exist\n");
+		return 0;
+	}
+	A = g->data.remain_period;
+	r->data.remain_period = A + r->data.remain_period;
+
+    tm.tm_mon += r->data.remain_period;
+	
+    mktime(&tm);
+
+    sprintf(r->data.end_date,"%d-%d-%d %d:%d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
     deletenode(data1);
     return 0;
 }

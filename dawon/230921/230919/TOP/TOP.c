@@ -185,9 +185,8 @@ int main()
 							printf("strlen period error > 10\n");
 							continue;
 						}
-
-
 					}
+
 					if(flag == 1)
 						break;
 					k = searchlist(name);
@@ -208,13 +207,14 @@ int main()
 						}
 					}
 				}
+
 				if(flag == 1)
 					break;
 				tm = *localtime(&t);
 
 				sprintf(start_date,"%d-%d-%d %d:%d", 
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
-				
+						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);	
+
 				tm.tm_mon += remain_period;
 				mktime(&tm);
 
@@ -289,7 +289,6 @@ int main()
 			default :
 				printf(" Try Again\n");
 				break;
-
 		}
 
 	}
