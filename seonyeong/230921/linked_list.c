@@ -65,17 +65,18 @@ struct node *deleteatend(struct node *head){
 	linkedlist->next = NULL;
 	return head;
 }
-struct node *deletenode_name(struct node *head,char *key, int x){
+struct node *deletenode_name(struct node *head,char *key, int *x){
 	struct node *temp = head, *prev;
-	x = 0;
+	*x = 0;
 	if (temp != NULL && strcmp(temp->data.name,key) == 0) {
 		head = temp->next;
-		x = 1;		
+		
+		*x = 1;		
 		return head;
 	}
 
 	// Find the key to be deleted
-	while (temp != NULL && strcmp(temp->data.name,key) == 0) {
+	while (temp != NULL && strcmp(temp->data.name,key) != 0) {
 		prev = temp;
 		temp = temp->next;
 	}
@@ -83,13 +84,13 @@ struct node *deletenode_name(struct node *head,char *key, int x){
 	// If the key is not present
 	if (temp == NULL ) 
 	{
-		x = -1;
+		*x = -1;
 		return head;
 	}
 
 	// Remove the node
 	prev->next = temp->next;
-	x = 2;
+	*x = 2;
 	return head;
 }
 struct node *searchlist_name(struct node *head,char* key){	

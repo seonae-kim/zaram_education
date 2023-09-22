@@ -280,6 +280,7 @@ int main()
 
 			if(to->data.remain.mon > 12)
 			{
+				printf("%d %d\n", __LINE__, to->data.remain.year); //
 				to->data.remain.year += (to->data.remain.year / 12);
 				to->data.remain.mon -= 12;
 				printf("%d %d\n", __LINE__, to->data.remain.year); //
@@ -311,12 +312,14 @@ int main()
 
 			if(to->data.end.mon > 12)
 			{
+				printf("%d %d\n", __LINE__, to->data.remain.year); //
 				to->data.end.year += (to->data.end.year / 12);
 				to->data.end.mon -= 12;
+				printf("%d %d\n", __LINE__, to->data.remain.year); //
 			}
 
 
-			head=deletenode_name(head,from_name,x);
+			head=deletenode_name(head,from_name,&x);
 			printList(head);											//linked
 
 			for(i = 0; i < total; i++)
@@ -459,16 +462,14 @@ int main()
 			printf("name to find: ");
 			scanf("%s",name);
 
-			head=deletenode_name(head,name,x);
-			int *Y = 0;
-			Y = &x;
+			head=deletenode_name(head,name,&x);
 			
-			if(*Y == -1)
+			if(x == -1)
 			{
 				printf("no such name1\n");
 				continue;
 			}			
-			else if (*Y == 2 )
+			else if (x == 2 )
 			{
 				printf("success");
 			}
