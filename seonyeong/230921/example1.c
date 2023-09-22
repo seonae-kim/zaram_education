@@ -32,22 +32,23 @@ int main()
 	{
 		printf("no file to read\n");
 	}
-
-	while(EOF !=fscanf(f,"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", 
+	if(f != NULL)
+	{
+		while(EOF !=fscanf(f,"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", 
 				a[i].name, &a[i].age,&a[i].start.year,&a[i].start.mon,&a[i].start.mday,&a[i].start.hour,&a[i].start.min,
 				&a[i].end.year,&a[i].end.mon,&a[i].end.mday,&a[i].end.hour,&a[i].end.min,&a[i].remain.year,
 				&a[i].remain.mon,&a[i].remain.mday,&a[i].remain.hour,&a[i].remain.min))
-	{	
+		{	
 		
-		if(head == NULL)
-			head=insertatbegin(head,a[i]);
-		else
-			head=insertatend(head,a[i]);
+			if(head == NULL)
+				head=insertatbegin(head,a[i]);
+			else
+				head=insertatend(head,a[i]);
 
-		i++;
+			i++;
+		}
+		total = i;
 	}
-	total = i;
-	
 	while(1)
 	{
 		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
