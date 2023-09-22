@@ -162,7 +162,7 @@ void printList(){
 
           p = p->next;
       }
-  }
+}
 
 void updateall()
 {

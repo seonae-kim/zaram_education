@@ -1,5 +1,8 @@
 #define DAY 50
 #define NAME 20
+#define AGE 5
+#define PERIOD 5
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,63 +32,68 @@ int main()
 	int end_hour = 0;
 	int end_min = 0;
 	int k=0;
-	char age_ch[5] = {0, };
+	char age_ch[AGE] = {0, };
 	char period_ch[5] = {0, };
 	char mode[3] = {0, };
 	int flag = 0;
 
 
 	printf("\n");
-
-	if((fp = fopen("member_info.txt", "r")) == NULL)
-	{
-		printf("fail\n");
+	fp = fopen("member_info.txt", "r");
+	if(fp == NULL)
+	{			
+		printf("no file to read\n");
 	}
-	
-	while(1)
-    {
-        if(fgets(buffer, sizeof(buffer), fp) == NULL)
-            break;
-		count = 0;
-        char *ptr = strtok(buffer, "\t");
-        while(ptr != NULL)
-        {   
-			if(count == 0)
-            {
-                sprintf(name,"%s",ptr);
-                ptr = strtok(NULL, "\t");
-            }
-			else if(count == 1)
-            {
-                age =atof(ptr);
-                ptr = strtok(NULL, "\t");
-            }
-			else if(count == 2)
-            {
-                sprintf(start_date,"%s",ptr);
-                ptr = strtok(NULL, "\t");
-            }
-			else if(count == 3)
-            {
-                sprintf(end_date,"%s",ptr);
-                ptr = strtok(NULL, "\t");
-            }
-			else if(count == 4)
-            {
-                remain_period = atof(ptr);
-                ptr = strtok(NULL, "\t");
-            }
-			else
-			{
-				ptr = strtok(NULL, "\t");
-			}	
-			
-			count++;
-        }
-	
-			insertend(name, age, start_date, end_date, remain_period);
+	else
+	{		
+		while(1)
+    	{		
+  	    if(fgets(buffer, sizeof(buffer), fp) == NULL)
+    	    {
+				break;
+			}
+			count = 0;
+    	    char *ptr = strtok(buffer, "\t");
+    	    while(ptr != NULL)
+    	    {   
+				if(count == 0)
+    	        {
+    	            sprintf(name,"%s",ptr);
+    	            ptr = strtok(NULL, "\t");
+    	        }
+				else if(count == 1)
+    	        {
+    	            age =atof(ptr);
+    	            ptr = strtok(NULL, "\t");
+    	        }
+				else if(count == 2)
+    	        {
+    	            sprintf(start_date,"%s",ptr);
+    	            ptr = strtok(NULL, "\t");
+    	        }
+				else if(count == 3)
+    	        {
+    	            sprintf(end_date,"%s",ptr);
+    	            ptr = strtok(NULL, "\t");
+    	        }
+				else if(count == 4)
+    	        {
+    	            remain_period = atof(ptr);
+    	            ptr = strtok(NULL, "\t");
+    	        }
+				else
+				{
+					ptr = strtok(NULL, "\t");
+				}	
+				
+				count++;
+    	    }
+		
+				insertend(name, age, start_date, end_date, remain_period);
 
-    }
+    	}
+		fclose(fp);
+	}
 
 
 	while(1)
@@ -124,28 +132,17 @@ int main()
 						break;
 					}
 					if(count > 1 || count == 0|| p >= 1)
-					{
+					{	
+						memset(name,'\0',NAME);
+						memset(age_ch,'\0',AGE);
+						memset(period_ch,'\0',PERIOD);
+
 						printf("\n< New member registration > \n name, age, period: ");
 						scanf("%s %s %s", name, age_ch, period_ch);
 						getchar();
 						age=atoi(age_ch);
 						remain_period=atoi(period_ch);
-						if(strlen(name) > 20)
-						{
-							printf("strlen name error > 20\n");
-							continue;
-						}
-						if(strlen(age_ch) > 10)
-						{
-							printf("strlen age error > 20\n");
-							continue;
-						}
-						if(strlen(period_ch) > 10)
-						{
-							printf("strlen period error > 10\n");
-							continue;
-						}
-   
+						   
 						for(int i = 0; i < strlen(name); i++)
 						{
 							if(!((int)name[i] > 96 && (int)name[i] < 123))
@@ -157,7 +154,7 @@ int main()
 						}
 						for(int i = 0; i < strlen(age_ch); i++)
 						{
-							if(!((int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)age_ch[i] > 96 && (int)age_ch[i] < 123))
+							if(!((int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)age_ch[i] > 96 &&									(int)age_ch[i] < 123))
 							{
 								printf("age error\n");
 								flag=1;
@@ -166,13 +163,30 @@ int main()
 						}
 						for(int i = 0; i < strlen(period_ch); i++)
 						{
-							if((!(int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)period_ch[i] > 96 && (int)period_ch[i] < 123) )
+							if((!(int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)period_ch[i] > 96									&& (int)period_ch[i] < 123) )
 							{
-								printf("age error\n");
+								printf("period error\n");
 								flag=1;
 								break;
 							}
 						}
+						if(strlen(name) > NAME)
+						{
+							printf("strlen name error > 20\n");
+							continue;
+						}
+						if(strlen(age_ch) > AGE)
+						{
+							printf("strlen age error > 20\n");
+							continue;
+						}
+						if(strlen(period_ch) > PERIOD)
+						{
+							printf("strlen period error > 10\n");
+							continue;
+						}
+
+
 					}
 					if(flag == 1)
 						break;
