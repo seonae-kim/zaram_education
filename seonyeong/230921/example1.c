@@ -28,7 +28,7 @@ int main()
 	printf("start \n");
 	
 	f=fopen("program.txt","r");
-	if(f==NULL)
+	if(f == NULL)
 	{
 		printf("no file to read\n");
 	}
@@ -51,7 +51,7 @@ int main()
 	}
 	while(1)
 	{
-		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
+		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >>\n");
 
 		scanf("%d",&n);
 		while (getchar() != '\n');
@@ -61,7 +61,7 @@ int main()
 			continue;
 		}
 
-		if(n==8)
+		if(n == 8)
 		{
 			printf("program exit\n");
 			break;
@@ -96,6 +96,18 @@ int main()
 							memset(a[i].name,'\0',100);
 							break;
 						}
+					}
+					
+					if(period <= 0)
+					{
+						printf("period error\n");
+						continue;
+					}
+					
+					if(a[i].age <= 0)
+					{
+						printf("age error\n");
+						continue;
 					}
 
 					if(flag_name == 1)
@@ -160,7 +172,13 @@ int main()
 			scanf("%s",name);
 			printf("extend:");
 			scanf("%d",&date);
-	
+
+			if(date <= 0)
+			{
+				printf("error\n");
+				continue;
+			}
+			
 			temp=searchlist_name(head,name);
 			if(temp == NULL)
 			{
@@ -235,7 +253,6 @@ int main()
 			scanf("%s",from_name);
 			printf("to name: ");
 			scanf("%s",to_name);
-		
 			
 			from=searchlist_name(head,from_name);
 			to=searchlist_name(head,to_name);
@@ -249,6 +266,12 @@ int main()
 			if(to==NULL)
 			{
 				printf("no to name\n");
+				continue;
+			}
+
+			if(strstr(to_name,from_name) != NULL)//
+			{
+				printf("error\n");
 				continue;
 			}
 
@@ -361,7 +384,6 @@ int main()
 				a[to_index].remain.hour %= 24;
 			}
 
-			
 			if(a[to_index].remain.mday > 30)
 			{
 				a[to_index].remain.mon += (a[to_index].remain.mday / 30);
@@ -392,7 +414,6 @@ int main()
 				a[to_index].end.hour %= 24;
 			}
 
-			
 			if(a[to_index].end.mday > 30)
 			{
 				a[to_index].end.mon += (a[to_index].end.mday / 30);

@@ -58,6 +58,7 @@ struct node *deleteatbegin(struct node *head){
 	head = head->next;
 	return head;
 }
+
 struct node *deleteatend(struct node *head){
 	struct node *linkedlist = head;
 	while (linkedlist->next->next != NULL)
@@ -65,6 +66,7 @@ struct node *deleteatend(struct node *head){
 	linkedlist->next = NULL;
 	return head;
 }
+
 struct node *deletenode_name(struct node *head,char *key, int *x){
 	struct node *temp = head, *prev;
 	*x = 0;
@@ -72,6 +74,7 @@ struct node *deletenode_name(struct node *head,char *key, int *x){
 		head = temp->next;
 		
 		*x = 1;		
+		free(temp);
 		return head;
 	}
 
@@ -85,12 +88,14 @@ struct node *deletenode_name(struct node *head,char *key, int *x){
 	if (temp == NULL ) 
 	{
 		*x = -1;
+		free(temp);
 		return head;
 	}
 
 	// Remove the node
 	prev->next = temp->next;
 	*x = 2;
+	free(temp);
 	return head;
 }
 struct node *searchlist_name(struct node *head,char* key){	
