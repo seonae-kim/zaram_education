@@ -88,7 +88,6 @@ struct node *deletenode_name(struct node *head,char *key, int *x){
 	if (temp == NULL ) 
 	{
 		*x = -1;
-		free(temp);
 		return head;
 	}
 
