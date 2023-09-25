@@ -6,6 +6,7 @@ int main()
 	int n = 0, i = 0, j = 0;
 	int **arr1;
 	int **arr2;
+	int a = 0;
 
 	printf("num: ");
 	scanf("%d",&n);
@@ -30,7 +31,14 @@ int main()
 		arr2[0][i] = arr1[0][i];
 	}
 	
-
+	for(i = 1; i < n; i++)
+	{
+		arr2[i][2] = arr1[1][a];
+		a++;
+	}
+	for(i = n-1; i > 0; i--)
+	{
+		arr2[i][n] = arr1
 	
 
 
