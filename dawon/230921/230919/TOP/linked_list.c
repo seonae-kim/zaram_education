@@ -53,12 +53,12 @@ void insertend(char name[NAME], int age, char start_date[DAY], char end_date[DAY
 int deletenode(char* data)
 {
     struct node *temp = head, *prev;
-    if (temp != NULL && strstr(temp->data.name,data) != NULL) {
+    if (temp != NULL && strcmp(temp->data.name,data) == 0) {
         head = temp->next;
         return 1;
     }
 
-    while (temp != NULL && strstr(temp->data.name,data) == NULL) {
+    while (temp != NULL && strcmp(temp->data.name,data) == 0) {
         prev = temp;
         temp = temp->next;
     }
@@ -90,7 +90,7 @@ int searchlist(char* data)
     struct node *temp = head;
     while(temp != NULL)
     {
-        if (strstr(temp->data.name, data) != NULL)
+        if (strcmp(temp->data.name, data) == 0)
         {
             printf("%s	%d	%s	%s	%d \n",
                     temp -> data.name, temp -> data.age ,temp -> data.start_date ,
@@ -108,7 +108,13 @@ int extension(char* data, int period)
     struct node *temp = head;
     while (temp != NULL)
     {
-        if(strstr(temp->data.name, data) != NULL)
+		if(period < 0)
+		{
+			printf("period error");
+			return 0;
+		}
+
+        if(strcmp(temp->data.name, data) == 0)
         {
             temp->data.remain_period =  temp->data.remain_period + period;
             tm.tm_mon += temp->data.remain_period;
@@ -117,10 +123,11 @@ int extension(char* data, int period)
             sprintf(temp->data.end_date,"%d-%d-%d %d:%d",
                     tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
-            return 0;
+            return 1;
         }
         temp = temp->next;
     }
+	printf("no such name\n");
 }
 
 
@@ -132,13 +139,19 @@ int transfer(char *data1, char *data2)
 	struct node *r = NULL;
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
+
+	if(strcmp(data1,data2) == 0)
+	{
+		printf("identical giver and receiver\n");
+		return 0;
+	}
     while(temp != NULL)
     {
-        if(strstr(temp->data.name, data1) != NULL)
+        if(strcmp(temp->data.name, data1) == 0)
         {
 			g=temp;
         }
-	    if(strstr(temp->data.name, data2) != NULL)
+	    if(strcmp(temp->data.name, data2) == 0)
         {
 			r=temp;
         }
