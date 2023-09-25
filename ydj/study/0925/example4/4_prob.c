@@ -14,9 +14,14 @@ int main()
 
 	while(str[i] == prefix[i])
 	{
+		if (i == strlen(str))
+		{
+			break;	
+		}
 		flag++;
 		i++;
 	}
+
 
 	if (flag == strlen(prefix))
 	{
@@ -26,9 +31,6 @@ int main()
 	{
 		printf("0\n");
 	}
-//	printf("%d\n", strcmp(str, prefix));
-
-//	if (strcmp(str))
 
 	return 0;
 }
