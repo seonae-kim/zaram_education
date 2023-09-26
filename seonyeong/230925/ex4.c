@@ -12,7 +12,7 @@ int main()
 	scanf("%d", &N);
 
 	temp = N;
-	for( idx = 0; idx < N - 1; idx++ )
+	for( idx = 0; idx < N ; idx++ )
 	{
 		if( num == N * N + 1)
 			break;
