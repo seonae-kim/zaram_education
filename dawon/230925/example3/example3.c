@@ -4,17 +4,17 @@
 
 int main()
 {
-	int n=0, i=0, j=0, h=0, index = 0,flag_1 = 0,flag_2 = 0,num=0, h=0, index1=0, index2=0;
+	int n=0, i=0, j=0, k=0,num=0,index = 0, flag = 0;
 	char a[20] = {0, };
 	char arr[10][10] = {0, };
 	char d;
 
 	printf("num: ");
-	scanf("%d", &n);
+	scanf("%d", &num);
 	printf("array: ");
 	
 		
-	for(i = 0; i < n; i++)
+	for(i = 0; i < num; i++)
 	{
 		scanf("%s",arr[i]);
 	}
@@ -22,13 +22,11 @@ int main()
 
 	for(i = 0; i < num; i++)
 	{
-		for(j = 0; j < num; j++)
+		for(j = 0; j < strlen(arr[i]); j++)
 		{
-			for(h = 0; h < num; h++)
-			{
-				if(arr[i][j] != arr[i][h])
+				if(arr[i][j] != arr[i][j+1])
 				{
-					for(int k = h; k < strlen(arr[i]); k++)
+					for(k = j + 1; k < strlen(arr[i]); k++)
 					{
 						if(arr[i][j] == arr[j][k])
 						{
@@ -39,15 +37,16 @@ int main()
 				}
 				if(flag == 1)
 					break;			
-			}
 
 			if(flag == 1)
 				break;	
 
-			n++;
 		}
+		if(flag != 1)
+			n++;
 	}
-		
+	
+	printf("output: %d\n",n);
 		
 								
 	return 0;
