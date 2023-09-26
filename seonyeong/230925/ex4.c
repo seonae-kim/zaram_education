@@ -14,15 +14,17 @@ int main()
 	{
 		for( j = 0; j < N; j++)
 		{
-			arr[0][j] = a;
-			a++;
+			arr[0][j] = num;
+			num++;
 		}
 	
 		for( i = 1; i < N; i++)
 		{
-			arr[i][N-1] = a;
-			a++;
+			arr[i][N-1] = num;
+			num++;
 		}
+
+
 
 	}
 

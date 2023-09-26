@@ -1,27 +1,36 @@
 #include <stdio.h>
 #include <math.h>
 
+int P(int x)
+{
+	if(x < 10)
+		return x; 
+
+	else
+		return x % 10 + P(x / 10);
+}
+
 
 int main()
 {
 	int num = 0;
-	int sum = 0;
-	double i = 0;
+	int A = 0;
 
-	printf(" input number: ");
-	scanf("%d", &num);
-	int q = sizeof(num)-2 ;
-
-		sum = num;
-	for(i = q ; i >= 0; i--)
+	printf("input number: ");
+	scanf("%d", &A);
+	
+	for ( num = A; num > 0; num--)
 	{
-		double  k = pow( 10, i);
-		 
-		sum += (int)(num / k) ; 
-		num -=(int)( num / k ) * k;
-
+		P(num--);
+		
+		if( num + P(num) == A)
+		{
+			printf( "%d\n" , num );
+			break;
+		}
+		
 	}
+	
 
-	printf("%d\n", sum);
-
+	
 }
