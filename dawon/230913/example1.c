@@ -13,13 +13,15 @@ int main()
 	char *file;
 	int n;
 	int i=0,j=0,k=0;
-	int pnum=0, flag_name=0, date=0, period =0,total=0,regnum=0, f_flag=0, p=0;
+	int pnum=0, flag_name=0, date=0, period =0,total=0,regnum=0, f_flag=0, p=0,flag = 0;
 	int age=0;
 	int year, day;
 	int word;
 	char name[10]={0, };
 	char arr[200]={0, };
 	char buf[100]={0, };
+	char age_ch[5]={0, };
+	char period_ch[5]={0, };
 	char array_inquire[200]={0, };
 	char *n_temp;
 	struct node *head = NULL;
@@ -61,7 +63,9 @@ int main()
 	
 	while(1)
 	{
-		printf("1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
+		flag = 0;
+		flag_name = 0;
+		printf("\n1: register 2: extend 3: transfer 4: delete 5: inquire 6: inquire all 7: renew 8: quit >> ");
 
 		scanf("%d",&n);
 		while (getchar() != '\n');
@@ -74,11 +78,13 @@ int main()
 		if(n==8)
 		{
 			printf("program exit\n");
+			free(head);
 			break;
 		}
 
 		if(n == 1)
-		{			
+		{	
+				flag = 0;
 				flag_name = 0;
 				memset(name,'\0',100);
 				f=fopen("program.txt","a");
@@ -88,21 +94,74 @@ int main()
 					exit(0);
 				}
 
-				printf("pnum to register: ");
+				printf("\npnum to register: ");
 				scanf("%d",&pnum);
-		
+				printf("Name, Age, Period: ");
+				scanf("%s %s %s",name,age_ch,period_ch);	
+				age = atoi(age_ch);
+				period = atoi(period_ch);
+
+				for(i = 0; i < strlen(name); i++)
+				{
+					if(!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z'))
+					{
+						printf("name error\n");
+						flag=1;
+						break;
+					}
+				}
+				for(i = 0; i < strlen(age_ch); i++)
+				{
+					if(!(age_ch[i] >= '0' && age_ch[i] <= '9') 
+						|| ((age_ch[i] >= 'a' && age_ch[i] <= 'z') 
+						&& (age_ch[i] >= 'A' && age_ch[i] <= 'Z')))
+					{
+						printf("age error\n");
+						flag=1;
+						break;
+					}
+				}
+				for(i = 0; i < strlen(period_ch); i++)
+				{
+					if((!age_ch[i] >= '0' && age_ch[i] <= '9') 
+						|| ((period_ch[i] >= 'a' && period_ch[i] <= 'z') 
+						&& (period_ch[i] >= 'A' && period_ch[i] <= 'Z')))
+					{
+						printf("period error\n");
+						flag=1;
+						break;
+					}
+				}
+				if(strlen(name) > 10)
+				{
+					printf("strlen name error > 10\n");
+					continue;
+				}
+				if(strlen(age_ch) > 5)
+				{
+					printf("strlen age error > 5\n");
+					continue;
+				}
+				if(strlen(period_ch) > 5)
+				{
+					printf("strlen period error > 5\n");
+					continue;
+				}
+
+				if(flag == 1)
+					continue;
+
 				if(regnum == 0)
 				{
 					total = pnum;
+					printf("TOTAL1: %d\n",total);
 					for(i=0; i < pnum; i++)
-					{
-						printf("name, age period: ");
-						scanf("%s %d %d",name,&age,&period);
+					{				
 						for(int j = 0; j < i; j++)
 						{	
 							if(strcmp(name,a[j].name) == 0)
 							{
-								printf("same name");
+								printf("same name1");
 								flag_name = 1;
 								memset(name,'\0',100);
 								break;
@@ -115,26 +174,26 @@ int main()
 						{
 							strcpy(a[i].name,name);
 							a[i].age = age;
-							a[i].start.year = tm.tm_year+1900;
-							a[i].start.mon = tm.tm_mon+1;
+							a[i].start.year = tm.tm_year + 1900;
+							a[i].start.mon = tm.tm_mon + 1;
 							a[i].start.mday = tm.tm_mday;
 							a[i].start.hour = tm.tm_hour;
 							a[i].start.min = tm.tm_min;
-							a[i].start.year = tm.tm_year+1900;
-							a[i].end.year = a[i].start.year + period/12;
-							a[i].end.mon = a[i].start.mon+period%12;
+							a[i].start.year = tm.tm_year + 1900;
+							a[i].end.year = a[i].start.year + period / 12;
+							a[i].end.mon = a[i].start.mon+period % 12;
 							a[i].end.mday = tm.tm_mday;
 							a[i].end.hour = tm.tm_hour;
 							a[i].end.min = tm.tm_min;
-							a[i].remain.year = period/12;
-							a[i].remain.mon = period%12;
+							a[i].remain.year = period / 12;
+							a[i].remain.mon = period % 12;
 							a[i].remain.mday = 0;
 							a[i].remain.hour = 0;
 							a[i].remain.min = 0;
 							if(a[i].end.mon > 12)
 							{
 								a[i].end.year += 1;
-								a[i].end.mon -=12;
+								a[i].end.mon -= 12;
 							}
 				
 							fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
@@ -158,16 +217,15 @@ int main()
 				}
 				else
 				{
-					total+=pnum;
+					total += pnum;
+					printf("TOTAL2: %d\n",total);
 					for(i = regnum; i < total; i++)
 					{
-						printf("name, age period: ");
-						scanf("%s %d %d",name,&age,&period);
 						for(int j = 0; j < i; j++)
 						{	
 							if(strcmp(name,a[j].name) == 0)
 							{
-								printf("same name");
+								printf("same name2");
 								flag_name = 1;
 								memset(name,'\0',100);
 								break;
@@ -232,8 +290,11 @@ int main()
 		{
 			char *tmp;
 			char update_year[10], update_mon[10];
+			char date_ch[5] = {0, };
 			int i=0, search_name=0;
 			struct node *temp=NULL;
+			flag = 0;
+			date_ch = {0, }; 
 			
 			f=fopen("program.txt","r+");
 	
@@ -245,9 +306,38 @@ int main()
 			
 			printf("name: ");
 			scanf("%s",name);
+			for(i = 0; i < strlen(name); i++)
+			{	
+				if(!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z'))
+				{
+						printf("name error\n");
+						flag=1;
+						break;
+				}
+			}
+		
 			printf("extend:");
-			scanf("%d",&date);
-	
+			scanf("%s",date_ch);
+			date = atoi(str_len);			
+			for(i = 0; i < 5; i++)
+			{
+				if(!(date_ch[i] >= '0' && date_ch[i] <= '9') 
+					|| ((date_ch[i] >= 'a' && date_ch[i] <= 'z') 
+					&& (date_ch[i] >= 'A' && date_ch[i] <= 'Z')))
+					{
+						printf("age error\n");
+						flag=1;
+						break;
+					}
+			}
+			if(flag == 1)
+				continue;
+
+			if(stelen(date_ch) > 5)
+			{
+				printf("strlen date error\n");
+				continue;
+			}	
 		
 			temp=searchlist_name(head,name);
 			if(temp == NULL)
@@ -288,10 +378,10 @@ int main()
 					if(a[i].remain.mon > 12)
 					{
 						a[i].remain.year += 1;
-						a[i].remain.mon -=12;
+						a[i].remain.mon -= 12;
 					}
 
-					flag_name=1;
+					flag_name = 1;
 				}
 
 			}
@@ -321,12 +411,36 @@ int main()
 			struct node *from;
 			struct node	*to;
 			struct node *temp;
+
 			f_flag = 0;
+			flag = 0;
 			printf("From name: ");
 			scanf("%s",from_name);
 			printf("To name: ");
 			scanf("%s",to_name);
-		
+
+			for(i = 0; i < strlen(from_name); i++)
+			{
+				if(!(from_name[i] >= 'a' && from_name[i] <= 'z') && !(from_name[i] >= 'A' && from_name[i] <= 'Z'))
+				{
+					printf("from name error\n");
+					flag=1;
+					break;
+				}
+			}
+
+			for(i = 0; i < strlen(to_name); i++)
+			{
+				if(!(to_name[i] >= 'a' && to_name[i] <= 'z') && !(to_name[i] >= 'A' && to_name[i] <= 'Z'))
+				{
+					printf("to name error\n");
+					flag=1;
+					break;
+				}
+			}
+
+			if(flag == 1)
+				continue;
 			
 			from=searchlist_name(head,from_name);
 			to=searchlist_name(head,to_name);
@@ -346,61 +460,19 @@ int main()
 
 			to->data.remain.year += from->data.remain.year;
 			to->data.remain.mon += from->data.remain.mon;
-			to->data.remain.mday += from->data.remain.mday;
-			to->data.remain.hour += from->data.remain.hour;
-			to->data.remain.min += from->data.remain.min;
-
-			if(to->data.remain.min > 60)
-			{
-				to->data.remain.hour += (to->data.remain.hour / 60);
-				to->data.remain.min %= 60;
-			}
-
-			if(to->data.remain.hour > 24)
-			{	
-				to->data.remain.mday += (to->data.remain.mday / 24);
-				to->data.remain.hour %= 24;
-			}
-
-			if(to->data.remain.mday > 30)
-			{
-				to->data.remain.mon += (to->data.remain.mon / 30);
-				to->data.remain.mday %= 30;
-			}
 
 			if(to->data.remain.mon > 12)
 			{
-				to->data.remain.year += (to->data.remain.year / 12);
+				to->data.remain.year += (to->data.remain.mon / 12);
 				to->data.remain.mon -= 12;
 			}
 
 			to->data.end.year += from->data.remain.year;
 			to->data.end.mon += from->data.remain.mon;
-			to->data.end.mday += from->data.remain.mday;
-			to->data.end.hour += from->data.end.mday;
-			to->data.end.min += from->data.end.min;
-
-			if(to->data.end.min > 60)
-			{
-				to->data.end.hour += (to->data.end.hour / 60);
-				to->data.end.min %= 60;
-			}
-
-			if(to->data.end.hour > 24)
-			{	
-				to->data.end.mday += (to->data.end.mday / 24);
-				to->data.end.hour %= 24;
-			}
-
-			if(to->data.end.mday > 30)
-			{
-				to->data.end.mon += (to->data.end.mon / 30);
-				to->data.end.mday %= 30;
-			}
 
 			if(to->data.end.mon > 12)
 			{
-				to->data.end.year += (to->data.end.year / 12);
+				to->data.end.year += (to->data.end.mon / 12);
 				to->data.end.mon -= 12;
 			}
 			
@@ -444,63 +516,20 @@ int main()
 
 			a[to_index].remain.year += a[from_index].remain.year;
 			a[to_index].remain.mon += a[from_index].remain.mon;
-			a[to_index].remain.mday += a[from_index].remain.mday;
-			a[to_index].remain.hour += a[from_index].remain.hour;
-			a[to_index].remain.min += a[from_index].remain.min;
-
-			if(a[to_index].remain.min > 60)
-			{
-				a[to_index].remain.hour += (a[to_index].remain.hour / 60);
-				a[to_index].remain.min %= 60;
-			}
-
-			if(a[to_index].remain.hour > 24)
-			{	
-				a[to_index].remain.mday += (a[to_index].remain.mday / 24);
-				a[to_index].remain.hour %= 24;
-			}
-
-			
-			if(a[to_index].remain.mday > 30)
-			{
-				a[to_index].remain.mon += (a[to_index].remain.mon / 30);
-				a[to_index].remain.mday %= 30;
-			}
+	
 
 			if(a[to_index].remain.mon > 12)
 			{
-				a[to_index].remain.year += (a[to_index].remain.year / 12);
+				a[to_index].remain.year += (a[to_index].remain.mon / 12);
 				a[to_index].remain.mon -= 12;
 			}
 
 			a[to_index].end.year += a[from_index].remain.year;
 			a[to_index].end.mon += a[from_index].remain.mon;
-			a[to_index].end.mday += a[from_index].remain.mday; 
-			a[to_index].end.hour += a[from_index].end.hour;
-			a[to_index].end.min += a[from_index].end.min;
-
-			if(a[to_index].end.min > 60)
-			{
-				a[to_index].end.hour += (a[to_index].end.hour / 60);
-				a[to_index].end.min %= 60;
-			}
-
-			if(a[to_index].end.hour > 24)
-			{	
-				a[to_index].end.mday += (a[to_index].end.mday / 24);
-				a[to_index].end.hour %= 24;
-			}
-
-			
-			if(a[to_index].end.mday > 30)
-			{
-				a[to_index].end.mon += (a[to_index].end.mon / 30);
-				a[to_index].end.mday %= 30;
-			}
-
+		
 			if(a[to_index].end.mon > 12)
 			{
-				a[to_index].end.year += (a[to_index].end.year / 12);
+				a[to_index].end.year += (a[to_index].end.mon / 12);
 				a[to_index].end.mon -= 12;
 			}
 			
@@ -539,7 +568,8 @@ int main()
 				}
 			}
 			memset(a[total-1].name,'\0',100);
-			total--;		
+			total--;
+			regnum--;
 			fclose(f);
 		}
 		
@@ -551,9 +581,9 @@ int main()
 			int i=0;
 			int n_flag=0, f_flag=0;
 			int index_name=0;
-
+			
+			flag = 0;
 			node = head;
-
 			if(f==NULL)
 			{
 				printf("no file\n");
@@ -562,6 +592,17 @@ int main()
 
 			printf("Name to find: ");
 			scanf("%s",name);
+			for(i = 0; i < strlen(name); i++)
+			{
+				if(!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z'))
+				{
+					printf("name error\n");
+					flag=1;
+					break;
+				}
+			}
+			if(flag == 1)
+				continue;
 
 			temp=deletenode_name(head,name,&f_flag);
 
@@ -648,9 +689,21 @@ int main()
 		else if(n==5)
 		{
 			struct node *temp;
+			flag = 0;
 		
 			printf("Name to find: ");
 			scanf("%s",name);
+			for(i = 0; i < strlen(name); i++)
+			{
+				if(!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z'))
+				{
+					printf("name error\n");
+					flag=1;
+					break;
+				}
+			}
+			if(flag == 1)
+				continue;
 
 			temp=searchlist_name(head,name);
 			if(temp == NULL)
@@ -661,9 +714,9 @@ int main()
 			
 			printf("Name: %s\n",temp->data.name);
 			printf("Age: %d\n",temp->data.age);
-			printf("Start date: %d %d %d %d %d \n",temp->data.start.year,temp->data.start.mon,temp->data.start.mday,temp->data.start.hour,temp->data.start.min);
-			printf("End date: %d %d %d %d %d \n",temp->data.end.year,temp->data.end.mon,temp->data.end.mday,temp->data.end.hour,temp->data.end.min);
-			printf("Remain: %d %d %d %d %d \n",temp->data.remain.year,temp->data.remain.mon,temp->data.remain.mday,temp->data.remain.hour,temp->data.remain.min);
+			printf("Start date: %d/%d/%d/%d/%d \n",temp->data.start.year,temp->data.start.mon,temp->data.start.mday,temp->data.start.hour,temp->data.start.min);
+			printf("End date: %d/%d/%d/%d/%d \n",temp->data.end.year,temp->data.end.mon,temp->data.end.mday,temp->data.end.hour,temp->data.end.min);
+			printf("Remain: %d/%d/%d/%d/%d \n",temp->data.remain.year,temp->data.remain.mon,temp->data.remain.mday,temp->data.remain.hour,temp->data.remain.min);
 
 
 			printf("\n");
