@@ -22,13 +22,14 @@ int main()
 
 	for(i = 0; i < num; i++)
 	{
+		flag = 0;
 		for(j = 0; j < strlen(arr[i]); j++)
 		{
 				if(arr[i][j] != arr[i][j+1])
 				{
 					for(k = j + 1; k < strlen(arr[i]); k++)
 					{
-						if(arr[i][j] == arr[j][k])
+						if(arr[i][j] == arr[i][k])
 						{
 							flag = 1;
 							break;
