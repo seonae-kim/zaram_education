@@ -27,7 +27,6 @@ int main()
 			for (p = j + 1; p < N; p++)
 			{
 				sum[q] = num[i] + num[j] + num[p];
-				printf("%d\n", sum[q]);
 				q++;
 
 			}
@@ -36,19 +35,21 @@ int main()
 
 	printf("output: ");
 
-	max = sum[0];
+	max = 0;
 	for( i = 0; i < 1000; i++)
 	{ 
 		if(sum[i] == M)
 		{
-			printf("%d\n", sum[i]);
 			count = 2;
 			break;
 		}
 
-		else if( sum[i] < M  && sum[i] > max)
+		else if( sum[i] < M )
 		{
-			max = sum[i];
+			if (sum[i] > max)
+			{
+				max = sum[i];
+			}
 		}
 	}
 
@@ -57,17 +58,6 @@ int main()
 	{
 		printf("%d\n", max);
 	}
-		/*	for(i = 0; i < 1000; i++)
-			{
-				M--;
-				if(sum[i] == M)
-				{
-					printf("%d\n", sum[i]);
-					break;
-				}
-			}*/
-
-		
 		
 	
 	return 0;

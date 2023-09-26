@@ -21,7 +21,6 @@ int main()
 		scanf("%s", arr[i]);
 	}
 
-
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < 50; j++)
@@ -32,22 +31,15 @@ int main()
 				{
 					if(arr[i][j] == arr[i][p])
 					{
-						count = -1;
-						break;
+						goto A;
 					}
-					if( arr[i][p] == 0 )
-						count = 2;
-					
-					else
-						count = 2;
 				}
 
 			}
-			if(count == -1)
-				break;
 		}
-		if(count == 2)
 			num++;
+A:
+;
 	}
 
 	printf("output: %d\n",num );
