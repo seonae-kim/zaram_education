@@ -6,10 +6,10 @@
 int main()
 {
 	int N = 0;
-	int i = 0, j = 0;
+	int i = 0, j = 0, p = 0;
 	int count = 0;
-	char arr[50] = {0};
-	char word[10] = {0};
+	int num = 0;
+	char arr[50][50] = {0};
 
 	printf("input N: ");
 	scanf("%d", &N);
@@ -22,30 +22,37 @@ int main()
 	}
 
 
-	printf("output:");
-
-	for( i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
-		for( j = 0; j < 10; j++)
+		for(j = 0; j < 50; j++)
 		{
-			sprintf(word,"%s",arr[i]);
-			if( word[j] != word[j+1])
+			if(arr[i][j] != arr[i][j+1])
 			{
-				if(word[j] == word[j++])
+				for ( p = j+2; p < 50; p++)
 				{
-					count = -1;
-					break;
+					if(arr[i][j] == arr[i][p])
+					{
+						count = -1;
+						break;
+					}
+					if( arr[i][p] == 0 )
+						count = 2;
+					
+					else
+						count = 2;
 				}
-			}
-			else 
-				count = 1;
-			printf("%s ", word);
-		}
 
+			}
+			if(count == -1)
+				break;
+		}
+		if(count == 2)
+			num++;
 	}
 
-return 0;
+	printf("output: %d\n",num );
 
+	return 0;
 
 }
 
