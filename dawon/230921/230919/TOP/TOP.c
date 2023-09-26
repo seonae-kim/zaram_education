@@ -1,15 +1,13 @@
-#define DAY 50
-#define NAME 20
-#define AGE 5
-#define PERIOD 5
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "linked_list.h"
 
+#define DAY 50
+#define NAME 20
+#define AGE 5
+#define PERIOD 5
 
 int main()
 {
@@ -31,7 +29,7 @@ int main()
 	int end_day = 0;
 	int end_hour = 0;
 	int end_min = 0;
-	int k=0;
+	int name_flag=0;
 	char age_ch[AGE] = {0, };
 	char period_ch[5] = {0, };
 	char mode[3] = {0, };
@@ -125,91 +123,78 @@ int main()
 				while(1)
 				{
 					flag=0;
-					k=0;
-					if(count == 1)
-					{
-						count = 0;
-						break;
-					}
-					if(count > 1 || count == 0|| p >= 1)
-					{	
-						memset(name,'\0',NAME);
-						memset(age_ch,'\0',AGE);
-						memset(period_ch,'\0',PERIOD);
+					name_flag=0;
 
-						printf("\n< New member registration > \n name, age, period: ");
-						scanf("%s %s %s", name, age_ch, period_ch);
-						getchar();
-						age=atoi(age_ch);
-						remain_period=atoi(period_ch);
+					memset(name,'\0',NAME);
+					memset(age_ch,'\0',AGE);
+					memset(period_ch,'\0',PERIOD);
+
+					printf("\n< New member registration > \n name, age, period: ");
+					scanf("%s %s %s", name, age_ch, period_ch);
+					getchar();
+					age=atoi(age_ch);
+					remain_period=atoi(period_ch);
 						   
-						for(int i = 0; i < strlen(name); i++)
+					for(i = 0; i < strlen(name); i++)
+					{
+						if(!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z'))
 						{
-							if(!((int)name[i] > 96 && (int)name[i] < 123))
-							{
-								printf("name error\n");
-								flag=1;
-								break;
-							}
+							printf("name error\n");
+							flag=1;
+							break;
 						}
-						for(int i = 0; i < strlen(age_ch); i++)
+					}
+					for(i = 0; i < strlen(age_ch); i++)
+					{
+						if(!(age_ch[i] >= '0' && age_ch[i] <= '9') || ((age_ch[i] >= 'a' &&									age_ch[i] <= 'z') && (age_ch[i] >= 'A' && age_ch[i] <= 'Z')))
 						{
-							if(!((int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)age_ch[i] > 96 &&									(int)age_ch[i] < 123))
-							{
-								printf("age error\n");
-								flag=1;
-								break;
-							}
+							printf("age error\n");
+							flag=1;
+							break;
 						}
-						for(int i = 0; i < strlen(period_ch); i++)
+					}
+					for(i = 0; i < strlen(period_ch); i++)
+					{
+						if((!age_ch[i] >= '0' && age_ch[i] <= '9') || ((period_ch[i] >= 'a'									&& period_ch[i] <= 'z') && (period_ch[i] >= 'A' && period_ch[i] <= 'Z')))
 						{
-							if((!(int)age_ch[i] > 47 && (int)age_ch[i] < 58) || ((int)period_ch[i] > 96									&& (int)period_ch[i] < 123) )
-							{
-								printf("period error\n");
-								flag=1;
-								break;
-							}
+							printf("period error\n");
+							flag=1;
+							break;
 						}
-						if(strlen(name) > NAME)
-						{
-							printf("strlen name error > 20\n");
-							continue;
-						}
-						if(strlen(age_ch) > AGE)
-						{
-							printf("strlen age error > 20\n");
-							continue;
-						}
-						if(strlen(period_ch) > PERIOD)
-						{
-							printf("strlen period error > 10\n");
-							continue;
-						}
+					}
+					if(strlen(name) > NAME)
+					{
+						printf("strlen name error > 20\n");
+						continue;
+					}
+					if(strlen(age_ch) > AGE)
+					{
+						printf("strlen age error > 20\n");
+						continue;
+					}
+					if(strlen(period_ch) > PERIOD)
+					{
+						printf("strlen period error > 10\n");
+						continue;
 					}
 
 					if(flag == 1)
-						break;
-					k = searchlist(name);
-					while(1)
+						continue;
+		
+					name_flag = searchlist(name);
+					
+					if(name_flag == 1)
 					{
-						if(k==1)
-						{
-							count = 1;
-							printf("\n The name is already exists\n Try Again\n");
-							p++;							
-							count++;
-							break;
-						}
-						else
-						{
-							count = 1;
-							break;
-						}
+						printf("\n The name is already exists\n Try Again\n");
+						continue;
 					}
+					else
+					{
+						break;
+					}
+			
 				}
 
-				if(flag == 1)
-					break;
 				tm = *localtime(&t);
 
 				sprintf(start_date,"%d-%d-%d %d:%d", 
@@ -234,7 +219,9 @@ int main()
 			case 2:
 				printf(" < Extension of the period >\n user name, period :");
 				scanf("%s %d", user, &period);
-				extension(user, period);
+				if(extension(user, period) == 1)
+					printList();
+	//			extension(user, period);
 				printf(" Finish\n");
 				break;
 
@@ -257,8 +244,8 @@ int main()
 			case 5:
 				printf(" < Search Member >\n user name : ");
 				scanf("%s", user);
-				int k = searchlist(user);
-				if(k == 1)
+				name_flag = searchlist(user);
+				if(name_flag == 1)
 					printf(" Found\n");
 				else 
 					printf(" User is not present in the list\n");

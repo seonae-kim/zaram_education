@@ -110,9 +110,12 @@ int extension(char* data, int period)
     {
 		if(period < 0)
 		{
-			printf("period error");
+			printf("\n Period error");
 			return 0;
 		}
+	
+		int min = tm.tm_min;
+		int hour = tm.tm_hour;
 
         if(strcmp(temp->data.name, data) == 0)
         {
@@ -121,13 +124,13 @@ int extension(char* data, int period)
             mktime(&tm);
 
             sprintf(temp->data.end_date,"%d-%d-%d %d:%d",
-                    tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+                    tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, hour, min);
 
             return 1;
         }
         temp = temp->next;
     }
-	printf("no such name\n");
+	printf("\n No such name\n");
 }
 
 
@@ -139,10 +142,12 @@ int transfer(char *data1, char *data2)
 	struct node *r = NULL;
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
+	int min = 0;
+	int hour = 0;
 
 	if(strcmp(data1,data2) == 0)
 	{
-		printf("identical giver and receiver\n");
+		printf("\n Identical giver and receiver\n");
 		return 0;
 	}
     while(temp != NULL)
@@ -159,22 +164,24 @@ int transfer(char *data1, char *data2)
     }
 	if(r == NULL)
 	{
-		printf("no receiver exist\n");
+		printf("\n No receiver exist\n");
 		return 0;
 	}
 	if(g == NULL)
 	{	
-		printf("no giver exist\n");
+		printf("\n No giver exist\n");
 		return 0;
 	}
-	A = g->data.remain_period;
-	r->data.remain_period = A + r->data.remain_period;
+	min = tm.tm_min;
+	hour = tm.tm_hour;
+
+	r->data.remain_period += g->data.remain_period;
 
     tm.tm_mon += r->data.remain_period;
 	
     mktime(&tm);
 
-    sprintf(r->data.end_date,"%d-%d-%d %d:%d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+    sprintf(r->data.end_date,"%d-%d-%d %d:%d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, hour, min);
 
     deletenode(data1);
     return 0;

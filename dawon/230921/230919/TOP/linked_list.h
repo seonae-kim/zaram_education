@@ -1,4 +1,8 @@
 #include <stdio.h>
+
+#define DAY 50
+#define NAME 20
+
 struct member
 {
     char name[NAME];
