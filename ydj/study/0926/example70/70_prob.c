@@ -14,6 +14,10 @@ int main()
 
 	cal = 1 + (k - 1) * 2;
 	result = cal % num;
+	if (result == 0)
+	{
+		result = num;
+	}
 
 	printf("%d\n", result);
 	return 0;
