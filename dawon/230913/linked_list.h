@@ -28,8 +28,7 @@ void printList(struct node *head);
 struct node *insertafternode(struct node *list, M data);
 struct node *deleteatbegin(struct node *head);
 struct node *deleteatend(struct node *head);
-struct node *deletenode_name(struct node *head,char *key);
-//int searchlist(struct node *head,int key);
+struct node *deletenode_name(struct node *head,char *key,int *f_flag);
 struct node *searchlist_name(struct node *head,char *key);
 
 

@@ -13,7 +13,7 @@ int main()
 	char *file;
 	int n;
 	int i=0,j=0,k=0;
-	int pnum=0, flag_name=0, date=0, period =0,total=0,regnum=0;
+	int pnum=0, flag_name=0, date=0, period =0,total=0,regnum=0, f_flag=0, p=0;
 	int age=0;
 	int year, day;
 	int word;
@@ -40,13 +40,9 @@ int main()
 		while(EOF !=fscanf(f,"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", a[i].name, &a[i].age,&a[i].start.year,&a[i].start.mon,&a[i].start.mday,&a[i].start.hour,&a[i].start.min,&a[i].end.year,&a[i].end.mon,&a[i].end.mday,&a[i].end.hour,&a[i].end.min,&a[i].remain.year,&a[i].remain.mon,&a[i].remain.mday,&a[i].remain.hour,&a[i].remain.min))
 		{	
 		
-			printf("name a[0]: %s\n",a[i].name);
-			printf("age a[0]: %d\n",a[i].age);
 			if(head == NULL)
 			{
 				head=insertatbegin(head,a[i]);
-				printf("head: ");
-				printList(head);
 				printf("\n\n");
 			}
 			else
@@ -54,12 +50,14 @@ int main()
 				head=insertatend(head,a[i]);
 			}
 
-			i++;
-		
+			i++;		
 		}
+		
+		regnum=i;
+		total = regnum;
+
 	}
-	printList(head);
-	regnum=i;
+	printList(head);	
 	
 	while(1)
 	{
@@ -81,8 +79,9 @@ int main()
 
 		if(n == 1)
 		{			
+				flag_name = 0;
+				memset(name,'\0',100);
 				f=fopen("program.txt","a");
-	
 				if(f == NULL)
 				{
 					printf("no file");
@@ -91,91 +90,140 @@ int main()
 
 				printf("pnum to register: ");
 				scanf("%d",&pnum);
-				total = pnum + regnum;
 		
 				if(regnum == 0)
 				{
-					for(int i=0; i < pnum; i++)
+					total = pnum;
+					for(i=0; i < pnum; i++)
 					{
 						printf("name, age period: ");
-						scanf("%s %d %d",a[i].name,&a[i].age,&period);
+						scanf("%s %d %d",name,&age,&period);
 						for(int j = 0; j < i; j++)
 						{	
-							if(strcmp(a[i].name,a[j].name) == 0)
+							if(strcmp(name,a[j].name) == 0)
 							{
 								printf("same name");
-								pnum--;
 								flag_name = 1;
-								total--;
-								memset(a[i].name,'\0',100);
+								memset(name,'\0',100);
 								break;
 							}
 						}
+						if(flag_name == 1)
+							break;
+
+						else
+						{
+							strcpy(a[i].name,name);
+							a[i].age = age;
+							a[i].start.year = tm.tm_year+1900;
+							a[i].start.mon = tm.tm_mon+1;
+							a[i].start.mday = tm.tm_mday;
+							a[i].start.hour = tm.tm_hour;
+							a[i].start.min = tm.tm_min;
+							a[i].start.year = tm.tm_year+1900;
+							a[i].end.year = a[i].start.year + period/12;
+							a[i].end.mon = a[i].start.mon+period%12;
+							a[i].end.mday = tm.tm_mday;
+							a[i].end.hour = tm.tm_hour;
+							a[i].end.min = tm.tm_min;
+							a[i].remain.year = period/12;
+							a[i].remain.mon = period%12;
+							a[i].remain.mday = 0;
+							a[i].remain.hour = 0;
+							a[i].remain.min = 0;
+							if(a[i].end.mon > 12)
+							{
+								a[i].end.year += 1;
+								a[i].end.mon -=12;
+							}
+				
+							fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
+										a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
+										a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
+										a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
+							if(head == NULL)
+							{
+								head=insertatbegin(head,a[i]);
+							}
+							else
+							{
+								head=insertatend(head,a[i]);
+							}	
+							regnum = pnum;
+						}
+
 					}
+					if(flag_name == 1)
+						continue;
 				}
 				else
 				{
-					for(int i = total; i < total+pnum; i++)
+					total+=pnum;
+					for(i = regnum; i < total; i++)
 					{
 						printf("name, age period: ");
-						scanf("%s %d %d",a[i].name,&a[i].age,&period);
+						scanf("%s %d %d",name,&age,&period);
 						for(int j = 0; j < i; j++)
 						{	
-							if(strcmp(a[i].name,a[j].name) == 0)
+							if(strcmp(name,a[j].name) == 0)
 							{
 								printf("same name");
-								pnum--;
 								flag_name = 1;
-								total--;
-								memset(a[i].name,'\0',100);
+								memset(name,'\0',100);
 								break;
 							}
 						}
-					}
-				}
+						if(flag_name == 1)
+							break;
 
+						else
+						{
+							strcpy(a[i].name,name);
+							a[i].age = age;
+							a[i].start.year = tm.tm_year + 1900;
+							a[i].start.mon = tm.tm_mon + 1;
+							a[i].start.mday = tm.tm_mday;
+							a[i].start.hour = tm.tm_hour;
+							a[i].start.min = tm.tm_min;
+							a[i].start.year = tm.tm_year + 1900;
+							a[i].end.year = a[i].start.year + period / 12;
+							a[i].end.mon = a[i].start.mon + period % 12;
+							a[i].end.mday = tm.tm_mday;
+							a[i].end.hour = tm.tm_hour;
+							a[i].end.min = tm.tm_min;
+							a[i].remain.year = period / 12;
+							a[i].remain.mon = period % 12;
+							a[i].remain.mday = 0;
+							a[i].remain.hour = 0;
+							a[i].remain.min = 0;
+							if(a[i].end.mon > 12)
+							{
+								a[i].end.year += 1;
+								a[i].end.mon -= 12;
+							}
+				
+							fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
+										a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
+										a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
+										a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
+							if(head == NULL)
+							{
+								head=insertatbegin(head,a[i]);
+							}
+							else
+							{
+								head=insertatend(head,a[i]);
+							}							
+
+						}
+						regnum += pnum;
+
+					}
 					if(flag_name == 1)
 						continue;
-
-					a[i].start.year = tm.tm_year+1900;
-					a[i].start.mon = tm.tm_mon+1;
-					a[i].start.mday = tm.tm_mday;
-					a[i].start.hour = tm.tm_hour;
-					a[i].start.min = tm.tm_min;
-					a[i].start.year = tm.tm_year+1900;
-					a[i].end.year = a[i].start.year + period/12;
-					a[i].end.mon = a[i].start.mon+period%12;
-					a[i].end.mday = tm.tm_mday;
-					a[i].end.hour = tm.tm_hour;
-					a[i].end.min = tm.tm_min;
-					a[i].remain.year = period/12;
-					a[i].remain.mon = period%12;
-					a[i].remain.mday = 0;
-					a[i].remain.hour = 0;
-					a[i].remain.min = 0;
-					
-					if(a[i].end.mon > 12)
-					{
-						a[i].end.year += 1;
-						a[i].end.mon -=12;
-					}
-				
-					fprintf(f, "%10s%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d%10d\n",
-								a[i].name,a[i].age,a[i].start.year,a[i].start.mon,a[i].start.mday,a[i].start.hour,a[i].start.min,
-								a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
-								a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
-								
-
-					if(head == NULL)
-					{
-						head=insertatbegin(head,a[i]);
-					}
-					else
-					{
-						head=insertatend(head,a[i]);
-					}
-
-				
+				}
+			
+				printf("TOTAL: %d\n",total);
 				printList(head);
 				fclose(f);		
 		}
@@ -204,7 +252,7 @@ int main()
 			temp=searchlist_name(head,name);
 			if(temp == NULL)
 			{
-				printf("no such name1\n");
+				printf("No such name1\n");
 				continue;
 			}
 
@@ -222,11 +270,7 @@ int main()
 				temp->data.remain.year += 1;
 				a[i].remain.mon -=12;
 			}
-			printf("year update: %d\n",temp->data.end.year);
-			printf("mon update: %d\n",temp->data.end.mon);
 			printList(head);
-
-
 
 			for(i = 0; i < total; i++)
 			{
@@ -247,8 +291,6 @@ int main()
 						a[i].remain.mon -=12;
 					}
 
-					printf("year update: %d\n", a[i].end.year);
-					printf("mon update: %d\n",a[i].end.mon);
 					flag_name=1;
 				}
 
@@ -256,7 +298,7 @@ int main()
 
 			if(flag_name == 0)
 			{
-				printf("no such name2\n");
+				printf("No such name2\n");
 				continue;
 			}
 			for(i = 0; i < total; i++)
@@ -266,9 +308,6 @@ int main()
 						a[i].end.year,a[i].end.mon,a[i].end.mday,a[i].end.hour,a[i].end.min,
 						a[i].remain.year,a[i].remain.mon,a[i].remain.mday,a[i].remain.hour,a[i].remain.min);
 			}
-
-
-
 			fclose(f);
 					
 		}
@@ -278,13 +317,14 @@ int main()
 			char from_name[10], to_name[10];
 			int i=0;
 			int from_index=0, to_index=0, from_flag=0, to_flag=0;
-			int n_flag=0,f_flag=0;
+			int n_flag=0;
 			struct node *from;
 			struct node	*to;
-
-			printf("from name: ");
+			struct node *temp;
+			f_flag = 0;
+			printf("From name: ");
 			scanf("%s",from_name);
-			printf("to name: ");
+			printf("To name: ");
 			scanf("%s",to_name);
 		
 			
@@ -293,13 +333,13 @@ int main()
 
 			if(from==NULL)
 			{
-				printf("no from name\n");
+				printf("No from name\n");
 				continue;
 			}
 			
 			if(to==NULL)
 			{
-				printf("no to name\n");
+				printf("No to name\n");
 				continue;
 			}
 
@@ -363,9 +403,15 @@ int main()
 				to->data.end.year += (to->data.end.year / 12);
 				to->data.end.mon -= 12;
 			}
-
-
-			head=deletenode_name(head,from_name,&f_flag);
+			
+			temp = deletenode_name(head,from_name,&f_flag);
+			if(temp == NULL && f_flag == 0)
+			{
+				printf("No such name\n");
+				continue;
+			}	
+			
+			head = temp;
 			printList(head);											//linked
 
 			for(i = 0; i < total; i++)
@@ -384,13 +430,13 @@ int main()
 			
 			if(from_flag == 0)
 			{
-				printf("no from name");
+				printf("No from name\n");
 				continue;
 			}
 
 			if(to_flag == 0)
 			{
-				printf("no to name");
+				printf("No to name\n");
 				continue;
 			}
 			
@@ -492,6 +538,7 @@ int main()
 					a[i-1].remain.min = a[i].remain.min;
 				}
 			}
+			memset(a[total-1].name,'\0',100);
 			total--;		
 			fclose(f);
 		}
@@ -499,10 +546,13 @@ int main()
 	
 		else if(n==4)
 		{
-			struct node *node = head;
+			struct node *node = NULL;
+			struct node *temp=NULL;
 			int i=0;
 			int n_flag=0, f_flag=0;
 			int index_name=0;
+
+			node = head;
 
 			if(f==NULL)
 			{
@@ -510,19 +560,20 @@ int main()
 				exit(0);
 			}
 
-			printf("name to find: ");
+			printf("Name to find: ");
 			scanf("%s",name);
 
-			node=deletenode_name(head,name,&f_flag);
+			temp=deletenode_name(head,name,&f_flag);
 
-			if(node == NULL && f_flag == 0)
+			if(temp == NULL && f_flag == 0)
 			{
-				printf("no such name\n");
+				printf("No such name\n");
+				head = node;
 				continue;
 			}
 			else
 			{
-				head=deletenode_name(head,name,&f_flag);
+				head=temp;
 			}
 			printList(head);
 
@@ -540,18 +591,18 @@ int main()
 
 			if(n_flag == 0)
 			{
-				printf("no such name2\n");
+				printf("No such name2\n");
 				continue;
 			}
 			
 			f=fopen("program.txt","w");
 			if(f == NULL)
 			{
-				printf("no file\n");
+				printf("No file\n");
 				exit(0);
 			}
 
-			for(i = 0; i < pnum; i++)
+			for(i = 0; i < total; i++)
 			{			
 				if(i == index_name)
 					continue;
@@ -584,9 +635,10 @@ int main()
 					a[i-1].remain.min = a[i].remain.min;
 				}
 			}
-			memset(a[index_name].name,'\0',100);
+			memset(a[total-1].name,'\0',100);
 			memset(name,'\0',10);
 			total--;
+			regnum--;
 
 			fclose(f);
 		}
@@ -597,21 +649,21 @@ int main()
 		{
 			struct node *temp;
 		
-			printf("name to find: ");
+			printf("Name to find: ");
 			scanf("%s",name);
 
 			temp=searchlist_name(head,name);
 			if(temp == NULL)
 			{
-				printf("no such name\n");
+				printf("No such name\n");
 				continue;
 			}
 			
-			printf("name: %s\n",temp->data.name);
-			printf("age: %d\n",temp->data.age);
-			printf("start: %d %d %d %d %d \n",temp->data.start.year,temp->data.start.mon,temp->data.start.mday,temp->data.start.hour,temp->data.start.min);
-			printf("end: %d %d %d %d %d \n",temp->data.end.year,temp->data.end.mon,temp->data.end.mday,temp->data.end.hour,temp->data.end.min);
-			printf("remain: %d %d %d %d %d \n",temp->data.remain.year,temp->data.remain.mon,temp->data.remain.mday,temp->data.remain.hour,temp->data.remain.min);
+			printf("Name: %s\n",temp->data.name);
+			printf("Age: %d\n",temp->data.age);
+			printf("Start date: %d %d %d %d %d \n",temp->data.start.year,temp->data.start.mon,temp->data.start.mday,temp->data.start.hour,temp->data.start.min);
+			printf("End date: %d %d %d %d %d \n",temp->data.end.year,temp->data.end.mon,temp->data.end.mday,temp->data.end.hour,temp->data.end.min);
+			printf("Remain: %d %d %d %d %d \n",temp->data.remain.year,temp->data.remain.mon,temp->data.remain.mday,temp->data.remain.hour,temp->data.remain.min);
 
 
 			printf("\n");

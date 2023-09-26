@@ -65,65 +65,33 @@ struct node *deleteatend(struct node *head){
 	linkedlist->next = NULL;
 	return head;
 }
-/*struct node *deletenode(struct node *head,int key){
-	struct node *temp = head, *prev;
-	if (temp != NULL && temp->data == key) {
-		head = temp->next;
-		return head;
-	}
-
-	// Find the key to be deleted
-	while (temp != NULL && temp->data != key) {
-		prev = temp;
-		temp = temp->next;
-	}
-			
-	// If the key is not present
-	if (temp == NULL) return NULL;
-
-	// Remove the node
-	prev->next = temp->next;
-	free(temp);
-	return head;
-}
-*/
-struct node *deletenode_name(struct node *head,char *key){
+struct node *deletenode_name(struct node *head,char *key,int *f_flag){
 	struct node *temp = head, *prev;
 	if (temp != NULL && strcmp(temp->data.name,key) == 0) {
 		head = temp->next;
+		*f_flag = 1;
 		return head;
 	}
 
 	// Find the key to be deleted
-	while (temp != NULL && strcmp(temp->data.name,key) == 0) {
+	while (temp != NULL && strcmp(temp->data.name,key) != 0) {
 		prev = temp;
-		temp = temp->next;
-		
+		temp = temp->next;		
 	}
 
 	// If the key is not present
 	if (temp == NULL) 
 	{
+		*f_flag = 0;
 		return NULL;
 	}
 
 	// Remove the node
 	prev->next = temp->next;
-	return head;
+	*f_flag = 1;
+	return prev;
 }
 
-
-/*int searchlist(struct node *head,int key){
-	struct node *temp = head;
-	while(temp != NULL) {
-		if (temp->data == key) {
-			return 1;
-		}
-		temp=temp->next;
-	}
-	return 0;
-}
-*/
 
 struct node *searchlist_name(struct node *head,char* key){	
 	struct node *temp = head;
@@ -135,34 +103,4 @@ struct node *searchlist_name(struct node *head,char* key){
 	}
 	return NULL;
 }
-/*
-void main(){
-	int k=0;
-	insertatbegin(12);
-	insertatbegin(22);
-	insertatend(30);
-	insertatend(44);
-	insertatbegin(50);
-	insertafternode(head->next->next, 33);
-	printf("Linked List: ");
 
-	// print list
-	printList();
-	deleteatbegin();
-	deleteatend();
-	deletenode(12);
-	printf("\nLinked List after deletion: ");
-
-	// print list
-	printList();
-	insertatbegin(4);
-	insertatbegin(16);
-	printf("\nUpdated Linked List: ");
-	printList();
-	k = searchlist(16);
-	if (k == 1)
-		printf("\nElement is found");
-	else
-		printf("\nElement is not present in the list");
-}
-*/
