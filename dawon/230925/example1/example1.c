@@ -6,7 +6,7 @@ int main()
 {
 	int m=0, n=0, i=0, j=0, h=0;
 	int *arr;
-	int min=0;
+	int min=1000;
 	int sum = 0;
 	int max = 0;
 
@@ -28,7 +28,6 @@ int main()
 			for(h = j + 1; h < n; h++)
 			{
 				sum = *(arr + i) + *(arr + j) + *(arr + h);
-				printf("sum: %d\n",sum);
 				if(m - sum <=  min && sum <= m)
 				{
 					min = m - sum;
