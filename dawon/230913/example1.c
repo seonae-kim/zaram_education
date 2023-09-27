@@ -294,7 +294,7 @@ int main()
 			int i=0, search_name=0;
 			struct node *temp=NULL;
 			flag = 0;
-			date_ch = {0, }; 
+			memset(date_ch,'\0',5);	
 			
 			f=fopen("program.txt","r+");
 	
@@ -318,8 +318,8 @@ int main()
 		
 			printf("extend:");
 			scanf("%s",date_ch);
-			date = atoi(str_len);			
-			for(i = 0; i < 5; i++)
+			date = atoi(date_ch);			
+			for(i = 0; i < strlen(date_ch); i++)
 			{
 				if(!(date_ch[i] >= '0' && date_ch[i] <= '9') 
 					|| ((date_ch[i] >= 'a' && date_ch[i] <= 'z') 
@@ -333,7 +333,7 @@ int main()
 			if(flag == 1)
 				continue;
 
-			if(stelen(date_ch) > 5)
+			if(strlen(date_ch) > 5)
 			{
 				printf("strlen date error\n");
 				continue;
