@@ -17,7 +17,8 @@ int main()
     strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S", timeInfo);
     file = fopen("current_time.txt", "a");
 
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("can't open file.\n");
         return 1;
     }

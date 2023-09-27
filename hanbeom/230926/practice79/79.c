@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <time.h>
 
-int main() {
+int main() 
+{
     time_t currentTime;
     struct tm* timeInfo;
 
