@@ -7,20 +7,21 @@ int main()
 	int **arr1;
 	int a = 0;
 	int k = 1;
-	int b = 1;
+	int b = 0;
 	int p = 1;
 
 	printf("num: ");
 	scanf("%d",&n);
+	b=n;
 
-	arr1=(int**)malloc(sizeof(int)*n);
+	arr1=(int**)malloc(sizeof(int*)*n);
 	
 	for(i = 0; i < n; i++)
 	{
 		*(arr1+i) = (int*)malloc(sizeof(int)*n);
 	}
 
-	while(p != 26)	
+	while(p != b*b+1)	
 	{
 			for(j = a; j < n; j++)
 			{
@@ -29,31 +30,32 @@ int main()
 
 			for(k = a+1; k < n; k++)
 			{				
-				*(*(arr1 + k) + j) = p++;
+				*(*(arr1 + k) + j-1) = p++;
 			
 			}
 
-			for(l = n-2; l <= a; l--)
+			for(l = n-2; l >= a; l--)
 			{
 					
-				*(*(arr1 + k) + l) = p++;
+				*(*(arr1 + k-1) + l) = p++;
 				
 			}
 			
-			for(m = n-2; m < a; m--)
+			for(m = n-2; m > a; m--)
 			{
-				*(*(arr1 + m) + l) = p++;
+				*(*(arr1 + m) + l+1) = p++;
 			}	
 
 				
 		a++;
 		n--;
 	}
+	
 
 
-	for(i = 0; i < n; i++)
+	for(i = 0; i < b; i++)
 	{
-		for(j = 0; j < n; j++)
+		for(j = 0; j < b; j++)
 		{
 			printf("%d ",*(*(arr1+i)+j));
 		}
