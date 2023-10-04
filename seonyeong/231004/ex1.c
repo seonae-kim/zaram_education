@@ -19,13 +19,16 @@ void *p_function()
 		{
 			if( num[i] == num[j] )
 			{
-				num[i] = num[i] - 1; 
+				i = i - 1; 
+				break;
 			}
 		}
-
-		printf( "%3d ", num[i]);
 	}
 
+	for(i = 0; i < 6; i++)
+	{
+		printf( "%3d ", num[i]);
+	}
 	printf("\n");
 
 }

@@ -44,10 +44,17 @@ int main(void)
 	int thr_id;
 	char input[20] = {0};
 
+
 	thr_id = pthread_create(&pthread1, NULL, p_function, NULL);
+
+	if(thr_id != 0)
+	{
+		printf("pthread create error\n"); 
+	}
 
 	while(1)
 	{
+
 		scanf("%s", input);
 
 		if( strstr(input , "q") != 0 )
@@ -57,11 +64,6 @@ int main(void)
 		}
 
 		printf("%s\n", input);
-		if(thr_id != 0)
-		{
-			printf("pthread create error\n"); 
-		}
-
 	}
 	return 0;
 }

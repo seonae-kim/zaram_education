@@ -22,21 +22,21 @@ int main()
 			a = a + 1;
 			temp = temp - 1;
 		}
-		
-		
+
+
 		for( j = a; j < temp; j++)
 		{
 			i = a;
 			arr[i][j] = num++;
 		}
-	
+
 		num--;
 		for(i = a; i < temp; i++)
 		{
 			j = temp-1;
 			arr[i][j] = num++;
 		}
-		
+
 		num--;
 		for(j = temp-1; j >= a; j--)
 		{
@@ -61,7 +61,7 @@ int main()
 		}
 		printf("\n");
 	}
-	
-	
+
+
 	return 0;
 }

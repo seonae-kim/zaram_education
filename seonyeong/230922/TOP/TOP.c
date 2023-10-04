@@ -12,7 +12,7 @@ struct member
 	char end_date[50];
 	int remain_period;
 };
-			
+
 struct node{
 	struct member data;
 	struct node *next;
@@ -79,18 +79,18 @@ int main()
 				{
 					ptr = strtok(NULL, "\t");
 				}	
-			
+
 				count++;
 			}
-				if(p == 0)
-				{
-					insertbegin(name, age, start_date, end_date, remain_period);
-				}
-				else
-				{
-					insertend(name, age, start_date, end_date, remain_period);
-				}
-				p++;
+			if(p == 0)
+			{
+				insertbegin(name, age, start_date, end_date, remain_period);
+			}
+			else
+			{
+				insertend(name, age, start_date, end_date, remain_period);
+			}
+			p++;
 		}
 
 	}
@@ -98,7 +98,7 @@ int main()
 	{
 		if(e == 1)
 			break;
-		
+
 		printf("\n # MEMBERSHIP PROGRAM #\n Select Mode\n 1-Registration\n 2-Extension of the period\n 3-Transfer of membership\n 4-Delete membership\n 5-Search membership \n 6-View all information \n 7-Update all membership \n 8-Save\n 9-exit & save\n");
 
 		scanf("%s", mode_ch);
@@ -121,7 +121,7 @@ int main()
 						age = atof(age_ch);
 						period = atof(period_ch);
 					}
-			
+
 					k = searchlist(name);
 					while(1)
 					{
@@ -133,7 +133,7 @@ int main()
 							count++;
 							break;
 						}
-						
+
 						if(age <= 0) 
 						{
 							count = 1;
@@ -162,7 +162,7 @@ int main()
 
 				sprintf(start_date,"%d-%d-%d %d:%d", 
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min);
-				
+
 				tm.tm_mon += period;
 				mktime(&tm);
 				int end_year = tm.tm_year+1900;
@@ -170,14 +170,14 @@ int main()
 				int end_day = tm.tm_mday;
 				int end_hour = tm.tm_hour;
 				int end_min = tm.tm_min;
-				
+
 				sprintf(end_date,"%d-%d-%d %d:%d",
 						end_year, end_mon, end_day, end_hour, end_min);
 
 				insertend(name, age, start_date, end_date, period);
 				printf(" Success\n");
 				break;
-		
+
 			case 2:
 				printf(" < Extension of the period >\n user name, period :");
 				scanf("%s %d", user, &period);
@@ -189,8 +189,8 @@ int main()
 				printf(" < Transfer of membership >\n giver, receiver : ");
 				scanf("%s %s", giver, receiver);
 				transfer(giver, receiver);
-		        break;
-	
+				break;
+
 			case 4:
 				printf(" < Delete Membership >\n user name : ");
 				scanf("%s", user);

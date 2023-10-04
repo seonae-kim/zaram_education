@@ -20,3 +20,5 @@ top_mode.o : top_mode.c cal.h mode1.h mode2.h mode3.h
 TOP : mode1.o mode2.o mode3.o cal_num.o cal.o top_mode.o 
 	gcc mode1.o mode2.o mode3.o cal_num.o cal.o top_mode.o -o TOP
 
+clean:
+	rm -f TOP TOP.o top_mode.o mode3.omode1.o mode2.o cal.o cal_num.o
