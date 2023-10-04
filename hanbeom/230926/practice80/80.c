@@ -1,23 +1,17 @@
 #include <stdio.h>
+#include <string.h>
 
 int main()
 {
-	char str[50] = {0,};
-	int i = 0;
-	while(1)
-	{
-		scanf("%c", &str[i]);
-		if(str[i] == 'q')
-		{
-			printf("\n");
-			printf("exit program");
-			return 0;
-		}
-		printf("%c", str[i]);
-		i++;
-	}
-
-
-
-
+    char str[50][50];
+    int i;
+    for (i = 0; i < 50; i++)
+    {
+        fgets(str[i], sizeof(str[i]), stdin);
+        if (strcmp(str[i], "q\n") == 0)
+        {
+            return 0;
+        }
+        printf("%s", str[i]);
+    }
 }
