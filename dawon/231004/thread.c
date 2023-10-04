@@ -9,7 +9,7 @@ void *rannum();
 void *rannum()
 {
 	int random[5] = {0, };
-	int i = 0, j = 0, m=0;
+	int i = 0, j = 0, m=0,flag =0;
 	pthread_t tid;
 	
 	srand(time(NULL));
@@ -26,12 +26,20 @@ void *rannum()
 					if(random[i] == random[j])
 					{
 						i--;
+						flag = 1;
 						break;
 					}
 				}
-				printf("%d ",random[i]);
-
+				if(flag == 1)
+					continue;
 			}
+
+			for(i = 0; i < 5; i++)
+			{
+				printf("%d ",random[i]);
+			}
+
+			
 			printf("\n");
 		}
 
