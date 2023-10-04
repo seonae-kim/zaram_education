@@ -55,17 +55,20 @@ int main()
 	t=pthread_create(&tid,NULL,rannum,NULL);
 
 	
-	scanf("%c",&a);
+	scanf(" %c",&a);
 
-	while(a != 'q')
+	while(1)
 	{	
-			if(a != 'q')
-			{
-				printf("input : %c\n",a);
-				printf("output: %c\n",a);
-			}
 
-			scanf("%c",&a);
+		if(a != 'q')
+		{
+			printf("input : %c\n",a);
+			printf("output: %c\n",a);
+		}
+		if(a == 'q')
+			break;
+		scanf(" %c",&a);
+
 			
 	}
 
