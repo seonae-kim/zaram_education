@@ -9,35 +9,41 @@ void *rannum();
 void *rannum()
 {
 	int random[5] = {0, };
-	int i = 0, j = 0;
+	int i = 0, j = 0, m=0;
 	pthread_t tid;
 	
 	srand(time(NULL));
 	
 	while(1)
 	{
-		
-		for(i = 0; i < 5; i++)
-		{
-			random[i] = rand() % 9;
-			for(j = 0; j < i; j++)
-			{
-				if(random[i] == random[j])
-				{
-					i--;
-					break;
-				}
-			}
-		}
-
-		for(j = 0; j < 5; j++)
+		for(m = 0; m < 5; m++)
 		{
 			for(i = 0; i < 5; i++)
 			{
+				random[i] = rand() % 45 + 1;
+				for(j = 0; j < i; j++)
+				{
+					if(random[i] == random[j])
+					{
+						i--;
+						break;
+					}
+				}
 				printf("%d ",random[i]);
+
 			}
 			printf("\n");
 		}
+
+/*			for(j = 0; j < 5; j++)
+			{
+				for(i = 0; i < 5; i++)
+				{
+					printf("%d ",random[i]);
+				}
+				printf("\n");
+			}
+			*/
 
 		sleep(1);
 		sleep(1);
