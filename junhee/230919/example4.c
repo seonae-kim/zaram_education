@@ -9,7 +9,7 @@ int main(void)
 {
 	int num[SIZE];
 	int mode[SIZE] = {0};
-	int n = 0, max = -1, many = 0, i = 0, j = 0, k = 0, u = 0, o = 0 ;
+	int n = 0, max = -1, many = 0, place = 0,i = 0, j = 0, k = 0, u = 0, o = 0 ;
 
 	printf("N:");
 	scanf("%d", &n);
@@ -18,9 +18,9 @@ int main(void)
 	{
 		scanf("%d", &num[i]);
 	}
-	for(j = 0; j < i; j++) //몇번 나오는 지 
+	for(j = 0; j < i; j++) 
 	{
-		for(k = 0; k < i; k++)
+		for(k = 0; k < i ; k++)
 		{
 			if(num[j] == num[k])
 			{
@@ -32,6 +32,7 @@ int main(void)
 	{
 		if(max < mode[u])
 		{
+			place = u; 
 			max = mode[u];
 		}
 	}
@@ -42,11 +43,12 @@ int main(void)
 			++many;
 			if (many > max)
 			{
-				printf("-1");
+				printf("-1\n");
 				return 0;
 			}
 		}
 	}
-	printf("%d", max);
+	printf("most_num: %d\n", num[place]);
+
 	return 0;
 }
