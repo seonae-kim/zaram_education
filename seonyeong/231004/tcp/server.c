@@ -67,7 +67,7 @@ void * handle_clnt(void * arg)
 	
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 		send_msg(msg, str_len);
-	
+
 	pthread_mutex_lock(&mutx);
 	for(i=0; i<clnt_cnt; i++)   // remove disconnected client
 	{

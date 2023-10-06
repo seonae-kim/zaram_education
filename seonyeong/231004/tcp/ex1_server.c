@@ -20,24 +20,33 @@ struct package
 
 };
 
+void send_msg(char *msg, int len);
+void *handle_clnt(void *arg);
 
 int main(int argc, char* argv[])
 {
 	int server = 0;
+	int client = 0;
+	int clnt_addr_size = 0;
 	struct sockaddr_in serv_addr, clnt_addr;
 	char msg[50] = {0};
-
-	if(argc != 7 )
+	struct package pack;
+	pthread_t thread;
+	if(argc != 2 )
 	{
-		printf("Usage : %s <port> <func> <name> <age> <fav_color> <fav_num>\n", argv[0]);
+		printf("Usage : %s <port>\n", argv[0]);
 		exit(1);
 	}
 
-	sprintf( msg, "%d %s %d %s %d", func, name, age, fav_color, fav_num ) ;
+	printf("<func> <name> <age> <fav_color> <fav_num>\n");
 
-	serv_adr.sin_family=AF_INET; 
-    serv_adr.sin_addr.s_addr=htonl(INADDR_ANY);
-    serv_adr.sin_port=htons(atoi(argv[1]));
+	scanf("%d %s %d %s %d", &pack.func, pack.name, &pack.age, pack.fav_color, &pack.fav_num );
+
+	//	sprintf( msg, "%d %s %d %s %d", func, name, age, fav_color, fav_num ) ;
+
+	serv_addr.sin_family=AF_INET; 
+	serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
+	serv_addr.sin_port=htons(atoi(argv[1]));
 
 
 	server = socket(PF_INET, SOCK_STREAM, 0);
@@ -59,12 +68,44 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	client = accept(server, (struct sockaddr*) &clnt_addr,sizeof(clnt_addr));
+	while(1)
+	{
+		clnt_addr_size = sizeof(clnt_addr);
+		client = accept(server, (struct sockaddr*) &clnt_addr , &clnt_addr_size);
+	
+		write( client, msg, sizeof(msg));
+		pthread_create(&thread,NULL, handle_clnt, (void*)&client);
+		
+		if(strstr(msg,"q") != 0)
+		{
+			pthread_detach(thread);
+			close(client);
+			exit(0);
+		}
 
-	write( client, msg, sizeof(msg));
-
+		printf("Connected client IP: %s \n", inet_ntoa(clnt_addr.sin_addr));
+	}
 	close(server);
 	return 0;
+	}
+
+
+void *handle_clnt(void *arg)
+{
+	int client = *((int*)arg);
+	int str_len=0, i;
+	char msg[BUF_SIZE];
+
+	while((str_len=read(client, msg, sizeof(msg)))!=0)
+		send_msg(msg, str_len);
+
+	close(client);
+	return NULL;
 }
 
+void send_msg(char *msg, int len)
+{
+	int client;
+	write(client, msg, len);
+}
 
