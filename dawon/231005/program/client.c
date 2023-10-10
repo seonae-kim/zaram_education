@@ -77,9 +77,7 @@ int main(int argc, char *argv[])
 		printf("%c",num[i]);
 	}
 
-
 	strcat(msg,num);
-
 	strcat(msg,"00000001");
 
 	printf("body msg: ");
@@ -91,7 +89,7 @@ int main(int argc, char *argv[])
 
 	for(i = 0; i < len_b; i++)
 	{
-		sprintf(body_str[i],"%x",body[i]);
+		sprintf(body_str[index++],"%x",body[i]);
 	}
 //	sprintf(body_char,"%x",body);
 
@@ -113,7 +111,7 @@ int main(int argc, char *argv[])
 	strcat(msg,body_len);
 //	strcat(msg,body_char);
 
-	for(i = 0; i < len_b; i++)
+	for(i = 0; i < index; i++)
 	{
 		strcat(msg,body_str[i]);
 	}

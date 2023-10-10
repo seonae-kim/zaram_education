@@ -73,9 +73,11 @@ int main(int argc, char *argv[])
 void * handle_clnt(void * arg)
 {
 	int clnt_sock=*((int*)arg);
-	int str_len=0, i = 0, mode = 0, body_strlen = 0, line = 0;
+	int str_len=0, i = 0, mode = 0, body_strlen = 0, line = 0, index = 0;
+	char ecode[8] = {'\0', };
 
 	char msg[BUF_SIZE], m;
+	char smsg[BUF_SIZE] = {'\0', };
 	char body_msg[BODY_SIZE] = {'\0', };
 	char body_char[BODY_SIZE] = {'\0', };
 	char body_len[2] = {'\0', };
@@ -92,47 +94,144 @@ void * handle_clnt(void * arg)
 		
 //		send_msg(msg, str_len);
 		
-		m = msg[49];
+		m = msg[55];
 		mode = atoi(m);
+		for(i = 64; i < 72; i++)
+		{
+			body_len[index++] = msg[i];
+			index++;
+		}
+		index = 0;
+		body_strlen = atoi(body_len);
+		for(i = 72; i < 72 + body_strlen; i++)
+		{
+			body_msg[index++] = msg[i];
+		}
+		index = 0;
 
 		if(mode == 1)
 		{
-			f_msg = fopen("msg.txt","a");
-			
-			for(i = 54; i < 57; i++)
+			if(msg[72] == '\0')
 			{
-				body_len[index++] = msg[i];
-				index++;
-			}
-			index = 0;
-			body_strlen = atoi(body_len);
-			for(i = 57; i <= 57 + body_strlen; i++)
-			{
-				body_msg[index++] = msg[i];
+				f_log = fopen("log.txt","a");
+				strcpy(ecode,"00000102");
+				for(i = 56; i < 64; i++)
+				{
+					msg[i] = ecode[index++];
+				}
+				
+				fprintf(f_log, "Error Code : 0x%s, No Saved message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				send_msg(msg,str_len);
+				fclose(f_log);
+				break;
 			}
 
+
+			f_msg = fopen("msg.txt","a");			
 			fprintf(f_msg,"%s",body_msg);
-			fclose(f);
+			strcpy(ecode,"00000001");
+/*			for(i = 56; i < 64; i++)
+			{
+				msg[i] = ecode[index++];
+			}
+*/
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			send_msg(msg,str_len);
+
+			fclose(f_msg);
+			fclose(f_log);
+
 		}
+
 		else if(mode == 2)
 		{
+			index = 0;
+			f_log = fopen("log.txt","a");
+
+			if(msg[72] == '\0')
+			{
+				strcpy(ecode,"00000101");
+				for(i = 56; i < 64; i++)
+				{
+					msg[i] = ecode[index++];
+				}
+
+				printf("Error Code: 0x%s\n",ecode);
+				printf("No sended message\n");
+				
+				fprintf(f_log, "Error Code : 0x%s, No Sended message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+				fclose(f_log);
+				break;
+			}
+			strcpy(ecode,"00000001");
 			send_msg(msg,str_len);
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			fclose(f_log);
+
 		}
 
 		else if(mode == 3)
 		{
 			f_msg = fopen("msg.txt","r");
+			f_log = fopen("log.txt","a");
+
+			if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
+			{
+				strcpy(ecode,"00000101");
+				for(i = 56; i < 64; i++)
+				{
+					msg[i] = ecode[index++];
+				}
+
+				printf("Error Code: 0x%s\n",ecode);
+				printf("No sended message\n");
+				
+				fprintf(f_log, "Error Code : 0x%s, No Sended message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+				fclose(f_log);
+				break;
+			}
+			else
+				fseek(f_msg,0,SEEK_SET);
 
 			while(f_msg != NULL)
 			{
 				fgets(body_char,MSG_SIZE,f_msg);
-				send_msg(bady_char,MSG_SIZE);
+				send_msg(body_char,MSG_SIZE);
 			}
+			strcpy(ecode,"00000001");
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+			fclose(f_log);
 			fclose(f_msg);
 		}
+
 		else if(mode == 4)
 		{
 			f_msg = fopen("msg.txt","a");
+			f_log = fopen("log.txt","a");
+			
+			if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
+			{
+				strcpy(ecode,"00000102");
+				for(i = 56; i < 64; i++)
+				{
+					msg[i] = ecode[index++];
+				}
+
+				printf("Error Code: 0x%s\n",ecode);
+				printf("No saved message\n");
+				f_log = fopen("log.txt","a");
+				fprintf(f_log, "Error Code : 0x%s, No Saved message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+				fclose(f_log);
+				break;
+			}
+			else
+				fseek(f_msg,0,SEEK_SET);
+
+
 			while(f_msg != NULL)
 			{
 				fgets(body_char, MSG_SIZE,f_msg);
@@ -153,16 +252,59 @@ void * handle_clnt(void * arg)
 
 			remove("msg.txt");
 			rename("output.txt","msg.txt");
+			strcpy(ecode,"00000001");
+/*			for(i = 56; i < 64; i++)
+			{
+				msg[i] = ecode[index++];
+			}
+*/
+			printf("Error Code: 0x%s\n",ecode);
+			printf("No saved message\n");
+				
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
+			fclose(f_log);
 			fclose(f_out);
 //			fclose(f_msg);
 		}
+
 		else if(mode == 5)
 		{
-			f_msg = fopen("msg.txt","r");
-			remove("msg.txt");
+			f_msg = fopen("msg.txt","w");
+			fclose(f_msg);
+			f_log = fopen("log.txt","a");
+			strcpy(ecode,"00000001");
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			fclose(f_log);
 		}
+	}
 
+		pthread_mutex_lock(&mutx);
+		for(i = 0; i < clnt_cnt; i++)
+		{
+			if(clnt_sock == clnt_socks[i])
+			{
+				while(i++ < clnt_cnt - 1)
+					clnt_socks[i] = clnt_socks[i+1];
+				break;
+			}
+		}
+		clnt_cnt--;
+		pthread_mutex_unlock(&mutx);
+		close(clnt_sock);
+		return NULL;
+}
+voie error_handling(char* msg)
+{
+	fputs(msg,stderr);
+	fputc('\n',stderr);
+	exit(1);
+}
+	
+
+		
+
+	
 
 			
 
