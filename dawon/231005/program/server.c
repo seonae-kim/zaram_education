@@ -8,6 +8,7 @@
 #include <pthread.h>
 
 #define BUF_SIZE 100
+#define MSG_SIZE 1080
 #define MAX_CLNT 256
 #define BODY_SIZE 1000
 
@@ -19,6 +20,15 @@ int clnt_cnt=0;
 int clnt_socks[MAX_CLNT];
 pthread_mutex_t mutx;
 
+typedef struct program
+{
+	char head[8];
+	char name[40];
+	char fcode[8];
+	char ecode[9];
+	char blen[9];
+	char bmsg[1000];
+}P;
 
 int main(int argc, char *argv[])
 {
@@ -26,10 +36,8 @@ int main(int argc, char *argv[])
 	char name[40] = {'\0', };
 	char head[30] = {'\0', };
 	char num[1];
-	char body;
-	char body_len[10] = {'\0', };
 	char body_char[BODY_SIZE * 2] = {'\0', };
-	int serv_sock, clint_sock;
+	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_adr, clnt_adr;
 	int clnt_adr_sz;
 	pthread_t t_id;
@@ -57,6 +65,7 @@ int main(int argc, char *argv[])
 		
 		clnt_adr_sz=sizeof(clnt_adr);
 		clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_adr,&clnt_adr_sz);
+		printf("1\n");
 		
 		pthread_mutex_lock(&mutx);
 		clnt_socks[clnt_cnt++]=clnt_sock;
@@ -76,67 +85,110 @@ void * handle_clnt(void * arg)
 	int str_len=0, i = 0, mode = 0, body_strlen = 0, line = 0, index = 0;
 	char ecode[8] = {'\0', };
 
-	char msg[BUF_SIZE], m;
-	char smsg[BUF_SIZE] = {'\0', };
-	char body_msg[BODY_SIZE] = {'\0', };
+	char msg[BUF_SIZE] = {'\0', };
 	char body_char[BODY_SIZE] = {'\0', };
-	char body_len[2] = {'\0', };
+	P p;
 
-	FILE *f_msg;
-	FILE *f_log;
-	FILE *f_out;
+	FILE *f_msg = NULL;
+	FILE *f_log = NULL;
+	FILE *f_out = NULL;
 	time_t t = time(NULL);
 	struct tm tm = *(localtime(&t));
-	char *file;
+
+	f_msg = fopen("msg.txt","r");	
+	if(f_msg == NULL)
+		printf("No file to open\n");
+	else
+	{
+		while(f_msg != NULL)
+		{
+			fgets(body_char, MSG_SIZE,f_msg);
+			line++;
+		}
+		fclose(f_msg);
+	}
+	
 	
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{
-		
-//		send_msg(msg, str_len);
-		
-		m = msg[55];
-		mode = atoi(m);
-		for(i = 64; i < 72; i++)
+		printf("Server received msg: %s\n",msg);
+
+		for(i = 0; i < 8; i++)
 		{
-			body_len[index++] = msg[i];
-			index++;
+			p.head[i] = msg[i];
+		}
+	
+
+		if(strcmp(p.head, "000B6FFF") != 0)
+		{
+			strcpy(p.ecode,"00000100");
+			for(i = 56; i < 64; i++)
+			{
+				msg[i] = p.ecode[index++];
+			}
+			send_msg(msg,str_len);
+			break;
+		}
+		
+		for(i = 48; i < 56; i++)
+		{
+			p.fcode[index++] = msg[i];
 		}
 		index = 0;
-		body_strlen = atoi(body_len);
+
+		mode = atoi(p.fcode);
+		printf("mode: %d\n",mode);
+
+
+		for(i = 64; i < 72; i++)
+		{
+			p.blen[index++] = msg[i];
+		}
+		index = 0;
+
+		body_strlen = atoi(p.blen);
 		for(i = 72; i < 72 + body_strlen; i++)
 		{
-			body_msg[index++] = msg[i];
+			p.bmsg[index++] = msg[i];
 		}
+		p.bmsg[72 + body_strlen] = '\0';
 		index = 0;
 
 		if(mode == 1)
 		{
-			if(msg[72] == '\0')
+			printf("###\n");
+			f_log = fopen("log.txt","r");
+
+			if(f_log == NULL)
 			{
-				f_log = fopen("log.txt","a");
-				strcpy(ecode,"00000102");
+				printf("fopen fail\n");
+				exit(1);
+			}
+			if(p.bmsg[0] == '\0')
+			{
+				strcpy(p.ecode,"00000102");
 				for(i = 56; i < 64; i++)
 				{
-					msg[i] = ecode[index++];
+					msg[i] = p.ecode[index++];
 				}
 				
-				fprintf(f_log, "Error Code : 0x%s, No Saved message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(f_log, "Error Code : 0x%s, No message to save %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 				send_msg(msg,str_len);
 				fclose(f_log);
 				break;
 			}
 
-
-			f_msg = fopen("msg.txt","a");			
-			fprintf(f_msg,"%s",body_msg);
-			strcpy(ecode,"00000001");
-/*			for(i = 56; i < 64; i++)
+			f_msg = fopen("msg.txt","a");
+			fprintf(f_msg,"%s",p.bmsg);
+			strcpy(p.ecode,"00000001");
+			for(i = 56; i < 64; i++)
 			{
-				msg[i] = ecode[index++];
+				msg[i] = p.ecode[index++];
 			}
-*/
-			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			send_msg(msg,str_len);
+			printf("3\n");
 
 			fclose(f_msg);
 			fclose(f_log);
@@ -145,30 +197,48 @@ void * handle_clnt(void * arg)
 
 		else if(mode == 2)
 		{
+			int a = 0;
 			index = 0;
 			f_log = fopen("log.txt","a");
+			f_msg = fopen("msg.txt","r");
 
-			if(msg[72] == '\0')
+			if(p.bmsg[0] == '\0')
 			{
-				strcpy(ecode,"00000101");
+				strcpy(p.ecode,"00000102");
 				for(i = 56; i < 64; i++)
 				{
-					msg[i] = ecode[index++];
+					msg[i] = p.ecode[index++];
 				}
-
-				printf("Error Code: 0x%s\n",ecode);
-				printf("No sended message\n");
+				index = 0;
 				
-				fprintf(f_log, "Error Code : 0x%s, No Sended message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(f_log, "Error Code : 0x%s, No message to send %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
 				break;
 			}
-			strcpy(ecode,"00000001");
+
+			while(f_msg != NULL)
+			{
+				fgets(body_char, MSG_SIZE, f_msg);
+				a++;
+				if(a == line)
+					strcpy(p.bmsg,body_char);
+			}
+			index = 0;
+			for(i = 72; i < 72 + body_strlen; i++)
+			{
+				msg[i] = p.bmsg[index++];
+			}
+			index = 0;
+			strcpy(p.ecode,"00000001");
+			for(i = 56; i < 64; i++)
+			{
+				msg[i] = p.ecode[index++];
+			}
 			send_msg(msg,str_len);
 			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			fclose(f_log);
-
+			fclose(f_msg);
 		}
 
 		else if(mode == 3)
@@ -178,16 +248,15 @@ void * handle_clnt(void * arg)
 
 			if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
 			{
-				strcpy(ecode,"00000101");
+				strcpy(p.ecode,"00000101");
 				for(i = 56; i < 64; i++)
 				{
-					msg[i] = ecode[index++];
+					msg[i] = p.ecode[index++];
 				}
-
-				printf("Error Code: 0x%s\n",ecode);
-				printf("No sended message\n");
+				index = 0;
+				send_msg(msg,str_len);
 				
-				fprintf(f_log, "Error Code : 0x%s, No Sended message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(f_log, "Error Code : 0x%s, No message to send %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
 				break;
@@ -200,8 +269,14 @@ void * handle_clnt(void * arg)
 				fgets(body_char,MSG_SIZE,f_msg);
 				send_msg(body_char,MSG_SIZE);
 			}
-			strcpy(ecode,"00000001");
+
 			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			strcpy(p.ecode,"00000001");
+			for(i = 56; i < 64; i++)
+			{
+				msg[i] = p.ecode[index++];
+			}
+			send_msg(msg,str_len);
 
 			fclose(f_log);
 			fclose(f_msg);
@@ -209,12 +284,14 @@ void * handle_clnt(void * arg)
 
 		else if(mode == 4)
 		{
+			int a = 0;
+			index = 0;
 			f_msg = fopen("msg.txt","a");
 			f_log = fopen("log.txt","a");
 			
 			if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
 			{
-				strcpy(ecode,"00000102");
+				strcpy(p.ecode,"00000102");
 				for(i = 56; i < 64; i++)
 				{
 					msg[i] = ecode[index++];
@@ -223,21 +300,13 @@ void * handle_clnt(void * arg)
 				printf("Error Code: 0x%s\n",ecode);
 				printf("No saved message\n");
 				f_log = fopen("log.txt","a");
-				fprintf(f_log, "Error Code : 0x%s, No Saved message %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(f_log, "Error Code : 0x%s, No message to delete %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
 				break;
 			}
 			else
 				fseek(f_msg,0,SEEK_SET);
-
-
-			while(f_msg != NULL)
-			{
-				fgets(body_char, MSG_SIZE,f_msg);
-				line++;
-			}
-			
 
 			f_out = fopen("output.txt","w");
 			
@@ -247,21 +316,19 @@ void * handle_clnt(void * arg)
 				a++;
 				if(a == line)
 					break;
-				fprintf(body_char,MSG_SIZE,f_out);
+				fprintf(f_out,"%s",body_char);
 			}
-
+			
 			remove("msg.txt");
 			rename("output.txt","msg.txt");
-			strcpy(ecode,"00000001");
-/*			for(i = 56; i < 64; i++)
+			strcpy(p.ecode,"00000001");
+			for(i = 56; i < 64; i++)
 			{
-				msg[i] = ecode[index++];
+				msg[i] = p.ecode[index++];
 			}
-*/
-			printf("Error Code: 0x%s\n",ecode);
-			printf("No saved message\n");
-				
-			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			send_msg(msg,str_len);
+						
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 			fclose(f_log);
 			fclose(f_out);
@@ -270,11 +337,19 @@ void * handle_clnt(void * arg)
 
 		else if(mode == 5)
 		{
+			index = 0;
 			f_msg = fopen("msg.txt","w");
+
+			strcpy(p.ecode,"00000001");
+			for(i = 56; i < 64; i++)
+			{
+				msg[i] = p.ecode[index++];
+			}
+			send_msg(msg,str_len);
 			fclose(f_msg);
 			f_log = fopen("log.txt","a");
-			strcpy(ecode,"00000001");
-			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			strcpy(p.ecode,"00000001");
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			fclose(f_log);
 		}
 	}
@@ -294,58 +369,13 @@ void * handle_clnt(void * arg)
 		close(clnt_sock);
 		return NULL;
 }
-voie error_handling(char* msg)
+void error_handling(char* msg)
 {
 	fputs(msg,stderr);
 	fputc('\n',stderr);
 	exit(1);
 }
-	
 
-		
-
-	
-
-			
-
-					
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	}
-	
-	pthread_mutex_lock(&mutx);
-	for(i=0; i<clnt_cnt; i++)   // remove disconnected client
-	{
-		if(clnt_sock==clnt_socks[i])
-		{
-			while(i++<clnt_cnt-1)
-				clnt_socks[i]=clnt_socks[i+1];
-			break;
-		}
-	}
-	clnt_cnt--;
-	pthread_mutex_unlock(&mutx);
-	close(clnt_sock);
-	return NULL;
-}
 void send_msg(char * msg, int len)   // send to all
 {
 	int i;
@@ -354,9 +384,5 @@ void send_msg(char * msg, int len)   // send to all
 		write(clnt_socks[i], msg, len);
 	pthread_mutex_unlock(&mutx);
 }
-void error_handling(char * msg)
-{
-	fputs(msg, stderr);
-	fputc('\n', stderr);
-	exit(1);
-}
+
+
