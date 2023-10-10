@@ -31,6 +31,7 @@ int clnt_cnt = 0;
 int clnt_socks[MAX_CLNT];
 char buffer[BUF_SIZE + NAME_SIZE] = {0};
 char msg[BUF_SIZE + NAME_SIZE] = {0};
+char temp[BUF_SIZE] = {0};
 char return_msg[BUF_SIZE + NAME_SIZE] = {0};
 FILE *fm, *fl, *fp;
 pthread_mutex_t mutx;
@@ -106,9 +107,15 @@ void * handle_clnt(void * arg)
 
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{   
-		idx++;
-
-		if(msg[53] == 54)//6
+		//idx++;
+		
+		//char temp[BUF_SIZE] = {0};
+		
+		strncpy(temp, msg+51, 3);
+		m[idx].func_code = atoi(temp);
+		printf(">>%d", m[idx].func_code);
+		
+		if(m[idx].func_code == 6)//6
 		{
 			printf("%d", msg[53]);
 			printf("exit\n");
@@ -116,7 +123,7 @@ void * handle_clnt(void * arg)
 			exit(0);
 		}
 
-		else if(msg[53] == 49)
+		else if(m[idx].func_code == 1)
 		{
 			printf("func_num: 1\n");
 
@@ -163,7 +170,7 @@ void * handle_clnt(void * arg)
 
 			fclose(fl);
 		}
-		else if(msg[53] == 50)
+		else if(m[idx].func_code == 2 )
 		{
 			printf(" func_num : 2\n");
 			if((fm = fopen("message.txt", "r")) == NULL)
@@ -203,7 +210,7 @@ void * handle_clnt(void * arg)
 			fclose(fm);
 		}
 
-		else if(msg[53] == 51)
+		else if(m[idx].func_code == 3)
 		{
 			printf("func_num : 3\n");
 
@@ -242,7 +249,7 @@ void * handle_clnt(void * arg)
 			fclose(fl);
 		}
 
-		else if(msg[53] == 52)
+		else if(m[idx].func_code == 4)
 		{
 
 			printf("func_num : 4\n");
@@ -306,7 +313,7 @@ void * handle_clnt(void * arg)
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 		}
-		else if(msg[53] == 53)
+		else if(m[idx].func_code == 5)
 		{
 			printf("func_num : 5\n");
 
@@ -325,15 +332,15 @@ void * handle_clnt(void * arg)
 			sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>", msg[53] - 48, error_code);
 			write(clnt_sock, return_msg, strlen(return_msg));
 		}
-		else 
+		else if(m[idx].func_code < 1 || m[idx].func_code > 6) 
 		{
-			sprintf(return_msg, "func_num: %d func_code error", msg[53] - 48);
+			sprintf(return_msg, "func_code error/ <func_code> <body>");
 			write(clnt_sock, return_msg, strlen(return_msg));
 			printf("func_code error\n");
-			char msg[BUF_SIZE + NAME_SIZE] = {0};
+			idx++;
 		}
 	}
-
+	
 	pthread_mutex_lock(&mutx);
 	for(i=0; i<clnt_cnt; i++) 
 	{
@@ -384,7 +391,6 @@ void msg_char(char *msg)
 {
 	struct messages m[50];
 	int idx = 0;
-	char temp[BUF_SIZE] = {0};
 	int message[BUF_SIZE] = {0};
 	char num[NAME_SIZE] = {0};
 	int i = 0;
@@ -393,7 +399,7 @@ void msg_char(char *msg)
 	m[idx].body_len = atof(temp);
 	strncpy(temp, msg+65, m[idx].body_len * 2);
 	sprintf(m[idx].body, "%s", temp);
-
+	
 	for(i = 0; i < m[idx].body_len; i++)
 	{
 		strncpy(num , m[idx].body + i*2, 2);  

@@ -93,7 +93,7 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 		n = n + 2;
 	}
 
-	sprintf(buffer,"%s %s %04X %04X %04X %s", 
+	sprintf(buffer,"%s %s %04d %04X %04X %s", 
 			head_num, name_num, func_code, error_code, body_len, body_num);
 	strcpy(msg, buffer);
 	return msg;
@@ -115,8 +115,11 @@ void * send_msg(void * arg)
             close(sock);
             exit(0);
         }
-		msg_buffer(head, name, func_code, error_code, body);
-		write(sock, msg, strlen(msg));
+		else
+		{
+			msg_buffer(head, name, func_code, error_code, body);
+			write(sock, msg, strlen(msg));
+		}
 
     }   
     return NULL;
