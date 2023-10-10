@@ -96,22 +96,16 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 	sprintf(buffer,"%s %s %04X %04X %04X %s", 
 			head_num, name_num, func_code, error_code, body_len, body_num);
 	strcpy(msg, buffer);
-	printf("%s\n", buffer);
 	return msg;
 }
 
 void * send_msg(void * arg)
 {
     int sock = *((int*)arg);
-    while(1)
+	printf("\n<func_code> <body> ");
+    
+	while(1)
     {
-		printf("\n<func_code> <body> ");
-	//	scanf("%d", &func_code);
-	//	for(int i = 0; i < 200; i++)
-	//	{
-	//		unsigned char p ;
-	//		sprintf(&body[i],"%c", p++);
-	//	}
 		scanf("%d %s", &func_code, body);
         if( func_code == 6 )
         {
@@ -121,8 +115,8 @@ void * send_msg(void * arg)
             close(sock);
             exit(0);
         }
-			msg_buffer(head, name, func_code, error_code, body);
-			write(sock, msg, strlen(msg));
+		msg_buffer(head, name, func_code, error_code, body);
+		write(sock, msg, strlen(msg));
 
     }   
     return NULL;
@@ -138,8 +132,7 @@ void * recv_msg(void * arg)
         if(str_len ==-1)
             return (void*)-1;
         msg[str_len] =0;
-        fputs(msg, stdout);
-		printf("%s", msg);
+		fputs(msg, stdout);
     }
     return NULL;
 }

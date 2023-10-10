@@ -1,0 +1,37 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUF_SIZE	client.c	10;"	d	file:
+BUF_SIZE	server.c	12;"	d	file:
+MAX_CLNT	server.c	11;"	d	file:
+NAME_SIZE	client.c	11;"	d	file:
+NAME_SIZE	server.c	13;"	d	file:
+body	client.c	/^char body[1000];$/;"	v
+body_len	client.c	/^int body_len ;$/;"	v
+buffer	client.c	/^char buffer[BUF_SIZE + NAME_SIZE] = {0};$/;"	v
+buffer	server.c	/^char buffer[BUF_SIZE + NAME_SIZE] = {0};$/;"	v
+clnt_cnt	server.c	/^int clnt_cnt = 0;$/;"	v
+clnt_socks	server.c	/^int clnt_socks[MAX_CLNT];$/;"	v
+count	server.c	/^int count = 0;$/;"	v
+error_code	client.c	/^int error_code = 0;$/;"	v
+error_code	server.c	/^int error_code = 0;$/;"	v
+fl	server.c	/^FILE *fm, *fl;$/;"	v
+fm	server.c	/^FILE *fm, *fl;$/;"	v
+func_code	client.c	/^int func_code ;$/;"	v
+handle_clnt	server.c	/^void * handle_clnt(void * arg)$/;"	f
+head	client.c	/^unsigned char head[] = {0x00,0x0B,0x6F,0xFF};$/;"	v
+main	client.c	/^int main(int argc, char *argv[])$/;"	f
+main	server.c	/^int main(int argc, char* argv[])$/;"	f
+main	test.c	/^int main(void)$/;"	f
+msg	client.c	/^char msg[BUF_SIZE + NAME_SIZE] = {0};$/;"	v
+msg	server.c	/^char msg[BUF_SIZE + NAME_SIZE] = {0};$/;"	v
+msg_buffer	client.c	/^char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code, char* body )$/;"	f
+msg_cut	server.c	/^int msg_cut(char *msg)$/;"	f
+mutx	server.c	/^pthread_mutex_t mutx;$/;"	v
+name	client.c	/^char name[NAME_SIZE] = {0} ;$/;"	v
+recv_msg	client.c	/^void * recv_msg(void * arg)$/;"	f
+return_msg	server.c	/^char return_msg[BUF_SIZE + NAME_SIZE] = {0};$/;"	v
+send_msg	client.c	/^void * send_msg(void * arg)$/;"	f
