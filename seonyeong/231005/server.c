@@ -9,8 +9,13 @@
 #include <time.h>
 
 #define MAX_CLNT 256
-#define BUF_SIZE 100
+#define BUF_SIZE 1000
 #define NAME_SIZE 20
+#define BODY_SIZE 1000
+
+#define HEAD_ERR   3
+#define BODY_ERR   2
+#define CORRECT    1
 
 void *handle_clnt(void * arg);
 void send_msg(char * msg, int len);
@@ -36,7 +41,7 @@ struct messages
 	char name[NAME_SIZE] ;
 	int func_code ;
 	int body_len ;
-	char body[1000];
+	char body[BODY_SIZE];
 };
 
 int main(int argc, char* argv[])
@@ -51,7 +56,7 @@ int main(int argc, char* argv[])
 
 	if(argc!=2) {
 		printf("Usage : %s <port>\n", argv[0]);
-		exit(1);
+		return 0;
 	}
 
 	pthread_mutex_init(&mutx, NULL);
@@ -105,6 +110,7 @@ void * handle_clnt(void * arg)
 
 		if(msg[53] == 54)//6
 		{
+			printf("%d", msg[53]);
 			printf("exit\n");
 			close(clnt_sock);
 			exit(0);
@@ -120,33 +126,33 @@ void * handle_clnt(void * arg)
 			}
 
 			int msg_return = msg_cut(msg);
-			if(msg_return == 3)
+			if(msg_return == HEAD_ERR)
 			{
 				printf("head incorrect\n");
 				error_code = 256;
 
-				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
+				fprintf(fl, " %s %04x %d-%d-%d %d:%d\n", msg, error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				
-				sprintf( return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf( return_msg, "func_num: %d  error_code: %04x  <func_code> <body>", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 
-			else if(msg_return == 2)
+			else if(msg_return == BODY_ERR)
 			{	
 				printf("no message\n");
 			}
 
-			else if(msg_return == 1)
+			else if(msg_return == CORRECT)
 			{
 				error_code = 1;
 
 				msg_char(msg);
 
-				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
+				fprintf(fl, "%s %04x %d-%d-%d %d:%d\n", msg,error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				printf("message save\n" );
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x  <func_code> <body>", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 
 			}
@@ -168,14 +174,14 @@ void * handle_clnt(void * arg)
 			{
 				printf("fail2\n");
 			}
-			char *ptr= fgets(buffer, 255, fm);
+			char *ptr= fgets(buffer, BUF_SIZE, fm);
 			if(ptr == NULL)
 			{
 				printf("no message\n");
 				error_code = 258;
-				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
+				fprintf(fl, "%s %04x %d-%d-%d %d:%d\n",msg, error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body> ", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
@@ -183,13 +189,13 @@ void * handle_clnt(void * arg)
 				rewind(fm);
 				while(1)
 				{
-					if(fgets(buffer, 255, fm) == NULL)
+					if(fgets(buffer, BUF_SIZE, fm) == NULL)
 						break;			
 				}
 				printf("last message: %s", buffer);
 				printf("transfer last message\n");
 				
-				sprintf(return_msg, "func_num: %d input: ", msg[53] - 48);
+				sprintf(return_msg, "func_num: %d <func_code> <body> ", msg[53] - 48);
 				write(clnt_sock, buffer, strlen(buffer));
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
@@ -209,25 +215,25 @@ void * handle_clnt(void * arg)
 			{
 				printf("fail2\n");
 			}
-			char *ptr= fgets(buffer, 255, fm);
+			char *ptr= fgets(buffer, BUF_SIZE, fm);
 			if(ptr == NULL)
 			{
 				printf("no message\n");
 				error_code = 258;
-				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
+				fprintf(fl, "%s %04x %d-%d-%d %d:%d\n",msg, error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body> ", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
 			{
 				rewind(fm);
-				while( fgets(buffer, 255, fm)!= NULL)
+				while( fgets(buffer, BUF_SIZE, fm)!= NULL)
 				{
 					write(clnt_sock, buffer, strlen(buffer));
 				}
 				error_code = 1;
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body> ", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 				printf("transfer all messages\n");
 			}
@@ -250,21 +256,21 @@ void * handle_clnt(void * arg)
 				printf("fail3\n");
 			}
 			
-			char *ptr= fgets(buffer, 255, fm);
+			char *ptr= fgets(buffer,BUF_SIZE, fm);
 			if(ptr == NULL)
 			{
 				printf("no message\n");
 				error_code = 258;
-				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
+				fprintf(fl, "%s %04x %d-%d-%d %d:%d\n", msg, error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body> ", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
 			{
 				rewind(fm);
 
-				while(fgets(buffer, 255, fm) != NULL)
+				while(fgets(buffer, BUF_SIZE, fm) != NULL)
 				{
 					line++;
 				}
@@ -272,7 +278,7 @@ void * handle_clnt(void * arg)
 
 				while(1)
 				{
-					if(fgets(buffer, 255, fm) == NULL)
+					if(fgets(buffer, BUF_SIZE, fm) == NULL)
 					{
 						break;
 					}
@@ -283,6 +289,10 @@ void * handle_clnt(void * arg)
 					{
 						fputs(buffer, fp);
 					}
+					else if(count == line)
+					{
+						break;
+					}
 				}
 			
 				fclose(fp);
@@ -292,7 +302,7 @@ void * handle_clnt(void * arg)
 				printf("delete last message\n");
 			
 				error_code = 1;
-				sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>", msg[53] - 48, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 		}
@@ -312,14 +322,15 @@ void * handle_clnt(void * arg)
 
 			error_code = 1;
 			printf("completely deleting all messages\n");
-			sprintf(return_msg, "func_num: %d  error_code: %04x input: ", msg[53] - 48, error_code);
+			sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>", msg[53] - 48, error_code);
 			write(clnt_sock, return_msg, strlen(return_msg));
 		}
 		else 
 		{
-			printf("func_code error\n");
 			sprintf(return_msg, "func_num: %d func_code error", msg[53] - 48);
 			write(clnt_sock, return_msg, strlen(return_msg));
+			printf("func_code error\n");
+			char msg[BUF_SIZE + NAME_SIZE] = {0};
 		}
 	}
 
@@ -348,7 +359,7 @@ int msg_cut(char *msg)
 	strncpy(m[idx].head, msg, 8);
 	if(strstr(m[idx].head, "000B6FFF") == NULL)
 	{
-		count == 3;
+		count == HEAD_ERR;
 	}
 	else
 	{
@@ -359,25 +370,23 @@ int msg_cut(char *msg)
 
 		if(strstr(m[idx].body, "32") != 0)
 		{
-			count = 2;
+			count = BODY_ERR;
 		}
 		else
 		{
-			count = 1;
+			count = CORRECT;
 		}
 	}
-
 	return count;
-
 }
 
 void msg_char(char *msg)
 {
 	struct messages m[50];
 	int idx = 0;
-	char temp[500] = {0};
-	int message[20] = {0};
-	char num[20] = {0};
+	char temp[BUF_SIZE] = {0};
+	int message[BUF_SIZE] = {0};
+	char num[NAME_SIZE] = {0};
 	int i = 0;
 
 	strncpy(temp, msg+62, 2);
@@ -401,6 +410,4 @@ void msg_char(char *msg)
 	fprintf(fm, "%ls\n", message);
 
 	fclose(fm);
-
 }
-
