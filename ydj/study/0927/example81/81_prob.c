@@ -18,6 +18,8 @@ int main()
 	}
 	fprintf(fp, "%s", now_time);
 
+	fclose(fp);
+
 	printf("DONE! Please check the file !\n");
 	return 0;
 }
