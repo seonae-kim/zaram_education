@@ -16,7 +16,7 @@ int main()
 	char* words[SIZE];
 	char tmp[SIZE] = {0};
 	int num;
-	int i,j,k = 0;
+	int i,j,k,o = 0;
 	int a = 0;
 	int s_count = 0;
 	int a_flag = 0, b_flag = 0, fail_flag = 0;
@@ -27,12 +27,12 @@ int main()
 	fgets(str,sizeof(str),stdin);
 	
 	char* word = strtok(str, " ");
-    while (word != NULL && a < num) 
+	while (word != NULL && a < num) 
 	{
-        words[a] = word;
-        word = strtok(NULL, " ");
-        a++;
-    }
+        	words[a] = word;
+	        word = strtok(NULL, " ");
+        	a++;
+    	}
 	 
 	for (i = 0; i < a; i++)
 	{
@@ -46,18 +46,17 @@ int main()
 			{
 				if(tmp[k] == words[i][j])
 				{
-					a_flag = 1;	
-					if(b_flag == 1)
+					if(k-j != 1)
 					{
-						fail_flag = 1;
-						break;
-					}
-				}
-				else
-				{
-					if(a_flag == 1)
-					{
-						b_flag = 1;	
+						for (o = k; o < j; o++)
+						{
+							if(tmp[o] != words[i][j])
+							{
+								fail_flag = 1;
+								break;
+							}
+
+						}
 					}
 				}
 			}
@@ -67,7 +66,6 @@ int main()
 				break;
 			}
 		}
-		printf("%s\n",tmp);
 		if(fail_flag == 1)
 		{
 			num--;
