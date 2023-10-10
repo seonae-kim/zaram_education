@@ -4,12 +4,13 @@ int main()
 {
 	FILE *fp;
 	char str[20] = {0};
-	fp = fopen("/home/vboxuser/zaram_education/ydj/study/0927/example81/time.txt", "r");
+	fp = fopen("time.txt", "r");
 	while (fgets(str, 100, fp) != NULL)
 	{	
 		printf("%s", str);
 	}
 	fclose(fp);
+	printf("\n");
 
 //	printf("%s\n", str);
 	return 0;
