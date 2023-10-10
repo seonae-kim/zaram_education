@@ -49,7 +49,7 @@ int main()
             }
             memset(temp, 0, 10 * sizeof(char));
         }
-        printf("%d", flag);
+        printf("%d \n", flag);
     }
 
 //    printf("%d", strlen(str));
