@@ -9,27 +9,31 @@ int main()
     printf("Please enter the string : ");
     scanf("%s", str);
 
-    for (i = 0; i < strlen(str); i++)
-    {
-        if (str[i] == '1')
-        {
-            num++;
-        }
-    }
+	for (i = 0; i < strlen(str); i++)
+	{
+		if (str[i] == '1')
+		{
+			num++;
+		}
+		else
+		{
+			if (num % 2 == 0)
+			{
+				if (i % 2 == 0)
+				{
+					printf("%c", str[i]);
+				}
+			}
+			else if (num % 2 == 1)
+			{
+				if (i % 2 == 1)
+				{
+					printf("%c", str[i]);
+				}
+			}
+		}
+	}
+	printf("\n");
 
-    if (num % 2 == 0)
-    {
-        for (i = 0; i < strlen(str); i = i + 2)
-        {
-            printf("%c", str[i]);
-        }
-    }
-    else 
-    {
-        for (i = 1; i < strlen(str); i = i + 2)
-        {
-            printf("%c", str[i]);
-        }       
-    }
     return 0;
 }
