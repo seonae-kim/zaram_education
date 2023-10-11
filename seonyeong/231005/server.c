@@ -98,9 +98,9 @@ int main(int argc, char* argv[])
 
 void * handle_clnt(void * arg)
 {
-	struct messages m[50];
+	struct messages m;
 	int clnt_sock=*((int*)arg);
-	int str_len=0, i = 0, idx = 0, count = 0;
+	int str_len=0, i = 0, count = 0;
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 
@@ -108,17 +108,17 @@ void * handle_clnt(void * arg)
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{   
 		memset(temp, 0, sizeof(temp));
-		strncpy(temp, msg+51, 3);
-		m[idx].func_code = strtol(temp, 0, 16);
+		strncpy(temp, msg+49, 3);
+		m.func_code = strtol(temp, 0, 16);
 		
-		if( m[idx].func_code == 6)
+		if( m.func_code == 6)
 		{
-			printf("%d", m[idx].func_code);
+			printf("%d", m.func_code);
 			printf("exit\n");
 			close(clnt_sock);
 			exit(0);
 		}
-		else if(m[idx].func_code == 1) //define or enum (o)
+		else if(m.func_code == 1) //define or enum (o)
 		{
 			printf("func_num: 1\n");
 
@@ -137,7 +137,7 @@ void * handle_clnt(void * arg)
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				
 				sprintf( return_msg, "func_num: %d  error_code: %04x  <func_code> <body> \n",
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 
@@ -154,7 +154,7 @@ void * handle_clnt(void * arg)
 				fprintf(fl, "%04X %d-%d-%d %d:%d\n", error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				sprintf(return_msg, "func_num: %d  error_code: %04X  <func_code> <body>\n",
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 						
 				msg_char(msg);
@@ -167,7 +167,7 @@ void * handle_clnt(void * arg)
 
 			//fclose(fl);
 		}
-		else if(m[idx].func_code == 2 )
+		else if(m.func_code == 2 )
 		{
 			printf(" func_num : 2\n");
 			if((fm = fopen("message.txt", "r")) == NULL)
@@ -186,7 +186,7 @@ void * handle_clnt(void * arg)
 				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>\n",
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
@@ -200,7 +200,7 @@ void * handle_clnt(void * arg)
 				printf("last message: %s", buffer);
 				printf("transfer last message\n");
 				
-				sprintf(return_msg, "func_num: %d <func_code> <body>\n", m[idx].func_code);
+				sprintf(return_msg, "func_num: %d <func_code> <body>\n", m.func_code);
 				write(clnt_sock, buffer, strlen(buffer));
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
@@ -208,7 +208,7 @@ void * handle_clnt(void * arg)
 			fclose(fm);
 		}
 
-		else if(m[idx].func_code == 3)
+		else if(m.func_code == 3)
 		{
 			printf("func_num : 3\n");
 
@@ -228,7 +228,7 @@ void * handle_clnt(void * arg)
 				fprintf(fl, "%04x %d-%d-%d %d:%d\n", error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>\n",
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
@@ -240,7 +240,7 @@ void * handle_clnt(void * arg)
 				}
 				error_code = 1;
 				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body> \n",
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 				printf("transfer all messages\n");
 			}
@@ -249,7 +249,7 @@ void * handle_clnt(void * arg)
 			fclose(fl);
 		}
 
-		else if(m[idx].func_code == 4)
+		else if(m.func_code == 4)
 		{
 
 			printf("func_num : 4\n");
@@ -271,7 +271,7 @@ void * handle_clnt(void * arg)
 				fprintf(fl, "%04x %d-%d-%d %d:%d\n",  error_code,
 						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>\n", 
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 			else
@@ -312,11 +312,11 @@ void * handle_clnt(void * arg)
 			
 				error_code = 1;
 				sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>\n", 
-						m[idx].func_code, error_code);
+						m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 			}
 		}
-		else if(m[idx].func_code == 5)
+		else if(m.func_code == 5)
 		{
 			printf("func_num : 5\n");
 
@@ -333,17 +333,16 @@ void * handle_clnt(void * arg)
 			error_code = 1;
 			printf("completely deleting all messages\n");
 			sprintf(return_msg, "func_num: %d  error_code: %04x <func_code> <body>\n",
-					m[idx].func_code, error_code);
+					m.func_code, error_code);
 			write(clnt_sock, return_msg, strlen(return_msg));
 		}
 		
 		else  
 		{
-			printf("func_code error %d\n", m[idx].func_code);
+			printf("func_code error %d\n", m.func_code);
 			sprintf(return_msg, "func_code error\n");
 			write(clnt_sock, return_msg, strlen(return_msg));
 			memset(temp, 0, sizeof(temp));
-			//idx++;
 		}
 	}
 	
@@ -365,24 +364,23 @@ void * handle_clnt(void * arg)
 
 int msg_cut(char *msg)
 {
-	struct messages m[50];
-	int idx = 0;
+	struct messages m;
 	char temp[500] = {0};	
 
-	strncpy(m[idx].head, msg, 8);
-	if(strstr(m[idx].head, "000B6FFF") == NULL)
+	strncpy(m.head, msg, 8);
+	if(strstr(m.head, "000B6FFF") == NULL)
 	{
 		count = HEAD_ERR;
 		
 	}
 	else
 	{
-		strncpy(temp, msg+62, 2);
-		m[idx].body_len = atof(temp);
-		strncpy(temp, msg+65, m[idx].body_len);
-		sprintf(m[idx].body, "%s", temp);
+		strncpy(temp, msg+58, 2);
+		m.body_len = atof(temp);
+		strncpy(temp, msg+60, m.body_len*2);
+		sprintf(m.body, "%s", temp);
 
-		if(strstr(m[idx].body, "32") != 0)
+		if(strstr(m.body, "32") != 0)
 		{
 			count = BODY_ERR;
 		}
@@ -396,22 +394,23 @@ int msg_cut(char *msg)
 
 void msg_char(char *msg)
 {
-	struct messages m[50];
-	int idx = 0;
+	struct messages m;
 	int message[BUF_SIZE] = {0};
 	char num[NAME_SIZE] = {0};
 	int i = 0;
+	char temp[BUF_SIZE];
 
 	memset(temp, 0, sizeof(temp));
-	memset(m[idx].body, 0, sizeof(m[idx].body));
+	memset(m.body, 0, sizeof(m.body));
+	memset(message, 0, sizeof(message));
 
-	strncpy(temp, msg+62, 2);
-	m[idx].body_len = atof(temp);
-	strncpy(temp, msg+65, m[idx].body_len * 2);
-	sprintf(m[idx].body, "%s", temp);
-	for(i = 0; i < m[idx].body_len; i++)
+	strncpy(temp, msg+58, 2);
+	m.body_len = atof(temp);
+	strncpy(temp, msg+60, m.body_len * 2);
+	sprintf(m.body, "%s", temp);
+	for(i = 0; i < m.body_len; i++)
 	{
-		strncpy(num , m[idx].body + i*2, 2);  
+		strncpy(num , m.body + i*2, 2);  
 		message[i] = strtol(num, 0, 16);
 	}
 

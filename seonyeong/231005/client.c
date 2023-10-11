@@ -98,9 +98,9 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 		n += 2;
 	}
 
-	sprintf(buffer,"%s %s %04X %04X %04X %s", 
+	sprintf(buffer,"%s%s%04X%04X%04X%s", 
 			head_num, name_num, func_code, error_code, body_len, body_num);
-	//strcpy(msg, buffer);
+	printf("%s\n", buffer);
 	return buffer;
 }
 
@@ -158,13 +158,11 @@ void * recv_msg(void * arg)
     int str_len;
     while(1)
     {
-		//pthread_mutex_lock(&mutx);
         str_len = read(sock, buffer, NAME_SIZE+BUF_SIZE-1);
         if(str_len ==-1)
             return (void*)-1;
         buffer[str_len] =0;
 		fputs(buffer, stdout);
-		//pthread_mutex_unlock(&mutx);
     }
 	return NULL;
 }
