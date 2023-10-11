@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <time.h>
 
 #define BUF_SIZE 100
 #define MSG_SIZE 1080
@@ -19,6 +20,10 @@ void error_handling(char * msg);
 int clnt_cnt=0;
 int clnt_socks[MAX_CLNT];
 pthread_mutex_t mutx;
+
+FILE *fmsg = NULL;
+FILE *flog = NULL;
+FILE *fout = NULL;
 
 typedef struct program
 {
@@ -83,31 +88,25 @@ void * handle_clnt(void * arg)
 {
 	int clnt_sock=*((int*)arg);
 	int str_len=0, i = 0, mode = 0, body_strlen = 0, line = 0, index = 0;
-	char ecode[8] = {'\0', };
+	time_t t = time(NULL);
+	struct tm tm = *(localtime(&t));
 
 	char msg[BUF_SIZE] = {'\0', };
 	char body_char[BODY_SIZE] = {'\0', };
 	P p;
 
-	FILE *f_msg = NULL;
-	FILE *f_log = NULL;
-	FILE *f_out = NULL;
-	time_t t = time(NULL);
-	struct tm tm = *(localtime(&t));
-
-	f_msg = fopen("msg.txt","r");	
-	if(f_msg == NULL)
+	fmsg = fopen("msg.txt","r");	
+	if(fmsg == NULL)
 		printf("No file to open\n");
 	else
 	{
-		while(f_msg != NULL)
+		while(fmsg != NULL)
 		{
-			fgets(body_char, MSG_SIZE,f_msg);
+			fgets(body_char, MSG_SIZE,fmsg);
 			line++;
 		}
-		fclose(f_msg);
+		fclose(fmsg);
 	}
-	
 	
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{
@@ -137,8 +136,6 @@ void * handle_clnt(void * arg)
 		index = 0;
 
 		mode = atoi(p.fcode);
-		printf("mode: %d\n",mode);
-
 
 		for(i = 64; i < 72; i++)
 		{
@@ -153,18 +150,18 @@ void * handle_clnt(void * arg)
 		}
 		p.bmsg[72 + body_strlen] = '\0';
 		index = 0;
+		printf("##\n");
 
 		if(mode == 1)
 		{
-			printf("###\n");
-			f_log = fopen("log.txt","r");
-
-			if(f_log == NULL)
+			flog = fopen("log.txt","a+");
+			printf("11\n");
+		/*	if(f_log == NULL)
 			{
 				printf("fopen fail\n");
 				exit(1);
 			}
-			if(p.bmsg[0] == '\0')
+		*/	if(p.bmsg[0] == '\0')
 			{
 				strcpy(p.ecode,"00000102");
 				for(i = 56; i < 64; i++)
@@ -172,29 +169,29 @@ void * handle_clnt(void * arg)
 					msg[i] = p.ecode[index++];
 				}
 				
-				fprintf(f_log, "Error Code : 0x%s, No message to save %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(flog, "Error Code : 0x%s, No message to save %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 				send_msg(msg,str_len);
-				fclose(f_log);
+				fclose(flog);
 				break;
 			}
 
-			f_msg = fopen("msg.txt","a");
-			fprintf(f_msg,"%s",p.bmsg);
+			fmsg = fopen("msg.txt","a+");
+			fprintf(fmsg,"%s",p.bmsg);
 			strcpy(p.ecode,"00000001");
 			for(i = 56; i < 64; i++)
 			{
 				msg[i] = p.ecode[index++];
 			}
 
-			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			fprintf(flog, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			send_msg(msg,str_len);
 			printf("3\n");
 
-			fclose(f_msg);
-			fclose(f_log);
+			fclose(fmsg);
+			fclose(flog);
 
 		}
-
+/*
 		else if(mode == 2)
 		{
 			int a = 0;
@@ -270,7 +267,7 @@ void * handle_clnt(void * arg)
 				send_msg(body_char,MSG_SIZE);
 			}
 
-			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			strcpy(p.ecode,"00000001");
 			for(i = 56; i < 64; i++)
 			{
@@ -297,10 +294,10 @@ void * handle_clnt(void * arg)
 					msg[i] = ecode[index++];
 				}
 
-				printf("Error Code: 0x%s\n",ecode);
+				printf("Error Code: 0x%s\n",p.ecode);
 				printf("No saved message\n");
 				f_log = fopen("log.txt","a");
-				fprintf(f_log, "Error Code : 0x%s, No message to delete %d/ %d/ %d/ %d/ %d",ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				fprintf(f_log, "Error Code : 0x%s, No message to delete %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
 				break;
@@ -352,6 +349,7 @@ void * handle_clnt(void * arg)
 			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 			fclose(f_log);
 		}
+		*/
 	}
 
 		pthread_mutex_lock(&mutx);

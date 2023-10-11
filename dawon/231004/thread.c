@@ -26,12 +26,9 @@ void *rannum()
 					if(random[i] == random[j])
 					{
 						i--;
-						flag = 1;
 						break;
 					}
 				}
-				if(flag == 1)
-					continue;
 			}
 
 			for(i = 0; i < 5; i++)
@@ -43,19 +40,7 @@ void *rannum()
 			printf("\n");
 		}
 
-/*			for(j = 0; j < 5; j++)
-			{
-				for(i = 0; i < 5; i++)
-				{
-					printf("%d ",random[i]);
-				}
-				printf("\n");
-			}
-			*/
-
-		sleep(1);
-		sleep(1);
-		sleep(1);
+		sleep(3);
 	}
 
 }

@@ -18,9 +18,11 @@ void error_handling(char * msg);
 
 int clnt_cnt=0;
 int clnt_socks[MAX_CLNT];
-	FILE *f_msg = NULL;
-	FILE *f_log = NULL;
-	FILE *f_out = NULL;
+
+FILE *f_msg = NULL;
+FILE *f_log = NULL;
+FILE *f_out = NULL;
+
 pthread_mutex_t mutx;
 
 typedef struct program
@@ -49,7 +51,7 @@ int main(int argc, char *argv[])
 		printf("Usage : %s <port>\n", argv[0]);
 		exit(1);
 	}
-  
+
 	pthread_mutex_init(&mutx, NULL);
 	serv_sock=socket(PF_INET, SOCK_STREAM, 0);
 
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
 	serv_adr.sin_family=AF_INET; 
 	serv_adr.sin_addr.s_addr=htonl(INADDR_ANY);
 	serv_adr.sin_port=htons(atoi(argv[1]));
-	
+
 	if(bind(serv_sock, (struct sockaddr*) &serv_adr, sizeof(serv_adr))==-1)
 		error_handling("bind() error");
 	if(listen(serv_sock, 5)==-1)
@@ -65,15 +67,15 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		
 		clnt_adr_sz=sizeof(clnt_adr);
 		clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_adr,&clnt_adr_sz);
 		printf("1\n");
-		
+
 		pthread_mutex_lock(&mutx);
 		clnt_socks[clnt_cnt++]=clnt_sock;
 		pthread_mutex_unlock(&mutx);
-	
+
+
 		pthread_create(&t_id, NULL, handle_clnt, (void*)&clnt_sock);
 		pthread_detach(t_id);
 		printf("Connected client IP: %s \n", inet_ntoa(clnt_adr.sin_addr));
@@ -107,8 +109,7 @@ void * handle_clnt(void * arg)
 		}
 		fclose(f_msg);
 	}
-	
-	
+
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{
 		printf("Server received msg: %s\n",msg);
@@ -117,8 +118,6 @@ void * handle_clnt(void * arg)
 		{
 			p.head[i] = msg[i];
 		}
-	
-
 		if(strcmp(p.head, "000B6FFF") != 0)
 		{
 			strcpy(p.ecode,"00000100");
@@ -129,7 +128,7 @@ void * handle_clnt(void * arg)
 			send_msg(msg,str_len);
 			break;
 		}
-		
+
 		for(i = 48; i < 56; i++)
 		{
 			p.fcode[index++] = msg[i];
@@ -156,7 +155,9 @@ void * handle_clnt(void * arg)
 
 		if(mode == 1)
 		{
-			printf("###\n");
+
+			printf("###1\n");
+
 			f_log = fopen("log.txt","a+");
 
 			if(f_log == NULL)
@@ -172,7 +173,7 @@ void * handle_clnt(void * arg)
 				{
 					msg[i] = p.ecode[index++];
 				}
-				
+
 				fprintf(f_log, "Error Code : 0x%s, No message to save %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 				send_msg(msg,str_len);
 				fclose(f_log);
@@ -211,7 +212,7 @@ void * handle_clnt(void * arg)
 					msg[i] = p.ecode[index++];
 				}
 				index = 0;
-				
+
 				fprintf(f_log, "Error Code : 0x%s, No message to send %d/ %d/ %d/ %d/ %d",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
@@ -256,7 +257,7 @@ void * handle_clnt(void * arg)
 				}
 				index = 0;
 				send_msg(msg,str_len);
-				
+
 				fprintf(f_log, "Error Code : 0x%s, No message to send %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 				fclose(f_log);
@@ -289,7 +290,7 @@ void * handle_clnt(void * arg)
 			index = 0;
 			f_msg = fopen("msg.txt","a");
 			f_log = fopen("log.txt","a");
-			
+
 			if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
 			{
 				strcpy(p.ecode,"00000102");
@@ -310,7 +311,7 @@ void * handle_clnt(void * arg)
 				fseek(f_msg,0,SEEK_SET);
 
 			f_out = fopen("output.txt","w");
-			
+
 			while(f_msg != NULL)
 			{
 				fgets(body_char, MSG_SIZE, f_msg);
@@ -319,7 +320,7 @@ void * handle_clnt(void * arg)
 					break;
 				fprintf(f_out,"%s",body_char);
 			}
-			
+
 			remove("msg.txt");
 			rename("output.txt","msg.txt");
 			strcpy(p.ecode,"00000001");
@@ -328,12 +329,16 @@ void * handle_clnt(void * arg)
 				msg[i] = p.ecode[index++];
 			}
 			send_msg(msg,str_len);
-						
+
 			fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
 			fclose(f_log);
 			fclose(f_out);
+
 //			fclose(f_msg);
+
+		
+
 		}
 
 		else if(mode == 5)
@@ -355,20 +360,21 @@ void * handle_clnt(void * arg)
 		}
 	}
 
-		pthread_mutex_lock(&mutx);
-		for(i = 0; i < clnt_cnt; i++)
+	pthread_mutex_lock(&mutx);
+	for(i = 0; i < clnt_cnt; i++)
+	{
+		if(clnt_sock == clnt_socks[i])
 		{
-			if(clnt_sock == clnt_socks[i])
-			{
-				while(i++ < clnt_cnt - 1)
-					clnt_socks[i] = clnt_socks[i+1];
-				break;
-			}
+			while(i++ < clnt_cnt - 1)
+				clnt_socks[i] = clnt_socks[i+1];
+			break;
 		}
-		clnt_cnt--;
-		pthread_mutex_unlock(&mutx);
-		close(clnt_sock);
-		return NULL;
+	}
+	clnt_cnt--;
+	pthread_mutex_unlock(&mutx);
+	close(clnt_sock);
+	return NULL;
+
 }
 void error_handling(char* msg)
 {
