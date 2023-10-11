@@ -9,6 +9,7 @@
 
 #define BUF_SIZE 1000
 #define NAME_SIZE 20
+#define BODY_SIZE 1000
 
 void *send_msg(void * arg);
 void *recv_msg(void * arg);
@@ -19,10 +20,11 @@ char msg[BUF_SIZE + NAME_SIZE] = {0};
 
 unsigned char head[] = {0x00,0x0B,0x6F,0xFF};
 char name[NAME_SIZE] = {0} ;
-int func_code ;
+unsigned int func_code ;
 int error_code = 0;
 int body_len ;
-char body[1000];
+char body[BODY_SIZE];
+pthread_mutex_t mutx;
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +39,7 @@ int main(int argc, char *argv[])
 		exit(1);
     }
 
+	pthread_mutex_init(&mutx, NULL);
 	sprintf(name, "%s", argv[3]);
 	client = socket(PF_INET, SOCK_STREAM, 0 );
 
@@ -67,22 +70,24 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 	int body_len = strlen(body);
 	int i = 0;
 	char head_num[10] = {0};
-	char name_num[50] = {0};
-	char body_num[2000] = {0};
+	char name_num[NAME_SIZE * 2] = {0};
+	char body_num[BODY_SIZE * 2] = {0};
 	int n = 0;
+	memset(msg, 0, sizeof(msg));
+	memset(buffer, 0, sizeof(buffer));
 
 	for(i = 0; i < 4; i++)
 	{
 		sprintf(&head_num[n], "%02X", head[i]);
-		n = n + 2;
+		n += 2;
 	}
 
 	n = 0;
 
-	for(i = 0; i < 20; i++)
+	for(i = 0; i < 20; i++) //define
 	{
 		sprintf(&name_num[n], "%02X", name[i]);
-		n = n + 2;
+		n += 2;
 	}
 
 	n = 0;
@@ -90,39 +95,61 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 	for(i = 0; i < body_len ; i++)
 	{
 		sprintf(&body_num[n],"%02X", body[i]);
-		n = n + 2;
+		n += 2;
 	}
 
-	sprintf(buffer,"%s %s %04d %04X %04X %s", 
+	sprintf(buffer,"%s %s %04X %04X %04X %s", 
 			head_num, name_num, func_code, error_code, body_len, body_num);
-	strcpy(msg, buffer);
-	return msg;
+	//strcpy(msg, buffer);
+	return buffer;
 }
 
 void * send_msg(void * arg)
 {
     int sock = *((int*)arg);
 	printf("\n<func_code> <body> ");
-    
 	while(1)
     {
-		scanf("%d %s", &func_code, body);
-        if( func_code == 6 )
-        {
-			msg_buffer(head, name, func_code, error_code, body);
-			write(sock, msg, strlen(msg));
-			printf("\nexit\n");
-            close(sock);
-            exit(0);
-        }
-		else
+		func_code = 0;
+		memset(body, 0 , sizeof(body));
+		
+		char temp[1000];
+
+		memset(temp , 0 , sizeof(temp));
+
+		fgets(temp, sizeof(temp), stdin);
+	
+		char *p = strtok( temp, " " );
+		
+		func_code = atoi(p);
+		p = strtok( NULL, " ");
+		
+		if (p != NULL)
 		{
-			msg_buffer(head, name, func_code, error_code, body);
-			write(sock, msg, strlen(msg));
+			sprintf(body, "%s", p);
+			body[strlen(body) - 1] = '\0';
 		}
 
-    }   
-    return NULL;
+		if( func_code == 6 )
+		{
+			msg_buffer(head, name, func_code, error_code, body);
+			write(sock, buffer, strlen(buffer));
+			printf("\nexit\n");
+			close(sock);
+			exit(0);
+		}
+		else if( 0 < func_code && func_code < 6)
+		{
+			msg_buffer(head, name, func_code, error_code, body);
+			write(sock, buffer, strlen(buffer));
+		}
+		else 
+		{
+			msg_buffer(head, name, func_code, error_code, body);
+			write(sock, buffer, strlen(buffer));
+		}
+	}
+	return NULL;
 }
 
 void * recv_msg(void * arg)
@@ -131,12 +158,14 @@ void * recv_msg(void * arg)
     int str_len;
     while(1)
     {
-        str_len = read(sock, msg, NAME_SIZE+BUF_SIZE-1);
+		//pthread_mutex_lock(&mutx);
+        str_len = read(sock, buffer, NAME_SIZE+BUF_SIZE-1);
         if(str_len ==-1)
             return (void*)-1;
-        msg[str_len] =0;
-		fputs(msg, stdout);
+        buffer[str_len] =0;
+		fputs(buffer, stdout);
+		//pthread_mutex_unlock(&mutx);
     }
-    return NULL;
+	return NULL;
 }
 

@@ -2,9 +2,10 @@
 
 int main(void)
 {
-	char A = 0x41;
+	char A ;
+	scanf("%c", &A);
 
-	printf("%c\n",A);
+	printf("%d\n",A);
 
 	return 0;
 }
