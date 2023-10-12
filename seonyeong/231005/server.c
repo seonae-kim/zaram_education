@@ -18,6 +18,7 @@
 #define CORRECT    1
 #define HEAD_ERR_CODE	256
 #define NOMSG_ERR_CODE   258
+#define NO_RCV_MSG_ERR_CODE   257
 
 enum FUNC{ SEND_MSG= 1, REQUEST_LAST_MSG, REQUEST_ALL_MSG, 
 		DELETE_LAST_MSG, DELETE_ALL_MSG, EXIT };
@@ -28,6 +29,7 @@ void error_handling(char * msg);
 void* msg_char(char *msg);
 int msg_cut(char *msg);
 char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code, char* body);
+void error_log(int *name, int func_code, int error_code);
 
 int count = 0, i = 0;
 int error_code = 0;
@@ -109,31 +111,38 @@ void * handle_clnt(void * arg)
 	int str_len=0 ;
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-	int name[NAME_SIZE] = {0};
-	char num[NAME_SIZE] ;
+	int name[NAME_SIZE * 2] = {0};
+	char num[NAME_SIZE * 2] = {0};
+	
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{   
 		memset(temp, 0, sizeof(temp));
 		strncpy(temp, msg + 8 ,NAME_SIZE * 2);
 		sprintf(m.name , "%s", temp);
-		for(i = 0; i < NAME_SIZE * 2; i++)
+		printf("m.name:%s\n",m.name); 
+		for(i = 0; i < NAME_SIZE ; i++)
 		{
 			strncpy(num , temp + i*2, 2);  
 			name[i] = strtol(num, 0, 16);
 		}
 		printf("name: %ls\n", name);
 
+		printf("#0m.name:%s\n",m.name); 
 		memset(temp, 0, sizeof(temp));
 
 		strncpy(temp, msg+58, 2);
-		m.body_len = atof(temp);
-		strncpy(temp, msg+60, m.body_len*2);
+		m.body_len = atoi(temp);
+		printf("#1m.name:%s\n",m.name); 
+		strncpy(temp, msg+60, m.body_len * 2);
+		printf("#2m.name:%s\n",m.name); 
 		sprintf(m.body, "%s", temp);
+		printf("m.body %s\n", m.body);
 
 		memset(temp, 0, sizeof(temp));
 		strncpy(temp, msg+49, 3);
 		m.func_code = strtol(temp, 0, 16);
 
+		printf("#3m.name:%s\n",m.name); 
 		if( m.func_code == EXIT )
 		{
 			printf("exit\n");
@@ -143,22 +152,15 @@ void * handle_clnt(void * arg)
 		else if(m.func_code == SEND_MSG) 
 		{
 			printf("func_num: 1\n");
-
-			if((fl = fopen("error_code_log.txt", "a")) == NULL)
-			{
-				printf("fail2\n");
-				exit(0);
-			}
-
+			
 			int msg_return = msg_cut(msg);
 			if(msg_return == HEAD_ERR)
 			{
 				printf("head incorrect\n");
 				error_code = HEAD_ERR_CODE ; 
 				
-				fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
-						name, m.func_code, error_code,
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+				error_log(name, m.func_code, error_code);
+				
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
 			}
@@ -166,6 +168,13 @@ void * handle_clnt(void * arg)
 			else if(msg_return == BODY_ERR)
 			{	
 				printf("no message\n");
+				error_code = NO_RCV_MSG_ERR_CODE;
+
+				printf("##1#m.name:%s\n",m.name); 
+				error_log(name, m.func_code, error_code);
+				
+				msg_buffer(head, m.name, m.func_code, error_code, m.body);
+				write(clnt_sock, buffer, strlen(buffer));
 			}
 
 			else if(msg_return == CORRECT)
@@ -173,13 +182,12 @@ void * handle_clnt(void * arg)
 				msg_char(msg);
 				error_code = CORRECT;
 
+				printf("###2m.name:%s\n",m.name); 
 				printf("message save\n" );
-				fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
-						name, m.func_code, error_code,
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+				error_log(name, m.func_code, error_code);
+				
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
-
 			}
 			else
 			{
@@ -195,19 +203,12 @@ void * handle_clnt(void * arg)
 				printf("fail1\n");
 				exit(0);
 			}
-			if((fl = fopen("error_code_log.txt", "a")) == NULL)
-			{
-				printf("fail2\n");
-				exit(0);
-			}
 			char *ptr= fgets(buffer, BUF_SIZE, fm);
 			if(ptr == NULL)
 			{
 				printf("no message\n");
 				error_code = NOMSG_ERR_CODE;
-				fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
-						name, m.func_code, error_code,
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+				error_log(name, m.func_code, error_code);
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
 			}
@@ -224,11 +225,11 @@ void * handle_clnt(void * arg)
 				printf("last message: %s", buffer);
 
 				printf("transfer last message\n");
+				error_log(name, m.func_code, error_code);
 				sprintf(return_msg,"func_code: %d error_code: %04X\n", m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 
 			}
-			fclose(fl);
 			fclose(fm);
 		}
 
@@ -241,19 +242,12 @@ void * handle_clnt(void * arg)
 				printf("fail1\n");
 				exit(0);
 			}
-			if((fl = fopen("error_code_log.txt", "a")) == NULL)
-			{
-				printf("fail2\n");
-				exit(0);
-			}
 			char *ptr= fgets(buffer, BUF_SIZE, fm);
 			if(ptr == NULL)
 			{
 				printf("no message\n");
 				error_code = NOMSG_ERR_CODE;
-				fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
-						name,m.func_code, error_code,
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+				error_log(name, m.func_code, error_code);
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
 			}
@@ -264,8 +258,8 @@ void * handle_clnt(void * arg)
 				{
 					write(clnt_sock, buffer, strlen(buffer));
 				}
-				error_code = CORRECT
-					;
+				error_code = CORRECT;
+				error_log(name, m.func_code, error_code);
 
 				sprintf(return_msg,"func_code: %d error_code : %04X\n", m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
@@ -274,7 +268,6 @@ void * handle_clnt(void * arg)
 			}
 
 			fclose(fm);
-			fclose(fl);
 		}
 
 		else if(m.func_code == DELETE_LAST_MSG)
@@ -298,9 +291,7 @@ void * handle_clnt(void * arg)
 			{
 				printf("no message\n");
 				error_code = NOMSG_ERR_CODE;
-				fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
-						name, m.func_code, error_code,
-						tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+				error_log(name, m.func_code, error_code);
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
 			}
@@ -342,6 +333,7 @@ void * handle_clnt(void * arg)
 				printf("delete last message\n");
 
 				error_code = CORRECT;
+				error_log(name, m.func_code, error_code);
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
 				write(clnt_sock, buffer, strlen(buffer));
 			}
@@ -362,6 +354,7 @@ void * handle_clnt(void * arg)
 			fclose(fm);
 
 			error_code = CORRECT;
+			error_log(name, m.func_code, error_code);
 			printf("completely deleting all messages\n");
 			msg_buffer(head, m.name, m.func_code, error_code, m.body);
 			write(clnt_sock, buffer, strlen(buffer));
@@ -394,7 +387,6 @@ void * handle_clnt(void * arg)
 int msg_cut(char *msg)
 {
 	struct messages m;
-
 	strncpy(m.head, msg, 8);
 	if(strstr(m.head, "000B6FFF") == NULL)
 	{
@@ -403,11 +395,10 @@ int msg_cut(char *msg)
 	else
 	{
 		strncpy(temp, msg+58, 2);
-		m.body_len = atof(temp);
+		m.body_len = atoi(temp);
 		strncpy(temp, msg+60, m.body_len*2);
 		sprintf(m.body, "%s", temp);
-
-		if(strstr(m.body, "32") != 0)
+		if(strlen(m.body) == 0)
 		{
 			count = BODY_ERR;
 		}
@@ -483,7 +474,22 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 	sprintf(buffer,"%02X%02X%02X%02X%40s%04X%04X%04X%s\n", 
 			head_num[0],head_num[2],head_num[4],head_num[6],
 			name, func_code, error_code, body_len, body);
+	printf(">%s >b> %s\n", name, buffer);
 	return buffer;
 }
 
 
+void error_log(int *name, int func_code, int error_code )
+{
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	if((fl = fopen("error_code_log.txt", "a")) == NULL)
+	{
+		printf("fail2\n");
+		exit(0);
+	}
+	fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
+			name, func_code, error_code,
+			tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
+	fclose(fl);
+}
