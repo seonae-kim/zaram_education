@@ -1,91 +1,79 @@
-0001 2023-10-11 13:22
-0001 2023-10-11 13:28
-0001 2023-10-11 13:35
-0001 2023-10-11 13:37
-0102 2023-10-11 13:39
-0102 2023-10-11 13:39
-0102 2023-10-11 13:39
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0001 2023-10-11 13:43
-0102 2023-10-11 14:2
-0001 2023-10-11 14:4
-0001 2023-10-11 14:2
-0102 2023-10-11 14:9
-0001 2023-10-11 14:9
-0001 2023-10-11 14:9
-0001 2023-10-11 14:17
-0102 2023-10-11 14:45
-0102 2023-10-11 14:45
-0102 2023-10-11 14:45
-0102 2023-10-11 14:45
-0102 2023-10-11 14:45
-0102 2023-10-11 14:48
-0102 2023-10-11 14:48
-0102 2023-10-11 14:48
-0102 2023-10-11 14:48
-0102 2023-10-11 14:54
-0001 2023-10-11 14:54
-0001 2023-10-11 16:4
-0001 2023-10-11 16:27
-0102 2023-10-11 16:29
-0102 2023-10-11 16:29
-0001 2023-10-11 16:29
-0001 2023-10-11 16:36
-0102 2023-10-11 16:40
-0001 2023-10-11 16:40
-0001 2023-10-11 16:40
-0102 2023-10-11 16:45
-0102 2023-10-11 16:46
-0001 2023-10-11 16:46
-0001 2023-10-11 16:49
-0001 2023-10-11 16:49
-0001 2023-10-11 16:52
-0001 2023-10-11 16:52
-0001 2023-10-11 16:54
-0001 2023-10-11 16:54
-0102 2023-10-11 16:58
-0102 2023-10-11 16:58
-0001 2023-10-11 16:58
-0001 2023-10-11 16:58
-0102 2023-10-11 17:1
-0100 2023-10-11 17:5
-0102 2023-10-11 17:13
-0102 2023-10-11 17:14
-0001 2023-10-11 17:14
-0001 2023-10-11 17:14
-0102 2023-10-11 17:37
-0001 2023-10-11 17:37
-0001 2023-10-11 17:37
-0001 2023-10-11 18:4
-0001 2023-10-11 18:4
-0001 2023-10-11 18:4
-0001 2023-10-11 18:5
-0001 2023-10-11 18:7
-0001 2023-10-11 18:7
-0001 2023-10-11 18:9
-0001 2023-10-11 18:10
-0001 2023-10-11 18:10
-0001 2023-10-11 18:10
-0001 2023-10-11 18:10
-0001 2023-10-11 18:12
-0001 2023-10-11 18:12
-0001 2023-10-11 18:12
-0102 2023-10-11 18:14
-0001 2023-10-11 18:14
-0001 2023-10-11 18:14
-0001 2023-10-11 18:14
-0001 2023-10-11 18:15
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
-0001 2023-10-11 18:17
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 10:47
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 11:9
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:9
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:9
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:13
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:20
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:22
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:24
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:31
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:32
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:33
+[yeong] func_code: 1 error: 0100 time: 2023-10-12 11:36
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 11:44
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 13:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 13:25
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 13:27
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 13:30
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 13:30
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 14:8
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 14:10
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 14:15
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:20
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:22
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:22
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 14:27
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 14:27
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:27
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:34
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:40
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:43
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:53
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:53
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 14:57
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:4
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:4
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:4
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:4
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:4
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:4
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:7
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:7
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:13
+[yeong] func_code: 2 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 2 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 2 error: 0102 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:16
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 15:41
+[yeong] func_code: 2 error: 0102 time: 2023-10-12 15:41
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:41
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:41
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:41
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:41
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 15:41
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:28
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:28
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:28
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:28
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:28
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:28
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:29
+[yeong] func_code: 3 error: 0102 time: 2023-10-12 16:29
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:29
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:29
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:29
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:29
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:35
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:35
+[yeong] func_code: 1 error: 0001 time: 2023-10-12 16:35
