@@ -16,7 +16,7 @@ int main()
 	{
 		printf("Fail to open the file, Please try again");
 	}
-	fprintf(fp, "%s", now_time);
+	fprintf(fp, "%s\n", now_time);
 
 	fclose(fp);
 
