@@ -7,15 +7,15 @@
 #include <pthread.h>
 #include <sys/socket.h>
 
-#define MSG_SIZE 100
-#define BODY_SIZE 10
+#define MSG_SIZE 1080
+#define BODY_SIZE 1000
 void *recv_msg(void * arg);
 void *send_msg(void * arg);
 
 typedef struct arg
 {
 	int str_sock;
-	char str_msg[MSG_SIZE];
+	char name[40];
 }A;
 
 typedef struct program
@@ -25,14 +25,13 @@ typedef struct program
 	char fcode[8];
 	char ecode[8];
 	char blen[8];
-	char bmsg[1000];
+	char bmsg[BODY_SIZE];
 }P;
 
 int main(int argc, char *argv[])
 {
 	char msg[MSG_SIZE] = {'\0', };
 	char name[40] = {'\0', };
-	char name_s[2] = {'\0', };
 	char head[30] = {'\0', };
 	struct sockaddr_in serv_addr;
 	int sock;
@@ -58,71 +57,69 @@ int main(int argc, char *argv[])
 
 	if(connect(a.str_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 		printf("connect() error\n");
-	sprintf(name_s,"%x",argv[3][0]);
-	printf("name: ");
-	printf("%x",name_s[0]);
-	printf("\n");
 
-	strcpy(head,"000B6FFF");
-	for(i = 0; i < 40 - strlen(name_s); i++)
-	{
-		name[i] = '0';
-	}
-
-	strcat(name, name_s);
-	strcat(msg,head);
-	strcat(msg,name);
-	printf("Func code: ");
-	scanf("%c",&num_i);
-	getchar();
-//	getchar();
-	for(i = 0; i < 7; i++)
-	{
-		num[i] = '0';
-	}
-	num[7] = num_i;
-	strcat(msg,num);
-	strcat(msg,"00000001");    //error code
-
-	printf("Body msg: ");
-
-	scanf("%s",body);
-	getchar();
-	len_b = strlen(body);
-
-	for(i = 0; i < len_b; i++)
-	{
-		sprintf(body_str[index],"%x",body[i]);
-		index++;
-	}
-
+	sprintf(a.name,"%x",argv[3][0]);
 	
-	sprintf(length,"%x",len_b * 2);
-	for(i = 0; i < 8 - strlen(body_len); i++)
-	{
-		body_len[i] = '0';
-	}
-	strcat(body_len,length);
+/*		strcpy(head,"000B6FFF");
+		for(i = 0; i < 40 - strlen(p.name); i++)
+		{
+			name[i] = '0';
+		}
+
+		strcat(name, p.name);
+		strcat(msg,head);
+		strcat(msg,name);
+		printf("Func code: ");
+		scanf("%c",&num_i);
+		getchar();
+		for(i = 0; i < 7; i++)
+		{
+			num[i] = '0';
+		}
+		num[7] = num_i;
+		strcat(msg,num);
+		strcat(msg,"00000001");    //error code
+
+		printf("Body msg: ");
+
+		scanf("%s",body);
+		getchar();
+		len_b = strlen(body);
+
+		for(i = 0; i < len_b; i++)
+		{
+			sprintf(body_str[index],"%x",body[i]);
+			index++;
+		}
+
+		
+		sprintf(length,"%x",len_b * 2);
+		for(i = 0; i < 8 - strlen(length); i++)
+		{
+			body_len[i] = '0';
+		}
+		strcat(body_len,length);
 
 
-	strcat(msg,body_len);
+		strcat(msg,body_len);
 
-	for(i = 0; i < index; i++)
-	{
-		if(body_str[i][0] == '\0')
-			break;
-		strcat(msg,body_str[i]);
-	}
+		for(i = 0; i < index; i++)
+		{
+			if(body_str[i][0] == '\0')
+				break;
+			strcat(msg,body_str[i]);
+		}
 
-	strcpy(a.str_msg,msg);
+		strcpy(a.str_msg,msg);
 
-	printf("MSG: %s\n",msg);
-
-	pthread_create(&snd_thread, NULL, send_msg, (void*)&a);
-	pthread_create(&rcv_thread, NULL, recv_msg, (void*)&a);
-	pthread_join(snd_thread, &thread_return);
-	pthread_join(rcv_thread, &thread_return);
-	close(a.str_sock);
+		printf("MSG: %s\n",msg);
+*/
+		pthread_create(&snd_thread, NULL, send_msg, (void*)&a);
+		pthread_create(&rcv_thread, NULL, recv_msg, (void*)&a);
+		pthread_join(snd_thread, &thread_return);
+		pthread_join(rcv_thread, &thread_return);
+		close(a.str_sock);
+	
 
 	return 0;
 
@@ -131,40 +128,120 @@ int main(int argc, char *argv[])
 void *send_msg(void* arg)
 {	
 	A *a = (A*)arg;
-	int index = 0, i = 0;
 	int sock = a -> str_sock;
 	char msg[MSG_SIZE] = {'\0', };
+	char name[40] = {'\0', };
+	char head[30] = {'\0', };
+	int i = 0, j = 0, index = 0, len_b = 0;
+	char num_i[2];
+	char num[8] = {'\0', };
+	char body[BODY_SIZE] = {'\0', };
+	char body_len[10] = {'\0', };
+	char body_char[BODY_SIZE * 2] = {'\0', };
+	char body_str[BODY_SIZE * 2][3] = {'\0', };
+	char length[BODY_SIZE] = {'\0', };
 	P p;
 
-	for(i = 56; i < 64; i++)
+	strcpy(p.name,a->name);
+	while(1)
 	{
-		p.ecode[index++] = msg[i];
-	}
-	index = 0;
-	strcpy(msg,a -> str_msg);
-/*	for(i = 72; i < BODY_SIZE; i++)
-	{
-		if(msg[i] == '\0')
-			break;
-		msg[index++] = msg[i];
-	}		
 
-*/		
-	if(atoi(p.ecode) == 100)
-	{
-		printf("Head fail\n");
-	}
-	else
-	{
-		printf("1\n");
-		write(sock, msg, strlen(msg));
+		strcpy(head,"000B6FFF");
+		for(i = 0; i < 40 - strlen(p.name); i++)
+		{
+			name[i] = '0';
+		}
+
+		strcat(name, p.name);
+		strcat(msg,head);
+		strcat(msg,name);
+		printf("Func code: ");
+		fgets(num_i,sizeof(num_i),stdin);
+		while(getchar()!= '\n');
+//		getchar();
+		for(i = 0; i < 7; i++)
+		{
+			num[i] = '0';
+		}
+		strcat(num,num_i);
+		num[8] = '\0';
+		printf("mode num: %s\n",num);
+		if(num[7] == '6')
+		{
+			printf("Program Exit\n");
+			exit(0);
+		}
+		strcat(msg,num);
+		strcat(msg,"00000001");    //error code
+
+		printf("Body msg: ");
+
+		fgets(body,sizeof(body),stdin);
+		while(getchar()!= '\n');
+//		getchar();
+		len_b = strlen(body);
+		body[len_b-1] = '\0';
+		printf("len_b: %d\n",len_b);
+
+		for(i = 0; i < len_b; i++)
+		{
+			sprintf(body_str[index],"%x",body[i]);
+			printf("body char: %c\n",body_str[index][0]);
+			index++;
+		}
+		printf("body_str: %s\n",body_str);
+
+		
+		sprintf(length,"%x",len_b * 2);
+		for(i = 0; i < 8 - strlen(length); i++)
+		{
+			body_len[i] = '0';
+		}
+		strcat(body_len,length);
+		body_len[9] = '\0';
+		printf("body len: %s\n",body_len);
+
+
+		strcat(msg,body_len);
+
+		for(i = 0; i < index; i++)
+		{
+			if(body_str[i][0] == '\0')
+				break;
+			strcat(msg,body_str[i]);
+		}
+		msg[72+ len_b * 2] = '\0';
+
+//		strcpy(a.str_msg,msg);
+
+		printf("MSG: %s\n",msg);
+
+		index = 0;
+		for(i = 56; i < 64; i++)
+		{
+			p.ecode[index++] = msg[i];
+		}
+		index = 0;
+//		strcpy(msg,a -> str_msg);
+	
+		if(atoi(p.ecode) == 100)
+		{
+			printf("Head fail\n");
+		}
+		else
+		{
+			write(sock, msg, strlen(msg));
+		}
+
 	}
 	return NULL;
 }
 
 void *recv_msg(void* arg)
 {
-	int sock = *((int*)arg);
+//	int sock = *((int*)arg);
+	A *a = (A*) arg;
+	int sock = a -> str_sock;
 	char msg[MSG_SIZE] = {'\0', };
 	int str_len = 0;
 	int body_strlen = 0;
@@ -173,19 +250,22 @@ void *recv_msg(void* arg)
 	int i = 0, index = 0;
 	P p;
 	
-	while((str_len=read(sock, msg, sizeof(msg)))!=0)
+	while(1)
 	{
-		printf("2\n");
+
+		str_len=read(sock, msg, MSG_SIZE);
 	
 		for(i = 0; i < 8; i++)
 		{
 			p.head[i] = msg[i];
 		}
+		p.head[8] = '\0';
 
 		for(i = 48; i < 56; i++)
 		{
 			p.fcode[index++] = msg[i];
 		}	
+		p.fcode[index] = '\0';
 		index = 0;
 
 		mode = atoi(p.fcode);
@@ -194,12 +274,14 @@ void *recv_msg(void* arg)
 		{
 			p.ecode[index++] = msg[i];
 		}
+		p.ecode[index] = '\0';
 		index = 0;
 
 		for(i = 64; i < 72; i++)
 		{
 			p.blen[index++] = msg[i];
 		}
+		p.blen[index] = '\0';
 		index = 0;
 
 		body_strlen = atoi(p.blen);
@@ -207,47 +289,52 @@ void *recv_msg(void* arg)
 		{
 			p.bmsg[index++] = msg[i];
 		}
+		p.bmsg[index] = '\0';
 		index = 0;
 
 		if(mode == 1)
 		{
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
-				printf("Error code: %s\n Got no message to save\n",p.ecode);
+				printf("\nError code: %s\n Got no message to save\n",p.ecode);
 				break;
 			}
-			fputs("SUCCESS",stdout);
-
+			printf("\nMode 1 SUCCESS\n");
 		}
 
 		else if(mode == 2)
 		{
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
-				printf("Error code: %s\n No message to read\n",p.ecode);
+				printf("\nError code: %s\n No message to read\n",p.ecode);
 				break;			
 			}
 			
 			if(str_len == -1)
 				return (void*)-1;
-
-			fputs(p.bmsg,stdout);
-			fputs("\nSUCCESS\n",stdout);
+			
+			printf("Requested Message : %s\n",p.bmsg);
+	//		fputs(p.bmsg,stdout);
+			fputs("\nMode 2 SUCCESS\n",stdout);
 		}
 
 		else if(mode == 3)
 		{
 			if(strcmp(p.ecode, "00000101") == 0)
 			{
-				printf("Error code: %s\n No message to read\n",p.ecode);
+				printf("\nError code: %s\n No message to read\n",p.ecode);
 				break;			
 			}
 
 			if(str_len == -1)
 				return (void*)-1;
 
-			fputs(p.bmsg,stdout);
-			fputs("SUCCESS",stdout);
+			printf("%s\n",p.bmsg);
+			if(strcmp(p.bmsg,"done") == 0)
+			{
+				fputs("\nMode 3 SUCCESS\n",stdout);
+				continue;
+			}
 		}
 
 		else if(mode == 4)
@@ -255,17 +342,22 @@ void *recv_msg(void* arg)
 
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
-				printf("Error code: %s\n No message to delete\n",p.ecode);
+				printf("\nError code: %s\n No message to delete\n",p.ecode);
 				break;			
 			}
 
-			fputs("SUCCESS",stdout);
+			fputs("\nMode 4 SUCCESS\n",stdout);
 
 		}
 
 		else if(mode == 5)
 		{
-			fputs("SUCCESS",stdout);
+			printf("\nMode 5 SUCCESS\n");
+		}
+		else
+		{
+			printf("\nMode Error\n");
+
 		}
 	}
 
