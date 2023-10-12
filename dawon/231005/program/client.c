@@ -60,60 +60,6 @@ int main(int argc, char *argv[])
 
 	sprintf(a.name,"%x",argv[3][0]);
 	
-/*		strcpy(head,"000B6FFF");
-		for(i = 0; i < 40 - strlen(p.name); i++)
-		{
-			name[i] = '0';
-		}
-
-		strcat(name, p.name);
-		strcat(msg,head);
-		strcat(msg,name);
-		printf("Func code: ");
-		scanf("%c",&num_i);
-		getchar();
-		for(i = 0; i < 7; i++)
-		{
-			num[i] = '0';
-		}
-		num[7] = num_i;
-		strcat(msg,num);
-		strcat(msg,"00000001");    //error code
-
-		printf("Body msg: ");
-
-		scanf("%s",body);
-		getchar();
-		len_b = strlen(body);
-
-		for(i = 0; i < len_b; i++)
-		{
-			sprintf(body_str[index],"%x",body[i]);
-			index++;
-		}
-
-		
-		sprintf(length,"%x",len_b * 2);
-		for(i = 0; i < 8 - strlen(length); i++)
-		{
-			body_len[i] = '0';
-		}
-		strcat(body_len,length);
-
-
-		strcat(msg,body_len);
-
-		for(i = 0; i < index; i++)
-		{
-			if(body_str[i][0] == '\0')
-				break;
-			strcat(msg,body_str[i]);
-		}
-
-		strcpy(a.str_msg,msg);
-
-		printf("MSG: %s\n",msg);
-*/
 		pthread_create(&snd_thread, NULL, send_msg, (void*)&a);
 		pthread_create(&rcv_thread, NULL, recv_msg, (void*)&a);
 		pthread_join(snd_thread, &thread_return);
@@ -129,7 +75,7 @@ void *send_msg(void* arg)
 {	
 	A *a = (A*)arg;
 	int sock = a -> str_sock;
-	char msg[MSG_SIZE] = {'\0', };
+/*	char msg[MSG_SIZE] = {'\0', };
 	char name[40] = {'\0', };
 	char head[30] = {'\0', };
 	int i = 0, j = 0, index = 0, len_b = 0;
@@ -140,11 +86,23 @@ void *send_msg(void* arg)
 	char body_char[BODY_SIZE * 2] = {'\0', };
 	char body_str[BODY_SIZE * 2][3] = {'\0', };
 	char length[BODY_SIZE] = {'\0', };
-	P p;
+*/	P p;
 
 	strcpy(p.name,a->name);
 	while(1)
 	{
+		char msg[MSG_SIZE] = {'\0', };
+		char name[40] = {'\0', };
+		char head[30] = {'\0', };
+		int i = 0, j = 0, index = 0, len_b = 0;
+		char num_i[2];
+		char num[8] = {'\0', };
+		char body[BODY_SIZE] = {'\0', };
+		char body_len[10] = {'\0', };
+		char body_char[BODY_SIZE * 2] = {'\0', };
+		char body_str[BODY_SIZE * 2][3] = {'\0', };
+		char length[BODY_SIZE] = {'\0', };
+
 
 		strcpy(head,"000B6FFF");
 		for(i = 0; i < 40 - strlen(p.name); i++)
@@ -177,10 +135,10 @@ void *send_msg(void* arg)
 		printf("Body msg: ");
 
 		fgets(body,sizeof(body),stdin);
-		while(getchar()!= '\n');
+//		while(getchar()!= '\n');
 //		getchar();
-		len_b = strlen(body);
-		body[len_b-1] = '\0';
+		len_b = strlen(body) - 1;
+		body[len_b] = '\0';
 		printf("len_b: %d\n",len_b);
 
 		for(i = 0; i < len_b; i++)
@@ -192,7 +150,7 @@ void *send_msg(void* arg)
 		printf("body_str: %s\n",body_str);
 
 		
-		sprintf(length,"%x",len_b * 2);
+		sprintf(length,"%x",len_b  * 2);
 		for(i = 0; i < 8 - strlen(length); i++)
 		{
 			body_len[i] = '0';
@@ -243,17 +201,22 @@ void *recv_msg(void* arg)
 	A *a = (A*) arg;
 	int sock = a -> str_sock;
 	char msg[MSG_SIZE] = {'\0', };
+	char rmsg[3] = {'\0', };
+	int imsg = 0;
+	char cmsg[3] = {'\0', };
+	char pmsg[BODY_SIZE] = {'\0', };
 	int str_len = 0;
 	int body_strlen = 0;
 	int strlen_msg = 0;
 	int mode = 0;
-	int i = 0, index = 0;
+	int i = 0, index = 0, count = 0;
 	P p;
 	
 	while(1)
 	{
 
 		str_len=read(sock, msg, MSG_SIZE);
+		printf("\nmsg: %s\n",msg);
 	
 		for(i = 0; i < 8; i++)
 		{
@@ -285,10 +248,12 @@ void *recv_msg(void* arg)
 		index = 0;
 
 		body_strlen = atoi(p.blen);
+		printf("body_strlen : %d\n",body_strlen);
 		for(i = 72; i < 72 + body_strlen; i++)
 		{
 			p.bmsg[index++] = msg[i];
 		}
+		printf("p.bmsg: %s\n",p.bmsg);
 		p.bmsg[index] = '\0';
 		index = 0;
 
@@ -312,10 +277,16 @@ void *recv_msg(void* arg)
 			
 			if(str_len == -1)
 				return (void*)-1;
+			if(strcmp(p.bmsg,"done") == 0)
+			{
+				fputs("\nMode 2 SUCCESS\n",stdout);
+				continue;
+			}
+
+
+			printf("%s\n",p.bmsg);
 			
-			printf("Requested Message : %s\n",p.bmsg);
-	//		fputs(p.bmsg,stdout);
-			fputs("\nMode 2 SUCCESS\n",stdout);
+
 		}
 
 		else if(mode == 3)
