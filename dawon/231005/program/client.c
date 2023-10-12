@@ -210,7 +210,7 @@ void *send_msg(void* arg)
 				break;
 			strcat(msg,body_str[i]);
 		}
-		msg[72+ len_b * 2] = '\0';
+		msg[72+ len_b * 2] = '\n';
 
 //		strcpy(a.str_msg,msg);
 
