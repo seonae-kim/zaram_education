@@ -102,28 +102,16 @@ void * handle_clnt(void * arg)
 	time_t t = time(NULL);
 	struct tm tm = *(localtime(&t));
 
-/*	f_msg = fopen("msg.txt","r");	
-	if(f_msg == NULL)
-		printf("No file to open\n");
-	else
-	{
-		while(!feof(f_msg))
-		{
-			fgets(body_char, MSG_SIZE,f_msg);
-			line++;
-		}
-		printf("line: %d\n",line);
-		fclose(f_msg);
-	}
-*/
+
 
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
 	{
 
 
 		line = 0;
+		index = 0;
 
-		printf("Received msg from client: %s\n",msg);
+		printf("Received msg from client >>\n%s\n",msg);
 		
 		f_msg = fopen("msg.txt","r");	
 		if(f_msg == NULL)
@@ -137,13 +125,12 @@ void * handle_clnt(void * arg)
 			}
 			fclose(f_msg);
 		}
-		printf("\nline: %d\n",line);
 		
 		for(i = 0; i < 8; i++)
 		{
 			p.head[i] = msg[i];
 		}
-
+		p.head[8] = '\0';
 
 		if(strcmp(p.head, "000B6FFF") != 0)
 		{
@@ -165,11 +152,9 @@ void * handle_clnt(void * arg)
 				index++;
 			}
 			p.fcode[index] = '\0';
-			printf("index: %d\n",index);
 			index = 0;
 
 			mode = atoi(p.fcode);
-			printf("mode: %d\n",mode);
 
 
 			for(i = 64; i < 72; i++)
@@ -177,22 +162,19 @@ void * handle_clnt(void * arg)
 				p.blen[index++] = msg[i];
 			}
 			index = 0;
-			printf("p.blen : %s\n",p.blen);
 
 			body_strlen = strtol(p.blen,NULL,16);
-			printf("body_strlen: %d\n",body_strlen);
 
 			for(i = 72; i < 72 + body_strlen; i++)
 			{
 				p.bmsg[index++] = msg[i];
 			}
 			p.bmsg[72 + body_strlen] = '\0';
-			printf("p.bmsg : %s\n",p.bmsg);
 			index = 0;
 
 			if(mode == 1)
 			{
-				printf("Mode 1 start\n");
+				printf("\nMode 1 start\n");
 
 				f_log = fopen("log.txt","a+");
 
@@ -235,7 +217,7 @@ void * handle_clnt(void * arg)
 					}
 
 					fwmsg[body_strlen / 2] = '\n';					
-					printf("File msg: %s\n",fwmsg);
+					printf("\nMSG to file: %s\n",fwmsg);
 
 					fprintf(f_msg,"%s",fwmsg);
 					strcpy(p.ecode,"00000001");
@@ -247,7 +229,7 @@ void * handle_clnt(void * arg)
 
 				fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d\n",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 				send_msg(msg,str_len);
-				printf("Complete\n");
+				printf("Mode 1 Complete\n");
 				memset(fwmsg,'\0',sizeof(char) * 1000);
 
 				fclose(f_msg);
@@ -262,7 +244,7 @@ void * handle_clnt(void * arg)
 				index = 0;
 				f_log = fopen("log.txt","a");
 				f_msg = fopen("msg.txt","r");
-				printf("2 start\n");
+				printf("\nMode 2 start\n");
 
 				if(p.bmsg[0] == '\0')
 				{
@@ -295,9 +277,8 @@ void * handle_clnt(void * arg)
 					}
 					send_msg(msg,MSG_SIZE);
 					index = 0;
-					printf("reading file >> \n");
+					printf("Reading file >> \n");
 					printf("%s\n",body_char);
-					printf("p.bmsg len: %d\n",strlen(body_char));
 					index = 0;
 					strcpy(p.ecode,"00000001");
 					for(i = 56; i < 64; i++)
@@ -314,9 +295,10 @@ void * handle_clnt(void * arg)
 
 
 
-					printf("Send Msg mode 2: %s\n",msg);
-
+					printf("%s\n",msg);
 					send_msg(msg,str_len);
+
+					printf("\nMode 2 Complete\n");
 					fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d\n",p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 					fclose(f_log);
 					fclose(f_msg);
@@ -327,7 +309,7 @@ void * handle_clnt(void * arg)
 			{
 				f_msg = fopen("msg.txt","r");
 				f_log = fopen("log.txt","a");
-				printf("3 start\n");
+				printf("Mode 3 start\n");
 
 				if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
 				{
@@ -337,7 +319,7 @@ void * handle_clnt(void * arg)
 						msg[i] = p.ecode[index++];
 					}
 					index = 0;
-					send_msg(msg,str_len);
+				send_msg(msg,str_len);
 
 					fprintf(f_log, "Error Code : 0x%s, No message to send %d/ %d/ %d/ %d/ %d\n", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
@@ -351,12 +333,13 @@ void * handle_clnt(void * arg)
 					while(!feof(f_msg))
 					{
 						if(fgets(body_char,MSG_SIZE,f_msg) == NULL) break;
-						printf("reading file >> \n");
-						printf("body char: %s\n",body_char);
-						for(i = 72; i < 72 + body_strlen; i++)
+						printf("\nReading file >> \n");
+						printf("%s\n",body_char);
+						for(i = 72; i < 72 + strlen(body_char); i++)
 						{
 							msg[i] = body_char[index++];
 						}
+						msg[72 + strlen(body_char)] = '\0';
 
 						send_msg(msg,MSG_SIZE);
 						index = 0;
@@ -379,7 +362,7 @@ void * handle_clnt(void * arg)
 
 					send_msg(msg,str_len);
 
-					printf("send all msg\n");
+					printf("Mode 3 Complete\n");
 					fclose(f_log);
 					fclose(f_msg);
 				}
@@ -391,7 +374,7 @@ void * handle_clnt(void * arg)
 				index = 0;
 				f_msg = fopen("msg.txt","r");
 				f_log = fopen("log.txt","a");
-				printf("\n4 start\n");
+				printf("\nMode 4 start\n");
 
 				if(fgets(body_char,MSG_SIZE,f_msg) == NULL)
 				{
@@ -410,7 +393,6 @@ void * handle_clnt(void * arg)
 				}
 				else
 				{
-					printf("\n4 else\n");
 					fseek(f_msg,0,SEEK_SET);
 
 					f_out = fopen("output.txt","w");
@@ -436,6 +418,8 @@ void * handle_clnt(void * arg)
 
 					fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d\n", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
+					printf("\nMode 4 Complete\n");
+
 					fclose(f_log);
 					fclose(f_out);
 					fclose(f_msg);
@@ -446,7 +430,7 @@ void * handle_clnt(void * arg)
 			{
 				index = 0;
 				f_msg = fopen("msg.txt","w");
-				printf("5 start\n");
+				printf("Mode 5 start\n");
 
 				strcpy(p.ecode,"00000001");
 				for(i = 56; i < 64; i++)
@@ -454,12 +438,15 @@ void * handle_clnt(void * arg)
 					msg[i] = p.ecode[index++];
 				}
 				send_msg(msg,str_len);
-				fclose(f_msg);
 				f_log = fopen("log.txt","a");
 				strcpy(p.ecode,"00000001");
 				fprintf(f_log, "Error Code : 0x%s, Success %d/ %d/ %d/ %d/ %d\n", p.ecode, tm.tm_year+1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+				printf("\nMode 5 Complete\n");
+
+				fclose(f_msg);
 				fclose(f_log);
 			}
+		
 		}
 	
 	

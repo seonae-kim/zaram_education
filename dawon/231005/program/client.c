@@ -75,18 +75,7 @@ void *send_msg(void* arg)
 {	
 	A *a = (A*)arg;
 	int sock = a -> str_sock;
-/*	char msg[MSG_SIZE] = {'\0', };
-	char name[40] = {'\0', };
-	char head[30] = {'\0', };
-	int i = 0, j = 0, index = 0, len_b = 0;
-	char num_i[2];
-	char num[8] = {'\0', };
-	char body[BODY_SIZE] = {'\0', };
-	char body_len[10] = {'\0', };
-	char body_char[BODY_SIZE * 2] = {'\0', };
-	char body_str[BODY_SIZE * 2][3] = {'\0', };
-	char length[BODY_SIZE] = {'\0', };
-*/	P p;
+	P p;
 
 	strcpy(p.name,a->name);
 	while(1)
@@ -116,38 +105,37 @@ void *send_msg(void* arg)
 		printf("Func code: ");
 		fgets(num_i,sizeof(num_i),stdin);
 		while(getchar()!= '\n');
-//		getchar();
 		for(i = 0; i < 7; i++)
 		{
 			num[i] = '0';
 		}
 		strcat(num,num_i);
 		num[8] = '\0';
-		printf("mode num: %s\n",num);
 		if(num[7] == '6')
 		{
 			printf("Program Exit\n");
 			exit(0);
 		}
+		if(!(num[7] >= '1' && num[7] <= '6'))
+		{
+			printf("\nMode Error\n");
+			continue;
+		}
+				
 		strcat(msg,num);
 		strcat(msg,"00000001");    //error code
 
 		printf("Body msg: ");
 
 		fgets(body,sizeof(body),stdin);
-//		while(getchar()!= '\n');
-//		getchar();
 		len_b = strlen(body) - 1;
 		body[len_b] = '\0';
-		printf("len_b: %d\n",len_b);
 
 		for(i = 0; i < len_b; i++)
 		{
 			sprintf(body_str[index],"%x",body[i]);
-			printf("body char: %c\n",body_str[index][0]);
 			index++;
 		}
-		printf("body_str: %s\n",body_str);
 
 		
 		sprintf(length,"%x",len_b  * 2);
@@ -157,8 +145,6 @@ void *send_msg(void* arg)
 		}
 		strcat(body_len,length);
 		body_len[9] = '\0';
-		printf("body len: %s\n",body_len);
-
 
 		strcat(msg,body_len);
 
@@ -170,7 +156,6 @@ void *send_msg(void* arg)
 		}
 		msg[72+ len_b * 2] = '\n';
 
-//		strcpy(a.str_msg,msg);
 
 		printf("MSG: %s\n",msg);
 
@@ -180,7 +165,6 @@ void *send_msg(void* arg)
 			p.ecode[index++] = msg[i];
 		}
 		index = 0;
-//		strcpy(msg,a -> str_msg);
 	
 		if(atoi(p.ecode) == 100)
 		{
@@ -197,7 +181,6 @@ void *send_msg(void* arg)
 
 void *recv_msg(void* arg)
 {
-//	int sock = *((int*)arg);
 	A *a = (A*) arg;
 	int sock = a -> str_sock;
 	char msg[MSG_SIZE] = {'\0', };
@@ -216,14 +199,15 @@ void *recv_msg(void* arg)
 	{
 
 		str_len=read(sock, msg, MSG_SIZE);
-		printf("\nmsg: %s\n",msg);
+		printf("\nMSG from Server >> \n%s\n",msg);
 	
 		for(i = 0; i < 8; i++)
 		{
 			p.head[i] = msg[i];
 		}
 		p.head[8] = '\0';
-
+		
+		index = 0;
 		for(i = 48; i < 56; i++)
 		{
 			p.fcode[index++] = msg[i];
@@ -243,36 +227,37 @@ void *recv_msg(void* arg)
 		for(i = 64; i < 72; i++)
 		{
 			p.blen[index++] = msg[i];
+
 		}
 		p.blen[index] = '\0';
 		index = 0;
 
-		body_strlen = atoi(p.blen);
-		printf("body_strlen : %d\n",body_strlen);
+		body_strlen = strtol(p.blen,NULL,16);
 		for(i = 72; i < 72 + body_strlen; i++)
 		{
 			p.bmsg[index++] = msg[i];
 		}
-		printf("p.bmsg: %s\n",p.bmsg);
 		p.bmsg[index] = '\0';
 		index = 0;
 
 		if(mode == 1)
 		{
+			p.ecode[8] = '\0';
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
 				printf("\nError code: %s\n Got no message to save\n",p.ecode);
-				break;
+				continue;
 			}
 			printf("\nMode 1 SUCCESS\n");
 		}
 
 		else if(mode == 2)
 		{
+			p.ecode[8] = '\0';
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
 				printf("\nError code: %s\n No message to read\n",p.ecode);
-				break;			
+				continue;			
 			}
 			
 			if(str_len == -1)
@@ -284,23 +269,24 @@ void *recv_msg(void* arg)
 			}
 
 
-			printf("%s\n",p.bmsg);
+			printf("Reading File >> \n%s",p.bmsg);
 			
 
 		}
 
 		else if(mode == 3)
 		{
+			p.ecode[8] = '\0';
 			if(strcmp(p.ecode, "00000101") == 0)
 			{
 				printf("\nError code: %s\n No message to read\n",p.ecode);
-				break;			
+				continue;			
 			}
 
 			if(str_len == -1)
 				return (void*)-1;
 
-			printf("%s\n",p.bmsg);
+			printf("Reading File >> \n%s",p.bmsg);
 			if(strcmp(p.bmsg,"done") == 0)
 			{
 				fputs("\nMode 3 SUCCESS\n",stdout);
@@ -310,11 +296,11 @@ void *recv_msg(void* arg)
 
 		else if(mode == 4)
 		{
-
+			p.ecode[8] = '\0';
 			if(strcmp(p.ecode, "00000102") == 0)
 			{
 				printf("\nError code: %s\n No message to delete\n",p.ecode);
-				break;			
+				continue;			
 			}
 
 			fputs("\nMode 4 SUCCESS\n",stdout);
@@ -324,11 +310,6 @@ void *recv_msg(void* arg)
 		else if(mode == 5)
 		{
 			printf("\nMode 5 SUCCESS\n");
-		}
-		else
-		{
-			printf("\nMode Error\n");
-
 		}
 	}
 
