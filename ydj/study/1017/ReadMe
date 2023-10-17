@@ -1,0 +1,7 @@
+This note is a document to explain the command
+
+make re_1_prob
+: to compile and generate executable file
+
+make clean
+: reset 

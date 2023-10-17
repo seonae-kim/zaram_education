@@ -48,6 +48,9 @@ int main()
 	// 5. search member
 	char search_name[20] = {0};
 
+	// 6. All Member
+	char all_member[50] = {0};
+
 	// 7. Renew ALL member's period
 	int ent_period = 0;
 	char ans = 0;
@@ -387,9 +390,12 @@ int main()
 				printf("The Entire MEMBER INFO will be appeard !! \n");
 				printf("==========================================================================\n");
 				printf("  \tNAME\t\tAGE\t\t   start\t  end\t\tremain \n");
+				fseek(fp, 39, SEEK_SET);
 				for (x = 0; x < cnt_line - 1; x++)
 				{
-					printf("%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", new[x].name, new[x].age, new[x].start, new[x].end, new[x].remain);
+					fgets(all_member, sizeof(all_member), fp);
+					puts(all_member);
+//					printf("%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", new[x].name, new[x].age, new[x].start, new[x].end, new[x].remain);
 				}
 				break;
 
