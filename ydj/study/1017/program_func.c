@@ -106,7 +106,7 @@ int RegistNew(FILE *fp, struct member *new_ptr, int i)
 
 	(new_ptr + i)->end = cal_date;
 				
-	fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i)->name, (new_ptr + i)->age, (new_ptr + i)->start, (new_ptr + i)->end, (new_ptr + i)->remain);
+	fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i)->name, (new_ptr + i)->age, (new_ptr + i)->start, (new_ptr + i)->end, 30 * (new_ptr + i)->remain);
 
 	fclose(fp);
 	flag = 0;
@@ -162,7 +162,7 @@ int ExtPeriod(FILE *fp, struct member *new_ptr, int cnt_line)
 	fseek(fp, 42 * x + 68, SEEK_SET);
 	fprintf(fp, "%d", (new_ptr + x)->end);
 	fseek(fp, 1, SEEK_CUR);
-	fprintf(fp, "%d", (new_ptr + x)->remain);
+	fprintf(fp, "%d", 30 * (new_ptr + x)->remain);
 
 	printf("MEMEBERSHIP period sucessfully changed!! \n");
 
@@ -222,12 +222,12 @@ int HandOverPeriod(FILE *fp, struct member *new_ptr, int cnt_line)
 	fseek(fp, 42 * y + 68, SEEK_SET);
 	fprintf(fp, "%d", (new_ptr + y)->end);
 	fseek(fp, 1, SEEK_CUR);
-	fprintf(fp, "%d", (new_ptr + y)->remain);
+	fprintf(fp, "%d", 30 * (new_ptr + y)->remain);
 
 	fseek(fp, 42 * x + 39, SEEK_SET);
 	for (i = x; i < cnt_line - 1; i++)
 	{
-		fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i + 1)->name, (new_ptr + i + 1)->age, (new_ptr + i + 1)->start, (new_ptr + i + 1)->end, (new_ptr + i + 1)->remain);
+		fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i + 1)->name, (new_ptr + i + 1)->age, (new_ptr + i + 1)->start, (new_ptr + i + 1)->end, 30 * (new_ptr + i + 1)->remain);
 	}
 
 	fclose(fp);
@@ -260,7 +260,7 @@ int RemvMember(FILE *fp, struct member *new_ptr, int cnt_line)
 	fseek(fp, 42 * x + 39, SEEK_SET);
 	for (i = x; i < cnt_line - 1; i++)
 	{
-		fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i + 1)->name, (new_ptr + i + 1)->age, (new_ptr + i + 1)->start, (new_ptr + i + 1)->end, (new_ptr + i + 1)->remain);
+		fprintf(fp, "%10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + i + 1)->name, (new_ptr + i + 1)->age, (new_ptr + i + 1)->start, (new_ptr + i + 1)->end, 30 * (new_ptr + i + 1)->remain);
 	}
 
 	fclose(fp);
@@ -292,7 +292,7 @@ int FindMember(FILE *fp, struct member *new_ptr, int cnt_line)
 	}
 
 	printf("  ---->    \tNAME\t\tAGE\t\t   start\t  end\t\tremain \n");
-	printf("  ---->  %10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + x)->name, (new_ptr + x)->age, (new_ptr + x)->start, (new_ptr + x)->end, (new_ptr + x)->remain);
+	printf("  ---->  %10s\t\t%2d\t\t%12s\t%8d\t%-2d \n", (new_ptr + x)->name, (new_ptr + x)->age, (new_ptr + x)->start, (new_ptr + x)->end, 30 * (new_ptr + x)->remain);
 
 	fclose(fp);
 
@@ -323,46 +323,28 @@ int AllMember(FILE *fp, struct member *new_ptr, int cnt_line)
 int RenewMember(FILE *fp, struct member *new_ptr, int cnt_line)
 {
 	int i = 0;
-	int ent_period = 0;
-	int year = 0, month = 0; 
 	char ans = '0';
 	
-	printf("\n");
-	printf("***** Warning *****\n");
-	printf("This mode will renew ALL member's membership\n\n");
+	struct tm *t;
+	time_t now = time(NULL);
+	char date_c[10] = {0};
+	char modify_start[10] = {0};
+	int new_remain = 0;
 
-	printf("Please enter extension period : ");
-	scanf("%d", &ent_period);
-				
-	printf("\nThe extension perid is %d \n", ent_period);
+	strftime(date_c, sizeof(date_c), "%Y%m%d", localtime(&now));
+
+	printf("This mode will renew the entir of member's remain day \n\n");
 	printf("Do you really want to change it? (Y/N) : ");
 	scanf(" %c", &ans);
 
 	if (ans == 'Y' || ans == 'y')
 	{
-		month = 0;
-		year = 0;
-	
 		for (i = 0; i < cnt_line - 1; i++)
 		{
-			(new_ptr + i)->remain = (new_ptr + i)->remain + ent_period;
-			(new_ptr + i)->end = (new_ptr + i)->end + (100 * ent_period);
-			if ((new_ptr + i)->end % 10000 > 1300)
-			{
-				month = ((new_ptr + i)->end % 10000) % 1200;
-				year = ((new_ptr + i)->end / 10000) + ((new_ptr + i)->end % 10000) / 1200;
-			}
-			else
-			{
-				month = (new_ptr + i)->end % 10000;
-				year = (new_ptr + i)->end / 10000;
-			}
-			(new_ptr + i)->end = year * 10000 + month;
-					
-			fseek(fp, 42 * i + 68, SEEK_SET);
-			fprintf(fp, "%d", (new_ptr + i)->end);
-			fseek(fp, 1, SEEK_CUR);
-			fprintf(fp, "%d", (new_ptr + i)->remain);
+			strncpy(modify_start, (new_ptr + i)->start, 8);
+			new_remain = 30 * (new_ptr + i)->remain - (atoi(date_c) - atoi(modify_start));
+			fseek(fp, 42 * i + 77, SEEK_SET);
+			fprintf(fp, "%d", new_remain);
 		}
 	}
 	printf("\n\nEntire member's period extension is done !\n");
