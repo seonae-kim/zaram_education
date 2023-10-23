@@ -1,5 +1,19 @@
 #include "client_manager.h"
 
+int checksamename(const struct Client* client, int k, const char* name)
+{
+	int i;
+	for(i = 0 ; i < k; i++)
+	{
+		if (strcmp(client[i].name, name) == 0 && client[i].delete !=1)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
 int calculateRemaingDays(struct Client* client, int k, int isUpdate)  //plus
 {
     struct tm endTime;
@@ -286,6 +300,7 @@ int TRANSFER_MONTHS(char* name_giver, char* name_receiver, struct Client* client
 	int delete_months;
 	int samecount_giver = 0;
     
+	/*
 	for (i = 0; i < k; i++)			
     {
         if (strcmp(client[i].name, name_giver) == 0 && client[i].delete != 1)
@@ -296,6 +311,23 @@ int TRANSFER_MONTHS(char* name_giver, char* name_receiver, struct Client* client
 			samecount_giver++;
 		}
 	}
+	*/
+
+	for (i =0; i < k; i++)
+	{
+		if (checksamename(client, k, name_giver) == 1)
+		{
+			client[i].delete = 1;
+			delete_months = client[i].months;
+			printf("delete_months is %d\n", delete_months);
+			samecount_giver++;
+		}
+	}
+
+
+	//
+
+
 
 	for(i = 0; i < k; i++)			
 	{

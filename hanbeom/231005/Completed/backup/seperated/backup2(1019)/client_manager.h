@@ -37,7 +37,8 @@ struct Client
     int inputnum;
 };
 
-int calculateRemaingDays(struct Client* client, int k, int isUpdate);
+int calculateRemaingDays(struct Client* client, int k);
+int updateRemaingDays(struct Client* client, int k);
 void calculateEndTime(struct Client* client, int k, struct tm* timeInfo);
 int ADD_CLIENT(struct Client* client, int k);
 int UPDATE_MONTHS(char* name_func2, int months_func2, struct Client* client, int k);

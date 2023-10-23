@@ -1,55 +1,80 @@
 #include "client_manager.h"
 
-int calculateRemaingDays(struct Client* client, int k, int isUpdate)  //plus
+int calculateRemaingDays(struct Client* client, int k)
 {
-    struct tm endTime;
-    time_t endTimestamp;
+    struct tm startTime, endTime;
+	time_t startTimestamp, endTimestamp;
 
-    endTime.tm_year = client[k].end_year - 1900;
-    endTime.tm_mon = client[k].end_month - 1;
-    endTime.tm_mday = client[k].end_day;
-    endTime.tm_hour = client[k].end_hour;
-    endTime.tm_min = client[k].end_min;
-    endTime.tm_sec = 0;
-    endTime.tm_isdst = -1;
+	startTime.tm_year = client[k].start_year - 1900;
+	startTime.tm_mon = client[k].start_month - 1;
+	startTime.tm_mday = client[k].start_day;
+	startTime.tm_hour = client[k].start_hour;
+	startTime.tm_min = client[k].start_min;
+	startTime.tm_sec = 0;
+	startTime.tm_isdst = -1;
 
-    time_t currentTime;
-    time(&currentTime);
-    struct tm* timeInfo;
-    timeInfo = localtime(&currentTime);
+	endTime.tm_year = client[k].end_year - 1900;
+	endTime.tm_mon = client[k].end_month - 1;
+	endTime.tm_mday = client[k].end_day;
+	endTime.tm_hour = client[k].end_hour;
+	endTime.tm_min = client[k].end_min;
+	endTime.tm_sec = 0;
+	endTime.tm_isdst = -1;
 
-    struct tm startTime;
-    time_t startTimestamp;
+	startTimestamp = mktime(&startTime);
+	endTimestamp = mktime(&endTime);
 
-    if (isUpdate) // isUpdate = 1
-	{		//if isUpdate =1 >> updateRemainigDays, if isUpdate = 0 >> calculateRemainingDays.
-        	// Use the current time for the start time in case of an update
-    	startTime = *timeInfo;
-    } 
-	else 		 
+	if (startTimestamp == -1 || endTimestamp == -1)
 	{
-        startTime.tm_year = client[k].start_year - 1900;
-        startTime.tm_mon = client[k].start_month - 1;
-        startTime.tm_mday = client[k].start_day;
-        startTime.tm_hour = client[k].start_hour;
-        startTime.tm_min = client[k].start_min;
-        startTime.tm_sec = 0;
-        startTime.tm_isdst = -1;
-    }
+		printf("it is error");
+		return -1;
+	}
+	
+	double diffInSeconds = difftime(endTimestamp, startTimestamp);
+	int diffInDays = (int)(diffInSeconds / (60 * 60 * 24));
 
-    startTimestamp = mktime(&startTime);
-    endTimestamp = mktime(&endTime);
+	return diffInDays;
+}
 
-    if (startTimestamp == -1 || endTimestamp == -1)
-    {
-        printf("it is error");
-        return -1;
-    }
+int updateRemaingDays(struct Client* client, int k)
+{
+    time_t currentTime;			
+    time(&currentTime);			
+    struct tm* timeInfo;			
+    timeInfo = localtime(&currentTime); 
 
-    double diffInSeconds = difftime(endTimestamp, startTimestamp);
-    int diffInDays = (int)(diffInSeconds / (60 * 60 * 24));
+	struct tm startTime, endTime;
+	time_t startTimestamp, endTimestamp;
 
-    return diffInDays;
+	startTime.tm_year = timeInfo->tm_year;
+	startTime.tm_mon = timeInfo->tm_mon;
+	startTime.tm_mday = timeInfo->tm_mday;
+	startTime.tm_hour = timeInfo->tm_hour;
+	startTime.tm_min = timeInfo->tm_min;
+	startTime.tm_sec = 0;
+	startTime.tm_isdst = -1;
+
+	endTime.tm_year = client[k].end_year - 1900;
+	endTime.tm_mon = client[k].end_month - 1;
+	endTime.tm_mday = client[k].end_day;
+	endTime.tm_hour = client[k].end_hour;
+	endTime.tm_min = client[k].end_min;
+	endTime.tm_sec = 0;
+	endTime.tm_isdst = -1;
+
+	startTimestamp = mktime(&startTime);
+	endTimestamp = mktime(&endTime);
+
+	if (startTimestamp == -1 || endTimestamp == -1)
+	{
+		printf("it is error");
+		return -1;
+	}
+	
+	double diffInSeconds = difftime(endTimestamp, startTimestamp);
+	int diffInDays = (int)(diffInSeconds / (60 * 60 * 24));
+
+	return diffInDays;	
 }
 
 void calculateEndTime(struct Client* client, int k, struct tm* timeInfo)
@@ -84,7 +109,7 @@ int ADD_CLIENT(struct Client* client, int k)
     int i;
     for (i = 0; i < k; i++)
     {
-        if (strcmp(client[i].name, client[k].name) == 0 && client[i].delete != 1)		//1
+        if (strcmp(client[i].name, client[k].name) == 0 && client[i].delete != 1)
         {
             printf("중복이니 다시입력\n");
 			client[k].delete = 1;		
@@ -122,7 +147,7 @@ int ADD_CLIENT(struct Client* client, int k)
 
 	calculateEndTime(client, k, timeInfo);
 
-    client[k].remainingDays = calculateRemaingDays(client, k, 0);
+    client[k].remainingDays = calculateRemaingDays(client, k);
 		
     fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[k].name, client[k].age, client[k].months, client[k].start_year, client[k].start_month, client[k].start_day, client[k].start_hour, client[k].start_min, client[k].end_year, client[k].end_month, client[k].end_day, client[k].end_hour, client[k].end_min, client[k].remainingDays);
     fclose(file);
@@ -189,7 +214,7 @@ int UPDATE_MONTHS(char* name_func2, int months_func2, struct Client* client, int
 
 		
 //
-        if (strcmp(client[i].name, name_func2) == 0 && client[i].delete != 1 && diffInSeconds > 0)		//2
+        if (strcmp(client[i].name, name_func2) == 0 && client[i].delete != 1 && diffInSeconds > 0)		//plus
         {
 			client[i].months += months_func2;
 
@@ -201,7 +226,7 @@ int UPDATE_MONTHS(char* name_func2, int months_func2, struct Client* client, int
 				client[i].end_month -= 12;
 			}       
 
-    		client[i].remainingDays = calculateRemaingDays(client, i, 0);	//  
+    		client[i].remainingDays = calculateRemaingDays(client, i);	//  
 
             fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);
  		
@@ -209,7 +234,7 @@ int UPDATE_MONTHS(char* name_func2, int months_func2, struct Client* client, int
 		}
 
 		//expired client		
-		else if(strcmp(client[i].name, name_func2) == 0 && client[i].delete != 1 && diffInSeconds < 0)	//3
+		else if(strcmp(client[i].name, name_func2) == 0 && client[i].delete != 1 && diffInSeconds < 0)
 		{
 			printf("expired client reapply\n");
 			
@@ -223,7 +248,7 @@ int UPDATE_MONTHS(char* name_func2, int months_func2, struct Client* client, int
 			//get endTime
 			calculateEndTime(client, i, timeInfo);
 
-    		client[i].remainingDays = calculateRemaingDays(client, i, 0);
+    		client[i].remainingDays = calculateRemaingDays(client, i);
 
 
             fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);
@@ -309,7 +334,7 @@ int TRANSFER_MONTHS(char* name_giver, char* name_receiver, struct Client* client
 				client[i].end_month -= 12;
 				client[i].end_year += 1;
 			}
-    		client[i].remainingDays = calculateRemaingDays(client, i, 0);
+    		client[i].remainingDays = calculateRemaingDays(client, i);
 			samecount_receiver++;
 		}
 
@@ -360,7 +385,7 @@ int DELETE_CLIENT(char* name_delete, struct Client* client, int k)
 		}
 	}
 
-	if(samecount == 0)
+	if(samecount != 1)
 	{
 		printf("name is not in list\n");
 		return 2;
@@ -416,7 +441,7 @@ int PRINT_ALL(struct Client* client, int k)
     {
         if(client[i].delete != 1)
 		{
-			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);	
+		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);	
 		}
 	}
     return 0;
@@ -437,7 +462,7 @@ int UPDATE_REMAINING_DAYS(struct Client* client, int k)
 	int i;
     for (i = 0; i < k; i++)			
     {
-    	client[i].remainingDays = calculateRemaingDays(client, i, 1);
+    	client[i].remainingDays = updateRemaingDays(client, i);
 
 		if(client[i].remainingDays < 0)
 		{
@@ -446,9 +471,9 @@ int UPDATE_REMAINING_DAYS(struct Client* client, int k)
 
         if(client[i].delete != 1)
 		{
-			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);	
+		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);	
 		
-			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);
+		fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client[i].name, client[i].age, client[i].months, client[i].start_year, client[i].start_month, client[i].start_day, client[i].start_hour, client[i].start_min, client[i].end_year, client[i].end_month, client[i].end_day, client[i].end_hour, client[i].end_min, client[i].remainingDays);
 		}
 	}
 	fclose(file);

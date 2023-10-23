@@ -37,6 +37,7 @@ struct Client
     int inputnum;
 };
 
+int checksamename(const struct Client* client, int k, const char* name, int* foundIndex);
 int calculateRemaingDays(struct Client* client, int k, int isUpdate);
 void calculateEndTime(struct Client* client, int k, struct tm* timeInfo);
 int ADD_CLIENT(struct Client* client, int k);
