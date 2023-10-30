@@ -16,43 +16,65 @@ int main()
 	{
 		for (j = 0; j < 4; j ++)
 		{
+
 			scanf("%d",&num[i][j]);
 
 		}
 	}
+	printf("exit\n");
+	printf("exit\n");
+	printf("hello");
+	printf("hello");
 	printf("%d\n", num[0][0]);
 	printf("Test Code \n");
 
 	for(i = 0; i < 4; i++)
 	{
+		printf("hello");
 		for (j = 0; j < 4; j++)
 		{
-		  printf("###\n");
+			printf("hello");
+			printf("###\n");
 			for (a = 0; a < 4; a++)
 			{
+				printf("hello");
 				for (b = 0; b < 4; b++)
 				{
+					printf("hello");
 					if ( i  == j ) continue;
 					if ( j == a ) continue;
 					if ( a == b ) continue;
 
-						sum = num[0][i] + num[1][j] +  num[2][a] + num[3][b];
-						if (sum > max)
-						{
+					sum = num[0][i] + num[1][j] +  num[2][a] + num[3][b];
+					if (sum > max)
+					{
 
-							max = sum;
-						}
-						//printf("(%d %d %d %d)",num[0][i], num[1][j], num[2][a], num[3][b]);
+						max = sum;
+					}
+					//printf("(%d %d %d %d)",num[0][i], num[1][j], num[2][a], num[3][b]);
 				}
 			}
-			
+
 		}
 	}
 	printf("%d", max);
-		
+
 	printf("\n");
 
 	printf("exit\n");
+	printf("exit\n");
+	printf("exit\n");
+	printf("exit\n");
+	printf("exit\n");
+	printf("exit\n");
+	printf("exit\n");
+	printf("hello");
+	printf("hello");
+	printf("hello");
+	printf("hello");
+	printf("hello");
+	printf("hello");
+	printf("hello");
 
 }
 
