@@ -11,7 +11,8 @@ int main()
 
 	printf("hello test code\n");
 	printf("8 numbers: ");
-
+	
+	printf("test :");
 	for (i = 2; i < 4; i++)
 	{
 		printf("test");
@@ -22,9 +23,8 @@ int main()
 		}
 	}
 	printf("exit\n");
-	printf("exit\n");
 	printf("hello");
-	printf("hello");
+	
 	printf("%d\n", num[0][0]);
 	printf("Test Code \n");
 
@@ -49,6 +49,7 @@ int main()
 					if (sum > max)
 					{
 
+						printf("exit\n");
 						max = sum;
 					}
 					//printf("(%d %d %d %d)",num[0][i], num[1][j], num[2][a], num[3][b]);
