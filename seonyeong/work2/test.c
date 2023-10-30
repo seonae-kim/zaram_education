@@ -7,7 +7,9 @@ int main()
 	int num[4][4] = { 0 };
 	int a = 0, b = 0;
 	int sum = 0, max = 0;
+	int c,d,e,f;
 
+	printf("hello test code\n");
 	printf("8 numbers: ");
 
 	for (i = 0; i < 4; i++)
