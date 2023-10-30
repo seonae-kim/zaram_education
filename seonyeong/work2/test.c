@@ -9,6 +9,7 @@ int main()
 	int sum = 0, max = 0;
 	int c,d,e,f;
 
+	printf("test code");
 	printf("hello test code\n");
 	printf("8 numbers: ");
 
