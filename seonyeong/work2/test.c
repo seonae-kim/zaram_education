@@ -14,6 +14,7 @@ int main()
 
 	for (i = 2; i < 4; i++)
 	{
+	  printf("ok test\n");
 		for (j = 2; j < 4; j ++)
 		{
 			scanf("%d",&num[i][j]);
