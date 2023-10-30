@@ -11,6 +11,7 @@ int main()
 
 	printf("hello code\n");
 	printf("hello test code\n");
+	printf("test :");
 	printf("8 numbers: ");
 
 	printf("ok test\n");
