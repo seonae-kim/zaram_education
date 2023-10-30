@@ -10,7 +10,7 @@
 
 #define MAX_CLNT 256
 #define BUF_SIZE 1000 
-#define NAME_SIZE 20
+#define NAME_SIZE 40
 #define BODY_SIZE 1000
 
 #define HEAD_ERR   3
@@ -111,38 +111,36 @@ void * handle_clnt(void * arg)
 	int str_len=0 ;
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-	int name[NAME_SIZE * 2] = {0};
-	char num[NAME_SIZE * 2] = {0};
+	int name[NAME_SIZE*2];
+	char num[NAME_SIZE*2];
 	
 	while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
-	{   
+	{  
+		memset(m.name,'\0',sizeof(m.name));
+		memset (num, 0, sizeof(num)); 
 		memset(temp, 0, sizeof(temp));
-		strncpy(temp, msg + 8 ,NAME_SIZE * 2);
+		strncpy(temp, msg + 8 ,NAME_SIZE);
 		sprintf(m.name , "%s", temp);
-		printf("m.name:%s\n",m.name); 
-		for(i = 0; i < NAME_SIZE ; i++)
+		m.name[39] = '\0';
+		//printf("#0m.name: %s\n",m.name);
+		for(i = 0; i < NAME_SIZE/2 ; i++)
 		{
 			strncpy(num , temp + i*2, 2);  
 			name[i] = strtol(num, 0, 16);
 		}
 		printf("name: %ls\n", name);
 
-		printf("#0m.name:%s\n",m.name); 
 		memset(temp, 0, sizeof(temp));
-
-		strncpy(temp, msg+58, 2);
+		strncpy(temp, msg+65, 8);
 		m.body_len = atoi(temp);
-		printf("#1m.name:%s\n",m.name); 
-		strncpy(temp, msg+60, m.body_len * 2);
-		printf("#2m.name:%s\n",m.name); 
-		sprintf(m.body, "%s", temp);
-		printf("m.body %s\n", m.body);
 
+		strncpy(temp, msg+72, m.body_len * 2);
+		sprintf(m.body, "%s", temp);		
+
+		//printf("#2m.name: %s\n",m.name);
 		memset(temp, 0, sizeof(temp));
-		strncpy(temp, msg+49, 3);
+		strncpy(temp, msg+48, 8);
 		m.func_code = strtol(temp, 0, 16);
-
-		printf("#3m.name:%s\n",m.name); 
 		if( m.func_code == EXIT )
 		{
 			printf("exit\n");
@@ -170,7 +168,6 @@ void * handle_clnt(void * arg)
 				printf("no message\n");
 				error_code = NO_RCV_MSG_ERR_CODE;
 
-				printf("##1#m.name:%s\n",m.name); 
 				error_log(name, m.func_code, error_code);
 				
 				msg_buffer(head, m.name, m.func_code, error_code, m.body);
@@ -182,7 +179,6 @@ void * handle_clnt(void * arg)
 				msg_char(msg);
 				error_code = CORRECT;
 
-				printf("###2m.name:%s\n",m.name); 
 				printf("message save\n" );
 				error_log(name, m.func_code, error_code);
 				
@@ -226,7 +222,7 @@ void * handle_clnt(void * arg)
 
 				printf("transfer last message\n");
 				error_log(name, m.func_code, error_code);
-				sprintf(return_msg,"func_code: %d error_code: %04X\n", m.func_code, error_code);
+				sprintf(return_msg,"func_code: %d error_code: %08X\n", m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 
 			}
@@ -261,7 +257,7 @@ void * handle_clnt(void * arg)
 				error_code = CORRECT;
 				error_log(name, m.func_code, error_code);
 
-				sprintf(return_msg,"func_code: %d error_code : %04X\n", m.func_code, error_code);
+				sprintf(return_msg,"func_code: %d error_code : %08X\n", m.func_code, error_code);
 				write(clnt_sock, return_msg, strlen(return_msg));
 
 				printf("transfer all messages\n");
@@ -394,9 +390,9 @@ int msg_cut(char *msg)
 	}
 	else
 	{
-		strncpy(temp, msg+58, 2);
+		strncpy(temp, msg+65, 8);
 		m.body_len = atoi(temp);
-		strncpy(temp, msg+60, m.body_len*2);
+		strncpy(temp, msg+72, m.body_len*2);
 		sprintf(m.body, "%s", temp);
 		if(strlen(m.body) == 0)
 		{
@@ -423,18 +419,19 @@ void* msg_char(char *msg)
 	memset(m.body, 0, sizeof(m.body));
 	memset(message, 0, sizeof(message));
 
-	strncpy(temp, msg+8 ,NAME_SIZE * 2);
+	strncpy(temp, msg+8 ,NAME_SIZE);
 	sprintf(m.name , "%s", temp);
-	for(i = 0; i < NAME_SIZE * 2; i++)
+	for(i = 0; i < NAME_SIZE/2 ; i++)
 	{
 		strncpy(num , temp + i*2, 2);  
 		name[i] = strtol(num, 0, 16);
 	}
 
 	memset(temp, 0, sizeof(temp));
-	strncpy(temp, msg+58, 2);
+	strncpy(temp, msg+65, 8);
 	m.body_len = atof(temp);
-	strncpy(temp, msg+60, m.body_len * 2);
+	memset(temp, 0, sizeof(temp));
+	strncpy(temp, msg+72, m.body_len * 2);
 	sprintf(m.body, "%s", temp);
 	for(i = 0; i < m.body_len; i++)
 	{
@@ -469,12 +466,11 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 		head_num[n] = head[i];
 		n += 2;
 	}   
-
 	n = 0;
-	sprintf(buffer,"%02X%02X%02X%02X%40s%04X%04X%04X%s\n", 
+	sprintf(buffer,"%02X%02X%02X%02X%40s%08X%08X%08X%s\n", 
 			head_num[0],head_num[2],head_num[4],head_num[6],
 			name, func_code, error_code, body_len, body);
-	printf(">%s >b> %s\n", name, buffer);
+	//printf(">%s >b> %s\n", name, buffer);
 	return buffer;
 }
 
@@ -488,7 +484,7 @@ void error_log(int *name, int func_code, int error_code )
 		printf("fail2\n");
 		exit(0);
 	}
-	fprintf(fl, "[%ls] func_code: %d error: %04x time: %d-%d-%d %d:%d\n", 
+	fprintf(fl, "[%ls] func_code: %d error: %08x time: %d-%d-%d %d:%d\n", 
 			name, func_code, error_code,
 			tm.tm_year+1900,tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min );
 	fclose(fl);

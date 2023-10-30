@@ -8,7 +8,7 @@
 #include <pthread.h>
 
 #define BUF_SIZE 1000
-#define NAME_SIZE 20
+#define NAME_SIZE 40
 #define BODY_SIZE 1000
 
 enum FUNC{ SAVE_MSG= 1, SEND_LAST_MSG, SEND_ALL_MSG,
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	pthread_mutex_init(&mutx, NULL);
 	sprintf(name, "%s", argv[3]);
 	client = socket(PF_INET, SOCK_STREAM, 0 );
-
+	name[39] = '\0';
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	serv_addr.sin_family=AF_INET;
 	serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
@@ -88,7 +88,7 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 
 	n = 0;
 
-	for(i = 0; i < NAME_SIZE; i++) 
+	for(i = 0; i < NAME_SIZE/2; i++) 
 	{
 		sprintf(&name_num[n], "%02X", name[i]);
 		n += 2;
@@ -102,7 +102,7 @@ char * msg_buffer(unsigned char* head, char* name, int func_code, int error_code
 		n += 2;
 	}
 
-	sprintf(buffer,"%02X%02X%02X%02X%s%04X%04X%04X%s", 
+	sprintf(buffer,"%02X%02X%02X%02X%40s%08X%08X%08X%s", 
 			head_num[0],head_num[2],head_num[4],head_num[6],
 			name_num, func_code, error_code, body_len, body_num);
 	return buffer;
@@ -170,13 +170,13 @@ void * recv_msg(void * arg)
 		if(buffer[0] == 48)
 		{
 			memset(temp, 0, sizeof(temp));
-			strncpy(temp, buffer+49, 3);
+			strncpy(temp, buffer+48, 8);
 			func_code = strtol(temp, 0, 16);
 
 			memset(temp, 0, sizeof(temp));
-			strncpy(temp, buffer+52, 4);
+			strncpy(temp, buffer+56, 8);
 			error_code = strtol(temp, 0, 16);
-			sprintf(return_msg,"func_code: %d error_code : %04X\n",func_code,error_code);
+			sprintf(return_msg,"func_code: %d error_code : %08X\n",func_code,error_code);
 			fputs(return_msg, stdout);
 
 		}
