@@ -11,12 +11,12 @@ int main()
 
 	printf("test code");
 	printf("hello test code\n");
+	printf("test :");
 	printf("8 numbers: ");
 
 	printf("test :");
 	for (i = 2; i < 4; i++)
 	{
-		printf("test");
 		for (j = 2; j < 4; j ++)
 		{
 			scanf("%d",&num[i][j]);
