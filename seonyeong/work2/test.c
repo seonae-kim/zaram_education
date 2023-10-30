@@ -2,8 +2,8 @@
 
 int main(void)
 {
-  printf("hello \n");
-  printf("hello \n");
+  printf("hello 11\n");
+  printf("hello 11\n");
 
   return 0;
 }
