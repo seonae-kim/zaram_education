@@ -12,8 +12,6 @@ int main()
 	printf("hello test code\n");
 	printf("8 numbers: ");
 
-	printf("%%test");
-
 	printf("test :");
 	for (i = 2; i < 4; i++)
 	{
