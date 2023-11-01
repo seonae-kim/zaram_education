@@ -40,13 +40,74 @@ void printList(struct ClientNode* head)
 	struct ClientNode* current = head;
 	while (current != NULL)
 	{
-		if(current->data.delete != 1)
-		{
 		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current->data.name, current->data.age, current->data.months, current->data.start_year, current->data.start_month, current->data.start_day, current->data.start_hour, current->data.start_min, current->data.end_year, current->data.end_month, current->data.end_day, current->data.end_hour, current->data.end_min, current->data.remainingDays);
-		}
 		current = current->next;
 	}
 }
+
+void deleteNode(struct ClientNode** head, char* name_giver)
+{
+	struct ClientNode* current = *head;
+	struct ClientNode* prev = NULL;
+
+	while (current != NULL && strcmp(current->data.name, name_giver) != 0)
+	{
+		prev = current;
+		current = current->next;
+	}
+
+	if (current == NULL)
+	{
+		printf("can't search node: \n");
+		return;
+	}
+
+	if (prev == NULL)
+	{
+		*head = current->next;
+	}
+	else
+	{
+		prev->next = current->next;
+	}
+
+	free(current);
+	printf("node is deleted\n");
+}
+
+void deleteCurrentNode(struct ClientNode** head, struct ClientNode* current)
+{
+	if (*head == NULL || current == NULL)
+	{
+		printf("node is not existed\n");
+		return;
+	}
+
+	if (*head == current)
+	{
+		*head = current->next;	//core
+		free(current);
+		printf("node is deleted\n");
+		return ;
+	}
+
+	struct ClientNode* prev = *head;
+	while (prev != NULL && prev->next != current)
+	{
+		prev = prev->next;
+	}
+
+	if(prev != NULL)
+	{
+		prev->next = current->next;				    
+		free(current);
+	}
+	else
+	{
+		printf("can't find node\n");
+	}
+}
+
 
 int checksamename(struct ClientNode* current, const char* name, int* foundIndex, int selectFunction)	//current is started from 'head'
 {																	
@@ -58,7 +119,7 @@ int checksamename(struct ClientNode* current, const char* name, int* foundIndex,
 	{
 		while (current != NULL)
 		{		
-			if (strcmp(current->data.name, name) == 0 && current->data.delete != 1)
+			if (strcmp(current->data.name, name) == 0)
 			{
 				exitwhen_2++;
 			}
@@ -78,7 +139,7 @@ int checksamename(struct ClientNode* current, const char* name, int* foundIndex,
 	{
 		while (current != NULL)
 		{		
-			if (strcmp(current->data.name, name) == 0 && current->data.delete != 1)
+			if (strcmp(current->data.name, name) == 0)
 			{
 				*foundIndex = i;
 				return 1;
@@ -145,22 +206,18 @@ int calculateRemaingDays(struct ClientNode* current, int isUpdate)  //isUpdate =
 
 void calculateEndTime(struct ClientNode* current, struct tm* timeInfo)
 {
-
 	current->data.end_year = timeInfo->tm_year + 1900;
 	current->data.end_month = timeInfo->tm_mon + 1 + (current->data.months);
-	
 
 	if (current->data.end_month > 12)
 	{
 		current->data.end_year += 1;
 		current->data.end_month -= 12;
 	}
-
 	current->data.end_day = timeInfo->tm_mday;
 	current->data.end_hour = timeInfo->tm_hour;
 	current->data.end_min = timeInfo->tm_min;
 }
-
 int addClient(struct ClientNode** head, struct Client newClient)		 
 {
 	struct ClientNode* client = append(head,newClient);	
@@ -181,7 +238,8 @@ int addClient(struct ClientNode** head, struct Client newClient)
 	if (checksamename(*head, client->data.name, &foundIndex, 1) == 1)
 	{
 		printf("existed client\n");
-		client->data.delete = 1;
+		//deleteNode(head, client->data.name);		// replace with new func
+		deleteCurrentNode(head, client);
 		return 1;
 	}
     
@@ -256,90 +314,77 @@ int updateMonths(struct ClientNode** head, char* name_func2, int months_func2)
 			client = client->next;
 		}
 
-        if (client->data.delete != 1)			
+        // 현재 시간과 클라이언트의 종료 시간을 비교하여 처리
+        time_t currentTime;
+        time(&currentTime);
+        struct tm* timeInfo = localtime(&currentTime);
+
+        struct tm endTime;
+        time_t endTimestamp;
+        endTime.tm_year = client->data.end_year - 1900;			
+        endTime.tm_mon = client->data.end_month - 1;				
+        endTime.tm_mday = client->data.end_day;
+        endTime.tm_hour = client->data.end_hour;
+        endTime.tm_min = client->data.end_min;
+        endTime.tm_sec = 0;
+        endTime.tm_isdst = -1;
+        endTimestamp = mktime(&endTime);
+
+        if (endTimestamp == -1)
         {
-            // 현재 시간과 클라이언트의 종료 시간을 비교하여 처리
-            time_t currentTime;
-            time(&currentTime);
-            struct tm* timeInfo = localtime(&currentTime);
-
-            struct tm endTime;
-            time_t endTimestamp;
-            endTime.tm_year = client->data.end_year - 1900;			
-            endTime.tm_mon = client->data.end_month - 1;				
-            endTime.tm_mday = client->data.end_day;
-            endTime.tm_hour = client->data.end_hour;
-            endTime.tm_min = client->data.end_min;
-            endTime.tm_sec = 0;
-            endTime.tm_isdst = -1;
-            endTimestamp = mktime(&endTime);
-
-            if (endTimestamp == -1)
-            {
-                printf("it is error");
-                return -1;
-            }
-
-            double diffInSeconds = difftime(endTimestamp, currentTime);
-
-            if (diffInSeconds > 0) // 클라이언트가 아직 유효한 경우
-            {
-                client->data.months += months_func2;
-                client->data.end_month += months_func2;
-
-                if (client->data.end_month > 12)
-                {
-                    client->data.end_year += 1;
-                    client->data.end_month -= 12;
-                }
-
-                client->data.remainingDays = calculateRemaingDays(client, 0);		
-
-                // 파일에 업데이트된 정보 저장
-				struct ClientNode* current_like_i = *head;							
-				while (current_like_i != NULL)
-				{
-					if(current_like_i->data.delete != 1)
-					{
-						fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current_like_i->data.name, current_like_i->data.age, current_like_i->data.months, current_like_i->data.start_year, current_like_i->data.start_month, current_like_i->data.start_day, current_like_i->data.start_hour, current_like_i->data.start_min, current_like_i->data.end_year, current_like_i->data.end_month, current_like_i->data.end_day, current_like_i->data.end_hour, current_like_i->data.end_min, current_like_i->data.remainingDays);
-					}
-					current_like_i = current_like_i->next;
-				}
-            }
-            else // 클라이언트가 이미 만료된 경우
-            {
-                printf("expired client reapply\n");
-
-                client->data.months = months_func2;
-                client->data.start_year = timeInfo->tm_year + 1900;
-                client->data.start_month = timeInfo->tm_mon + 1;
-                client->data.start_day = timeInfo->tm_mday;
-                client->data.start_hour = timeInfo->tm_hour;
-                client->data.start_min = timeInfo->tm_min;
-
-                // 클라이언트의 종료 시간 업데이트
-                calculateEndTime(client, timeInfo);				
-                client->data.remainingDays = calculateRemaingDays(client, 0);		
-
-                // 파일에 업데이트된 정보 저장
-				struct ClientNode* current_like_i = *head;				
-				while (current_like_i != NULL)
-				{
-					if(current_like_i->data.delete != 1)
-					{
-						fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current_like_i->data.name, current_like_i->data.age, current_like_i->data.months, current_like_i->data.start_year, current_like_i->data.start_month, current_like_i->data.start_day, current_like_i->data.start_hour, current_like_i->data.start_min, current_like_i->data.end_year, current_like_i->data.end_month, current_like_i->data.end_day, current_like_i->data.end_hour, current_like_i->data.end_min, current_like_i->data.remainingDays);
-					}
-					current_like_i = current_like_i->next;
-				}
-            }
-            fclose(file);
-            return 0;
+        	printf("it is error");
+            return -1;
         }
-        else
+
+        double diffInSeconds = difftime(endTimestamp, currentTime);
+
+        if (diffInSeconds > 0) // 클라이언트가 아직 유효한 경우
         {
-            printf("Client is marked as deleted.\n");
+        	client->data.months += months_func2;
+            client->data.end_month += months_func2;
+
+            if (client->data.end_month > 12)
+            {
+            	client->data.end_year += 1;
+            	client->data.end_month -= 12;
+            }
+
+            client->data.remainingDays = calculateRemaingDays(client, 0);		
+
+            // 파일에 업데이트된 정보 저장
+			struct ClientNode* current_like_i = *head;							
+			while (current_like_i != NULL)
+			{
+				fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current_like_i->data.name, current_like_i->data.age, current_like_i->data.months, current_like_i->data.start_year, current_like_i->data.start_month, current_like_i->data.start_day, current_like_i->data.start_hour, current_like_i->data.start_min, current_like_i->data.end_year, current_like_i->data.end_month, current_like_i->data.end_day, current_like_i->data.end_hour, current_like_i->data.end_min, current_like_i->data.remainingDays);
+				current_like_i = current_like_i->next;
+			}
         }
-		printf("testtest: foundIndex is %d\n", foundIndex);
+        else // 클라이언트가 이미 만료된 경우
+        {
+        	printf("expired client reapply\n");
+
+            client->data.months = months_func2;
+            client->data.start_year = timeInfo->tm_year + 1900;
+            client->data.start_month = timeInfo->tm_mon + 1;
+            client->data.start_day = timeInfo->tm_mday;
+            client->data.start_hour = timeInfo->tm_hour;
+            client->data.start_min = timeInfo->tm_min;
+
+            // 클라이언트의 종료 시간 업데이트
+            calculateEndTime(client, timeInfo);				
+            client->data.remainingDays = calculateRemaingDays(client, 0);		
+
+            // 파일에 업데이트된 정보 저장
+			struct ClientNode* current_like_i = *head;				
+			while (current_like_i != NULL)
+			{
+				fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current_like_i->data.name, current_like_i->data.age, current_like_i->data.months, current_like_i->data.start_year, current_like_i->data.start_month, current_like_i->data.start_day, current_like_i->data.start_hour, current_like_i->data.start_min, current_like_i->data.end_year, current_like_i->data.end_month, current_like_i->data.end_day, current_like_i->data.end_hour, current_like_i->data.end_min, current_like_i->data.remainingDays);
+				current_like_i = current_like_i->next;
+			}
+         }
+         fclose(file);
+         return 0;
+         printf("testtest: foundIndex is %d\n", foundIndex);
     }
     else
     {
@@ -398,8 +443,10 @@ int transferMonths(struct ClientNode** head, char* name_giver, char* name_receiv
 		{
 			client = client->next;
 		}
-		client->data.delete = 1;
+
 		delete_months = client->data.months;
+		deleteNode(head, name_giver);				// create new func				
+
 		//printf("delete_months is %d\n", delete_months);					//test
 		samecount_giver++;
 		//printf("samecount_giver is %d\n", samecount_giver);			//test
@@ -432,10 +479,7 @@ int transferMonths(struct ClientNode** head, char* name_giver, char* name_receiv
 		client = *head;
 		while(client != NULL)
 		{
-			if (client->data.delete != 1)					
-			{
-				fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-			}
+			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
 			client = client->next;
 		}	
 		
@@ -475,7 +519,7 @@ int deleteClient(struct ClientNode** head, char* name_delete)
     int foundIndex;
 
 	struct ClientNode* client = *head; // client start from head
-    
+	
 	if (checksamename(client, name_delete, &foundIndex, 2) == 1)
     {
         samecount++;
@@ -489,29 +533,23 @@ int deleteClient(struct ClientNode** head, char* name_delete)
 	
     if (checksamename(client, name_delete, &foundIndex, 2) == 1)
     {
-        for(i =0; i < foundIndex; i++)
+        for(i = 0; i < foundIndex; i++)
 		{
 			client = client->next;
 		}
-
-		client->data.delete = 1;
-        samecount++;
+		deleteNode(head, client->data.name);
 
 		client = *head;
 		while(client != NULL)
 		{
-			if (client->data.delete != 1)					
-			{
-				fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-			}
+			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
 			client = client->next;
 		}
     }
-
 	fclose(file); 
     return 0;
-
 }
+
 int searchClient(struct ClientNode** head, char* name_search)
 {
 	printf("Enter name to search:");
@@ -524,7 +562,7 @@ int searchClient(struct ClientNode** head, char* name_search)
 	
 	struct ClientNode* client = *head;
 
-	if (client->data.delete != 1 && checksamename(client, name_search, &foundIndex, 2) == 1 )
+	if (checksamename(client, name_search, &foundIndex, 2) == 1 )
 	{
 		for(i =0; i < foundIndex; i++)
 		{
@@ -560,16 +598,12 @@ int updateRemainingDays(struct ClientNode** head)
 	
 		if(client->data.remainingDays < 0)
 		{
-			client->data.delete = 1;
+			deleteNode(head, client->data.name);
 		}
-
-		if (client->data.delete != 1)			
-		{		
-			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-				
-			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-		}
-			client = client->next;
+		
+		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
+		fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
+		client = client->next;
 	}
 	fclose(file);
 

@@ -33,13 +33,14 @@ struct Client
     int end_hour;
     int end_min;
     int remainingDays;
-    int delete; 
     int inputnum;
 };
 
 struct ClientNode* createNode(const struct Client newClient);
 struct ClientNode* append(struct ClientNode** head, const struct Client newClient);
 void printList(struct ClientNode* head);
+void deleteNode(struct ClientNode** head, char* name_giver);
+void deleteCurrentNode(struct ClientNode** head, struct ClientNode* current);
 int checksamename(struct ClientNode* current, const char* name, int* foundIndex, int selectFunction);
 int calculateRemaingDays(struct ClientNode* current, int isUpdate);
 void calculateEndTime(struct ClientNode* current, struct tm* timeInfo);
