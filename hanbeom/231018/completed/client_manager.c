@@ -40,8 +40,19 @@ void printList(struct ClientNode* head)
 	struct ClientNode* current = head;
 	while (current != NULL)
 	{
-		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current->data.name, current->data.age, current->data.months, current->data.start_year, current->data.start_month, current->data.start_day, current->data.start_hour, current->data.start_min, current->data.end_year, current->data.end_month, current->data.end_day, current->data.end_hour, current->data.end_min, current->data.remainingDays);
-		current = current->next;
+
+		if(current->data.remainingDays < 0)
+		{
+			//deleteNode(head, client->data.name);
+			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %s\n", current->data.name, current->data.age, current->data.months, current->data.start_year, current->data.start_month, current->data.start_day, current->data.start_hour, current->data.start_min, current->data.end_year, current->data.end_month, current->data.end_day, current->data.end_hour, current->data.end_min, "expired");
+			current = current->next;
+		}
+
+		else
+		{
+			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", current->data.name, current->data.age, current->data.months, current->data.start_year, current->data.start_month, current->data.start_day, current->data.start_hour, current->data.start_min, current->data.end_year, current->data.end_month, current->data.end_day, current->data.end_hour, current->data.end_min, current->data.remainingDays);
+			current = current->next;
+		}
 	}
 }
 
@@ -411,16 +422,11 @@ int transferMonths(struct ClientNode** head, char* name_giver, char* name_receiv
     
 	struct ClientNode* client = *head; // client start from head
 									   
-    if (checksamename(client, name_receiver, &foundIndex, 2) == 1)		
+    if (checksamename(client, name_receiver, &foundIndex, 2) == 0)		
     {
-        samecount_receiver++;
-    }
-
-	if(samecount_receiver != 1)
-	{
 		printf("receiver is not in list\n");
 		return 2;
-	}
+    }
 
 	FILE* file;
     file = fopen("current_time.txt", "w");
@@ -473,7 +479,6 @@ int transferMonths(struct ClientNode** head, char* name_giver, char* name_receiv
 				client->data.end_year += 1;
 			}
 			client->data.remainingDays = calculateRemaingDays(client, 0);
-			samecount_receiver++;
 		}
 
 		client = *head;
@@ -596,14 +601,22 @@ int updateRemainingDays(struct ClientNode** head)
 	{
 		client->data.remainingDays = calculateRemaingDays(client, 1);
 	
-		if(client->data.remainingDays < 0)
+		if(client->data.remainingDays >= 0)
 		{
-			deleteNode(head, client->data.name);
+			//deleteNode(head, client->data.name);
+			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
+			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
+			client = client->next;
 		}
 		
-		printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-		fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %d\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, client->data.remainingDays);
-		client = client->next;
+		else
+		{
+			printf("%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %s\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, "expired");
+			fprintf(file, "%s %d %d %dy %dm %dd %dh %dm %dy %dm %dd %dh %dm %s\n", client->data.name, client->data.age, client->data.months, client->data.start_year, client->data.start_month, client->data.start_day, client->data.start_hour, client->data.start_min, client->data.end_year, client->data.end_month, client->data.end_day, client->data.end_hour, client->data.end_min, "expired");
+			client = client->next;
+		}
+
+
 	}
 	fclose(file);
 
